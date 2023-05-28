@@ -1,0 +1,171 @@
+* {
+    margin: 0;
+}
+
+
+.container {
+    max-width: 1536px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.header {
+    background-color: #2693ff;
+    max-width: 1920px;
+    padding: 20px 192px 80px 192px;
+    margin-bottom: 39px;
+}
+
+.h1 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 50px;
+}
+
+.logoutBtn {
+    color: black;
+    text-decoration: none;
+    float: right;
+    font-size: 19px;
+    padding: 5px;
+    font-family: 'Merriweather', serif;
+}
+
+.btn {
+    margin-bottom: 39px;
+    margin-left: 1px;
+    background-color: #2693ff;
+    border: 2px solid black;
+    padding: 5px 10px;
+    font-family: 'Merriweather', serif;
+    font-size: 18px;
+    height: 39px;
+}
+
+
+
+
+.addBtn {
+    margin-bottom: 39px;
+    margin-left: 1px;
+    background-color: #2693ff;
+    border: 2px solid black;
+    padding: 5px 10px;
+    font-family: 'Merriweather', serif;
+    font-size: 18px;
+    height: 39px;
+}
+
+.dataTable, .dataTable th, .dataTable td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.dataTable {
+    margin-left: auto;
+    margin-right: auto;
+    width: 1535px;
+    border: 2px solid black;
+    font-family: 'Merriweather', serif;
+}
+
+.dataTable th, .dataTable td {
+    padding: 5px;
+    font-size: 19px;
+    text-align: center;
+}
+
+.headerRow th{
+    background-color: #2693ff;
+    font-size: 20px;
+}
+
+.editBtn {
+    background-color: #2693ff;
+    border: none;
+    width: 100%;
+    height: 34px;
+    font-size: 18px;
+    font-family: 'Merriweather', serif;
+}
+
+.firstTd {
+    padding: 0px !important;
+    width: 132px;
+}
+
+.evenRow {
+    background-color: #89c4ff;
+}
+
+.discardedRow {
+    background-color: #7c7c7c;
+    color: #2b2b2b;
+}
+
+.adminH1, .logoutBtn {
+    display: inline-block;
+}
+
+
+/* EDIT */
+
+.label {
+    /*padding-right: 25px;*/
+    font-size: 22px;
+    font-family: 'Merriweather', serif;
+    width: 208px;
+}
+
+.editBookTable {
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.editBookButtons {
+    width: 67px;
+    margin-left: auto;
+    margin-right: auto;
+    display: inline;
+}
+
+.submitDeleteBtn {
+    background-color: red;
+    margin-top: 25px;
+}
+
+.submitEditBtn {
+    margin-left: 119px;
+    margin-top: 25px;
+}
+
+.editBookCenterBtns {
+    margin-left: 102px;
+    margin-right: auto;
+    width: 212px;
+}
+
+.input {
+    font-size: 20px;
+    font-family: 'Merriweather', serif;
+    width: 200px;
+}
+
+.checkbox {
+    width: 20px;
+    height: 20px;
+    margin-top: 3px;
+}
+
+.middleColumn {
+    width: 29px;
+}
+
+
+/* ADD */
+
+.dateLabel {
+    display: block;
+    font-size: 17px;
+}
