@@ -4,7 +4,7 @@
 
 
 .container {
-    max-width: 1536px;
+    max-width: 1700px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -64,7 +64,7 @@
 .dataTable {
     margin-left: auto;
     margin-right: auto;
-    width: 1535px;
+    width: 1700px;
     border: 2px solid black;
     font-family: 'Merriweather', serif;
 }
@@ -92,6 +92,7 @@
 .firstTd {
     padding: 0px !important;
     width: 132px;
+    background-color: #2693ff;
 }
 
 .evenRow {

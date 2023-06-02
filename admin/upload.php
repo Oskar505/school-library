@@ -15,7 +15,6 @@
     }
 
 
-
     if (isset($_POST['upload'])) {
         $fileMimes = array(
             'text/x-comma-separated-values',
@@ -30,6 +29,8 @@
             'application/vnd.msexcel',
             'text/plain'
         );
+
+
      
         // Validate selected file is a CSV file or not
         if (!empty($_FILES['file']['name']) && in_array($_FILES['file']['type'], $fileMimes)) {
@@ -42,45 +43,57 @@
     
             // Parse data from CSV file line by line        
             while (($getData = fgetcsv($csvFile, 10000, ",")) !== FALSE){
-                // Get row data
-                $name = $getData[0];
-                $email = $getData[1]   
-                
-                $allData = [$getData[0], '', $getData[2], $getData[9], '', $getData[4], $getData[5], $getData[6], $getData[7], $getData[8], $getData[10], $returnDate, $reservation, $note, $discarded];
-    
-                // If user already exists in the database with the same email
-                $query = "SELECT id FROM users WHERE email = '" . $getData[1] . "'";
-    
-                $check = mysqli_query($con, $query);
-    
-                if ($check->num_rows > 0){
-                    mysqli_query($conn, "UPDATE users SET name = '" . $name . "', created_at = NOW() WHERE email = '" . $email . "'");
+                echo 'while';
+
+                // lendDate
+                if ($getData[11] == '0000-00-00') {
+                    $getData[11] = '';
                 }
-                
-                else{
-                    mysqli_query($con, "INSERT INTO users (name, email, created_at, updated_at) VALUES ('" . $name . "', '" . $email . "', NOW(), NOW())");
+
+                // FIXME:
+                /*
+                // dates
+                $getData[7] = date("d-m-Y", strtotime($getData[7]));
+                $getData[11] = date("d-m-Y", strtotime($getData[11]));
+
+                // Přidání 3 měsícu k datu pujceni
+                $returnDate = date("Y-d-m", strtotime("+3 months", strtotime($getData[11])));
+                */
+
+                // discarded
+                if (strpos($getData[14], 'VYŘAZENO') !== false) {
+                    $discarded = 1;
                 }
+
+                else {
+                    $discarded = 0;
+                }
+
+
+
+                $allData = [$getData[1], '', $getData[2], $getData[10], '', $getData[4], $getData[5], $getData[6], $getData[7], $getData[9], $getData[11], $returnDate, '', $getData[14], $discarded];
+    
+                $stmt = mysqli_prepare($conn, "INSERT INTO books (registration, isbn, subject, class, publisher, author, name, price, dateAdded, lentTo, lendDate, returnDate, reservation, note, discarded) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+                mysqli_stmt_bind_param($stmt, "ssssssssssssssi", $allData[0], $allData[1], $allData[2], $allData[3], $allData[4], $allData[5], $allData[6], $allData[7], $allData[8], $allData[9], $allData[10], $allData[11], $allData[12], $allData[13], $allData[14]);
+                mysqli_stmt_execute($stmt);
+                mysqli_stmt_close($stmt);
             }
     
             // Close opened CSV file
             fclose($csvFile);
     
-            header("Location: index.php");         
+
+
+            // send form only once
+            header('Location: index.php');
+            exit;  
         }
 
         else{
             echo "Please select valid file";
         }
     }
-        $stmt = mysqli_prepare($conn, "INSERT INTO books (registration, isbn, subject, class, publisher, author, name, price, dateAdded, lentTo, lendDate, returnDate, reservation, note, discarded) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-
-        mysqli_stmt_bind_param($stmt, "ssssssssssssssi", $allData[0], $allData[1], $allData[2], $allData[3], $allData[4], $allData[5], $allData[6], $allData[7], $allData[8], $allData[9], $allData[10], $allData[11], $allData[12], $allData[13], $allData[14]);
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_close($stmt);
-
-        // send form only once
-        header('Location: index.php');
-        exit;
 
 ?>
 
