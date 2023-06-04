@@ -158,6 +158,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather&family=Playfair+Display&family=Roboto&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     
@@ -193,13 +194,16 @@
             </tr>
 
             <?php
+                $rows = 50;
+
                 $conn = mysqli_connect('localhost', 'test', 'Test22knih*', 'knihovna');
 
                 if (!$conn) {
                     echo 'chyba pripojeni'.mysqli_connect_error();
                 }
 
-                $sql = 'SELECT * FROM books';
+
+                $sql = "SELECT * FROM books LIMIT $rows";
                 $result = mysqli_query($conn, $sql);
 
                 if ($result === false) {
@@ -210,8 +214,12 @@
                 $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 
+                if (count($data) < $rows) {
+                    $rows = count($data);
+                }
 
-                for ($i = 0; $i < count($data); $i++) {
+
+                for ($i = 0; $i < $rows; $i++) {
                     //echo $data[$i]['id'];
                     
                     $id = $data[$i]['id'];
@@ -261,9 +269,39 @@
                         <td>$note</td>
                     </tr>";
                 }
+
+
+                echo "
+
+                "
             ?>
         </table>
+
+        <button class='expandTableBtn' onclick="loadMoreRows(10)">Další</button>
+
     </main>
+
+
+    <!-- expandTableAJAX -->
+    <script>
+        var rowCount = <?php echo $row_count; ?>;
+        
+        function loadMoreRows(count) {
+            $.ajax({
+                url: 'expandTable.php',
+                type: 'GET',
+                data: {
+                    count: count,
+                    rowCount: rowCount
+                },
+                success: function(response) {
+                    var tbody = $('#myTable tbody');
+                    tbody.append(response);
+                    rowCount += count;
+                }
+            });
+        }
+    </script>
 
 
     <footer>

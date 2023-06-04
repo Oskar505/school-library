@@ -39,7 +39,7 @@
             $csvFile = fopen($_FILES['file']['tmp_name'], 'r');
     
             // Skip the first line
-            fgetcsv($csvFile);
+            //fgetcsv($csvFile);
     
             // Parse data from CSV file line by line        
             while (($getData = fgetcsv($csvFile, 10000, ",")) !== FALSE){
