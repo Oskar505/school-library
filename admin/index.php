@@ -246,8 +246,21 @@
                         }
 
 
+                        // book wasnt returned in time
+                        $returnedInTime = true;
+                        $returnedInTimeClass = '';
+                        $returnDateObj = new DateTime($returnDate);
+                        $todayDateObj = new DateTime();
 
-                        echo "<tr class='dataRow " . ($i % 2 === 1 ? 'evenRow' : '') . ' ' . ($discarded == 1 ? 'discardedRow' : '') . " '>
+
+                        if ($returnDateObj < $todayDateObj &&  $returnDate != '') {
+                            $returnedInTime = false;
+                            $returnedInTimeClass = 'notReturned';
+                        }
+
+
+
+                        echo "<tr class='dataRow " . ($i % 2 === 1 ? 'evenRow' : '') . ' ' . ($discarded == 1 ? 'discardedRow' : '') . ' ' . $returnedInTimeClass . " '>
                             <td class='firstTd'>
                                 <form action='editBook.php' method='post'>
                                     <input type='hidden' name='id' value='$id'>

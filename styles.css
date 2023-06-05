@@ -104,6 +104,10 @@
     color: #2b2b2b;
 }
 
+.notReturned {
+    background-color: rgb(255, 0, 0);
+}
+
 .adminH1, .logoutBtn {
     display: inline-block;
 }
