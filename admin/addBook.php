@@ -35,78 +35,202 @@
 
 
     <form class="inputForm" method="post" action="index.php">
-        <div class="column">
-            <input class="input" type="text" id="registration" name="registration" placeholder="Evidenční číslo">
-        </div>
+    <table class='editBookTable'>
+        <tr class='column'>
+            <td class='label'>
+                <label for='registration'>Registrační číslo</label>
+            </td>
 
-        <div class="column">
-            <input class="input" type="text" id="isbn" name="isbn" placeholder="Isbn" id='isbn'>
-            <button type='button' id='fillBtn'>Vyplnit</button>
-        </div>
+            <td class='middleColumn'></td>
 
-        <div class="column">
-            <input class="input" type="text" id="subject" name="subject" placeholder="Okruh">
-        </div>
-        
-        <div class="column">
-            <input class="input" type="text" id="publisher" name="publisher" placeholder="Vydavatel">
-        </div>
+            <td>
+                <input class='input' type='text' id='registration' name='registration' placeholder='Evidenční číslo'>
+            </td>
+        </tr>
 
-        <div class="column">
-            <input class="input" type="text" id="author" name="author" placeholder="Autor">
-        </div>
-        
-        <div class="column">
-            <input class="input" type="text" id="name" name="name" placeholder="Název">
-        </div>
-        
-        <div class="column">
-            <input class="input" type="text" id="price" name="price" placeholder="Pořizovací cena">
-        </div>
-        
-        <div class="column">
-            <label class='label dateLabel' for="zaevidování">Zaevidování</label>
-            <input class="input" type="date" id="dateAdded" name="dateAdded" placeholder="Datum zaevidování">
-        </div>
-        
-        <div class="column">
-            <input class="input" type="text" id="lentTo" name="lentTo" placeholder="Vypůjčeno">
-        </div>
+        <tr class='column'>
+            <td class='label'>
+                <label for='isbn'>Isbn</label>
+            </td>
 
-        <div class="column">
-            <input class="input" type="text" id="class" name="class" placeholder="Třída">
-        </div>
-        
-        <div class="column">
-            <label class='label dateLabel' for="půjčení">Půjčení</label>
-            <input class="input" type="date" id="lendDate" name="lendDate">
-        </div>
-        
-        <div class="column">
-            <label class='label dateLabel' for="vrácení">Vrácení</label>
-            <input class="input" type="date" id="returnDate" name="returnDate">
-        </div>
-        
-        <div class="column">
-            <input class="input" type="text" id="reservation" name="reservation" placeholder="Rezervace">
-        </div>
-        
-        <div class="column note">
-            <input class="input" type="text" name="note" id="note" placeholder="poznámka">
-        </div>
-        
-        <div class="column">
-            <label for="Vyřazeno">Vyřazeno</label>
-            <input class="input" class="checkbox" type="checkbox" id="discarded" name="discarded">
-        </div>
-        
-        <div class="column">
-            <input class="input" class="submitPopup" type="submit" name="add" value="Přidat">
-        </div>
-    </form>
+            <td class='middleColumn'></td>
 
-    <form method="post" action="addBook.php">
-        <button type="submit" name="back">Zpět</button>
+            <td>
+                <input class='input' type='text' id='isbn' name='isbn' placeholder='Isbn'>
+            </td>
+        </tr>
+
+        <tr class='column'>
+            <td class='label'>
+                <label for='subject'>Okruh</label>
+            </td>
+
+            <td class='middleColumn'></td>
+
+            <td>
+                <input class='input' type='text' id='subject' name='subject' placeholder='Okruh'>
+            </td>
+        </tr>
+
+        <tr class='column'>
+            <td class='label'>
+                <label for='publisher'>Vydavatel</label>
+            </td>
+
+            <td class='middleColumn'></td>
+
+            <td>
+                <input class='input' type='text' id='publisher' name='publisher' placeholder='Vydavatel'>
+            </td>
+        </tr>
+
+        <tr class='column'>
+            <td class='label'>
+                <label for='author'>Autor</label>
+            </td>
+
+            <td class='middleColumn'></td>
+
+            <td>
+                <input class='input' type='text' id='author' name='author' placeholder='Autor'>
+            </td>
+        </tr>
+
+        <tr class='column'>
+            <td class='label'>
+                <label for='name'>Název</label>
+            </td>
+
+            <td class='middleColumn'></td>
+
+            <td>
+                <input class='input' type='text' id='name' name='name' placeholder='Název'>
+            </td>
+        </tr>
+
+        <tr class='column'>
+            <td class='label'>
+                <label for='price'>Cena</label>
+            </td>
+
+            <td class='middleColumn'></td>
+
+            <td>
+                <input class='input' type='text' id='price' name='price' placeholder='Pořizovací cena'>
+            </td>
+        </tr>
+
+        <tr class='column'>
+            <td class='label'>
+                <label for='dateAdded'>Zaevidování</label>
+            </td>
+
+            <td class='middleColumn'></td>
+
+            <td>
+                <input class='input' type='date' id='dateAdded' name='dateAdded' placeholder='Datum zaevidování'>
+            </td>
+        </tr>
+
+        <tr class='column'>
+            <td class='label'>
+                <label for='lentTo'>Půjčeno</label>
+            </td>
+
+            <td class='middleColumn'></td>
+
+            <td>
+                <input class='input' type='text' id='lentTo' name='lentTo' placeholder='Vypůjčeno'>
+            </td>
+        </tr>
+
+        <tr class='column'>
+            <td class='label'>
+                <label for='class'>Třída</label>
+            </td>
+
+            <td class='middleColumn'></td>
+
+            <td>
+                <input class='input' type='text' id='class' name='class' placeholder='Třída'>
+            </td>
+        </tr>
+
+        <tr class='column'>
+            <td class='label'>
+                <label for='lendDate'>Datum půjčení</label>
+            </td>
+
+            <td class='middleColumn'></td>
+
+            <td>
+                <input class='input' type='date' id='lendDate' name='lendDate'>
+            </td>
+        </tr>
+
+        <tr class='column'>
+            <td class='label'>
+                <label for='returnDate'>Datum vrácení</label>
+            </td>
+
+            <td class='middleColumn'></td>
+
+            <td>
+                <input class='input' type='date' id='returnDate' name='returnDate'>
+            </td>
+        </tr>
+
+        <tr class='column'>
+            <td class='label'>
+                <label for='reservation'>Rezervace</label>
+            </td>
+
+            <td class='middleColumn'></td>
+
+            <td>
+                <input class='input' type='text' id='reservation' name='reservation' placeholder='Rezervace'>
+            </td>
+        </tr>
+
+        <tr class='column'>
+            <td class='label'>
+                <label for='note'>Poznámka</label>
+            </td>
+
+            <td class='middleColumn'></td>
+
+            <td>
+                <input class='input' type='text' name='note' id='note' placeholder='poznámka'>
+            </td>
+        </tr>
+
+        <tr class='column'>
+            <td class='label'>
+                <label for='discarded'>Vyřazeno</label>
+            </td>
+
+            <td class='middleColumn'></td>
+
+            <td>
+                <input class='checkbox' type='checkbox' id='discarded' name='discarded'>
+            </td>
+        </tr>
+
+
+        <tr class='column'>
+            <td>
+                <input class="submitEditBtn btn" type="submit" name="add" value="Přidat">
+            </td>
+
+            <td></td>
+
+            <td>
+                <form method="post" action="addBook.php">
+                    <button class='submitDeleteBtn btn' type="submit" name="back">Zpět</button>
+                </form>
+            </td>
+        </tr>
+    </table>
     </form>
 
 

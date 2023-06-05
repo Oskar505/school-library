@@ -30,6 +30,11 @@
     <form class="inputForm" method="post" action="index.php">
 
         <?php
+            /*
+            include 'log.php';
+            writeToLog('test');
+            */
+
             // get id
             if (isset($_POST['id'])) {
                 $id = $_POST['id'];

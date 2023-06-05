@@ -6,61 +6,57 @@
         exit;
     }
 
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
-
     $conn = mysqli_connect('localhost', 'test', 'Test22knih*', 'knihovna');
 
-    $count = isset($_GET['count']) ? intval($_GET['count']) : 0;
-    $rowCount = isset($_GET['rowCount']) ? intval($_GET['rowCount']) : 0;
     $searchInput = isset($_GET['searchInput']) ? mysqli_real_escape_string($conn, $_GET['searchInput']) : '';
     $showDiscarded = isset($_GET['showDiscarded']) ? mysqli_real_escape_string($conn, $_GET['showDiscarded']) : '';
 
+    $rows = 100;
 
     if (!$conn) {
-        echo 'chyba pripojeni' . mysqli_connect_error();
+        echo 'chyba pripojeni'.mysqli_connect_error();
     }
 
 
     if ($showDiscarded == 'true') {
         if ($searchInput == '') {
-            $sql = "SELECT * FROM books LIMIT $rowCount, $count";
+            $sql = "SELECT * FROM books LIMIT $rows";
         }
 
         else {
-            $sql = "SELECT * FROM books WHERE name LIKE '%$searchInput%' OR author LIKE '%$searchInput%' OR isbn LIKE '%$searchInput%' OR note LIKE '%$searchInput%' OR lentTo LIKE '%$searchInput%' OR class LIKE '%$searchInput%' LIMIT $rowCount, $count";
+            $sql = "SELECT * FROM books WHERE name LIKE '%$searchInput%' OR author LIKE '%$searchInput%' OR isbn LIKE '%$searchInput%' OR note LIKE '%$searchInput%' OR lentTo LIKE '%$searchInput%' OR class LIKE '%$searchInput%' LIMIT $rows";
         }
         echo 'showDiscarded true';
     }
 
     else {
         if ($searchInput == '') {
-            $sql = "SELECT * FROM books WHERE discarded=0 LIMIT $rowCount, $count";
+            $sql = "SELECT * FROM books WHERE discarded=0 LIMIT $rows";
         }
 
         else {
             echo 'showDiscarded false';
-            $sql = "SELECT * FROM books WHERE (name LIKE '%$searchInput%' OR author LIKE '%$searchInput%' OR isbn LIKE '%$searchInput%' OR note LIKE '%$searchInput%' OR lentTo LIKE '%$searchInput%' OR class LIKE '%$searchInput%') AND discarded=0 LIMIT $rowCount, $count";
+            $sql = "SELECT * FROM books WHERE (name LIKE '%$searchInput%' OR author LIKE '%$searchInput%' OR isbn LIKE '%$searchInput%' OR note LIKE '%$searchInput%' OR lentTo LIKE '%$searchInput%' OR class LIKE '%$searchInput%') AND discarded=0 LIMIT $rows";
         }     
     }
 
     $result = mysqli_query($conn, $sql);
 
     if ($result === false) {
-        echo 'Error: ' . mysqli_error($conn);
+            echo 'Error: '.mysqli_error($conn);
     }
+
 
     $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-    if (count($data) < $count) {
-        $count = count($data);
+
+    if (count($data) < $rows) {
+        $rows = count($data);
     }
 
 
-
-    for ($i = 0; $i < $count; $i++) {
-
+    for ($i = 0; $i < $rows; $i++) {
+        
         $id = $data[$i]['id'];
         $registration = $data[$i]['registration'];
         $isbn = $data[$i]['isbn'];
@@ -86,7 +82,22 @@
             $evenNum = false;
         }
 
-        echo "<tr class='dataRow " . ($i % 2 === 1 ? 'evenRow' : '') . ' ' . ($discarded == 1 ? 'discardedRow' : '') . " '>
+
+        // book wasnt returned in time
+        $returnedInTime = true;
+        $returnedInTimeClass = '';
+        $returnDateObj = new DateTime($returnDate);
+        $todayDateObj = new DateTime();
+
+
+        if ($returnDateObj < $todayDateObj &&  $returnDate != '') {
+            $returnedInTime = false;
+            $returnedInTimeClass = 'notReturned';
+        }
+
+
+
+        echo "<tr class='dataRow " . ($i % 2 === 1 ? 'evenRow' : '') . ' ' . ($discarded == 1 ? 'discardedRow' : '') . ' ' . $returnedInTimeClass . " '>
             <td class='firstTd'>
                 <form action='editBook.php' method='post'>
                     <input type='hidden' name='id' value='$id'>

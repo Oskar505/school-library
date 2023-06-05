@@ -173,6 +173,13 @@
             <input class='addBtn btn' type="submit" value="Přidat knihu">
         </form>
 
+        <div class='filters'>
+            <input type="text" class='searchInput input' class='search' id='searchInput' placeholder='Vyhledat'>
+            <label class='showDiscardedLabel label' for="showDiscarded">Zobrazit vyřazené</label>
+            <input class='showDiscarded checkbox' type="checkbox" name="showDiscarded" id="showDiscarded">
+        </div>
+        
+
         <table class='dataTable'>
             <thead>
                 <tr class='headerRow'>
@@ -202,7 +209,7 @@
                     }
 
 
-                    $sql = "SELECT * FROM books LIMIT $rows";
+                    $sql = "SELECT * FROM books WHERE discarded=0 LIMIT $rows";
                     $result = mysqli_query($conn, $sql);
 
                     if ($result === false) {
@@ -299,17 +306,59 @@
         var rowCount = <?php echo $rows; ?>;
         
         function loadMoreRows(count) {
+            let searchInput = document.getElementById('searchInput');
+            let showDiscarded = document.getElementById('showDiscarded');
+            
+
             $.ajax({
                 url: 'expandTable.php',
                 type: 'GET',
                 data: {
                     count: count,
-                    rowCount: rowCount
+                    rowCount: rowCount,
+                    searchInput: searchInput.value,
+                    showDiscarded: showDiscarded.checked
                 },
                 success: function(response) {
                     var tbody = $('#tableBody');
                     tbody.append(response);
                     rowCount += count;
+                }
+            });
+        }
+
+
+        // search
+
+        let searchInput = document.getElementById('searchInput');
+        let showDiscarded = document.getElementById('showDiscarded');
+
+        searchInput.addEventListener('input', search);
+        showDiscarded.addEventListener('input', search);
+
+
+        //console.log(searchInput.value);
+        //console.log(showDiscarded.checked);
+
+        function search() {
+            console.log('search')
+
+            searchInput = document.getElementById('searchInput');
+            showDiscarded = document.getElementById('showDiscarded');
+
+            console.log(searchInput.value);
+            console.log(showDiscarded.checked);
+
+            $.ajax({
+                url: 'getSearchedData.php',
+                type: 'GET',
+                data: {
+                    searchInput: searchInput.value,
+                    showDiscarded: showDiscarded.checked
+                },
+                success: function(response) {
+                    var tbody = $('#tableBody');
+                    tbody.html(response);
                 }
             });
         }

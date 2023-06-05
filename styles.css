@@ -56,6 +56,21 @@
     height: 39px;
 }
 
+.filters {
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.searchInput {
+    margin-right: 40px;
+}
+
+.showDiscarded {
+    margin-left: 10px;
+    
+}
+
 .dataTable, .dataTable th, .dataTable td {
     border: 1px solid black;
     border-collapse: collapse;
@@ -93,6 +108,7 @@
     padding: 0px !important;
     width: 132px;
     background-color: #2693ff;
+    height: 59px;
 }
 
 .evenRow {
@@ -144,11 +160,15 @@
 .submitDeleteBtn {
     background-color: red;
     margin-top: 25px;
+    width: 91px;
+    height: 39px;
 }
 
 .submitEditBtn {
     margin-left: 119px;
     margin-top: 25px;
+    width: 91px;
+    height: 39px;
 }
 
 .editBookCenterBtns {
