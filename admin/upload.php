@@ -43,7 +43,6 @@
     
             // Parse data from CSV file line by line        
             while (($getData = fgetcsv($csvFile, 10000, ",")) !== FALSE){
-                echo 'while';
 
                 // lendDate
                 if ($getData[11] == '0000-00-00') {

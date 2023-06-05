@@ -108,6 +108,12 @@
     display: inline-block;
 }
 
+.expandTableBtn {
+    margin-top: 30px;
+    width: 134px;
+    height: 60px;
+}
+
 
 /* EDIT */
 

@@ -174,117 +174,116 @@
         </form>
 
         <table class='dataTable'>
-            <tr class='headerRow'>
-                <th></th>
-                <th>Evidenční číslo</th>
-                <th>Okruh</th>
-                <th>Autor</th>
-                <th>Název</th>
-                <th>Cena</th>
-                <th>Zapsáno</th>
-                <th>Půjčeno</th>
-                <th>Třída</th>
-                <th>Datum půjčení</th>
-                <th>Rezervace</th>
-                <th>Poznámka</th>
-            </tr>
+            <thead>
+                <tr class='headerRow'>
+                    <th></th>
+                    <th>Evidenční číslo</th>
+                    <th>Okruh</th>
+                    <th>Autor</th>
+                    <th>Název</th>
+                    <th>Cena</th>
+                    <th>Zapsáno</th>
+                    <th>Půjčeno</th>
+                    <th>Třída</th>
+                    <th>Datum půjčení</th>
+                    <th>Rezervace</th>
+                    <th>Poznámka</th>
+                </tr>
+            </thead>
 
-            <tr>
+            <tbody id='tableBody'>
+                <?php
+                    $rows = 100;
 
-            </tr>
+                    $conn = mysqli_connect('localhost', 'test', 'Test22knih*', 'knihovna');
 
-            <?php
-                $rows = 50;
-
-                $conn = mysqli_connect('localhost', 'test', 'Test22knih*', 'knihovna');
-
-                if (!$conn) {
-                    echo 'chyba pripojeni'.mysqli_connect_error();
-                }
-
-
-                $sql = "SELECT * FROM books LIMIT $rows";
-                $result = mysqli_query($conn, $sql);
-
-                if ($result === false) {
-                        echo 'Error: '.mysqli_error($conn);
-                }
-
-
-                $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-
-                if (count($data) < $rows) {
-                    $rows = count($data);
-                }
-
-
-                for ($i = 0; $i < $rows; $i++) {
-                    //echo $data[$i]['id'];
-                    
-                    $id = $data[$i]['id'];
-                    $registration = $data[$i]['registration'];
-                    $isbn = $data[$i]['isbn'];
-                    $subject = $data[$i]['subject'];
-                    $publisher = $data[$i]['publisher'];
-                    $author = $data[$i]['author'];
-                    $name = $data[$i]['name'];
-                    $price = $data[$i]['price'];
-                    $dateAdded = $data[$i]['dateAdded'];
-                    $lentTo = $data[$i]['lentTo'];
-                    $class = $data[$i]['class'];
-                    $lendDate = $data[$i]['lendDate'];
-                    $returnDate = $data[$i]['returnDate'];
-                    $reservation = $data[$i]['reservation'];
-                    $note = $data[$i]['note'];
-                    $discarded = $data[$i]['discarded'];
-
-                    if ($i % 2 === 0) {
-                        $evenNum = true;
-                    }
-
-                    else {
-                        $evenNum = false;
+                    if (!$conn) {
+                        echo 'chyba pripojeni'.mysqli_connect_error();
                     }
 
 
+                    $sql = "SELECT * FROM books LIMIT $rows";
+                    $result = mysqli_query($conn, $sql);
 
-                    echo "<tr class='dataRow " . ($i % 2 === 1 ? 'evenRow' : '') . ' ' . ($discarded == 1 ? 'discardedRow' : '') . " '>
-                        <td class='firstTd'>
-                            <form action='editBook.php' method='post'>
-                                <input type='hidden' name='id' value='$id'>
-                                <button class='editBtn' type='submit'>Upravit</button>
-                            </form>
-                        </td>
-                        <td>$registration</td>
-                        <td>$subject</td>
-                        <td>$author</td>
-                        <td>$name</td>
-                        <td>$price</td>
-                        <td>$dateAdded</td>
-                        <td>$lentTo</td>
-                        <td>$class</td>
-                        <td>$lendDate</td>
-                        <td>$reservation</td>
-                        <td>$note</td>
-                    </tr>";
-                }
+                    if ($result === false) {
+                            echo 'Error: '.mysqli_error($conn);
+                    }
 
 
-                echo "
+                    $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-                "
-            ?>
+
+                    if (count($data) < $rows) {
+                        $rows = count($data);
+                    }
+
+
+                    for ($i = 0; $i < $rows; $i++) {
+                        
+                        $id = $data[$i]['id'];
+                        $registration = $data[$i]['registration'];
+                        $isbn = $data[$i]['isbn'];
+                        $subject = $data[$i]['subject'];
+                        $publisher = $data[$i]['publisher'];
+                        $author = $data[$i]['author'];
+                        $name = $data[$i]['name'];
+                        $price = $data[$i]['price'];
+                        $dateAdded = $data[$i]['dateAdded'];
+                        $lentTo = $data[$i]['lentTo'];
+                        $class = $data[$i]['class'];
+                        $lendDate = $data[$i]['lendDate'];
+                        $returnDate = $data[$i]['returnDate'];
+                        $reservation = $data[$i]['reservation'];
+                        $note = $data[$i]['note'];
+                        $discarded = $data[$i]['discarded'];
+
+                        if ($i % 2 === 0) {
+                            $evenNum = true;
+                        }
+
+                        else {
+                            $evenNum = false;
+                        }
+
+
+
+                        echo "<tr class='dataRow " . ($i % 2 === 1 ? 'evenRow' : '') . ' ' . ($discarded == 1 ? 'discardedRow' : '') . " '>
+                            <td class='firstTd'>
+                                <form action='editBook.php' method='post'>
+                                    <input type='hidden' name='id' value='$id'>
+                                    <button class='editBtn' type='submit'>Upravit</button>
+                                </form>
+                            </td>
+                            <td>$registration</td>
+                            <td>$subject</td>
+                            <td>$author</td>
+                            <td>$name</td>
+                            <td>$price</td>
+                            <td>$dateAdded</td>
+                            <td>$lentTo</td>
+                            <td>$class</td>
+                            <td>$lendDate</td>
+                            <td>$reservation</td>
+                            <td>$note</td>
+                        </tr>";
+                    }
+
+
+                    echo "
+
+                    "
+                ?>
+            </tbody>
         </table>
 
-        <button class='expandTableBtn' onclick="loadMoreRows(10)">Další</button>
+        <button class='expandTableBtn btn' onclick="loadMoreRows(100)">Další</button>
 
     </main>
 
 
     <!-- expandTableAJAX -->
     <script>
-        var rowCount = <?php echo $row_count; ?>;
+        var rowCount = <?php echo $rows; ?>;
         
         function loadMoreRows(count) {
             $.ajax({
@@ -295,7 +294,7 @@
                     rowCount: rowCount
                 },
                 success: function(response) {
-                    var tbody = $('#myTable tbody');
+                    var tbody = $('#tableBody');
                     tbody.append(response);
                     rowCount += count;
                 }
