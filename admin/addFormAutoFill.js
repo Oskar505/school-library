@@ -51,10 +51,10 @@ function fill(isbnVal) {
     .catch(error => {
         console.error('Chyba: ', error)
     })
-        
-    //AIzaSyBd971Qa39h-1ktGX3ouStS-akgZIzVc8I
 }
 
+
+// set dateAdded to today's date
 const dateAdded = document.getElementById('dateAdded');
 const today = new Date().toISOString().split('T')[0];
 dateAdded.value = today;
