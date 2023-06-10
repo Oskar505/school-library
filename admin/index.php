@@ -159,6 +159,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather&family=Playfair+Display&family=Roboto&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
 </head>
 <body>
     
@@ -184,17 +185,17 @@
             <thead>
                 <tr class='headerRow'>
                     <th></th>
-                    <th>Evidenční číslo</th>
-                    <th>Okruh</th>
-                    <th>Autor</th>
-                    <th>Název</th>
-                    <th>Cena</th>
-                    <th>Zapsáno</th>
-                    <th>Půjčeno</th>
-                    <th>Třída</th>
-                    <th>Datum půjčení</th>
-                    <th>Rezervace</th>
-                    <th>Poznámka</th>
+                    <th id='registration'>Evidenční číslo</th>
+                    <th id='subject'>Okruh</th>
+                    <th id='author'>Autor</th>
+                    <th id='name'>Název</th>
+                    <th id='price'>Cena</th>
+                    <th id='dateAdded'>Zapsáno</th>
+                    <th id='lentTo'>Půjčeno</th>
+                    <th id='class'>Třída</th>
+                    <th id='lendDate'>Datum půjčení</th>
+                    <th id='reservation'>Rezervace</th>
+                    <th id='note'>Poznámka</th>
                 </tr>
             </thead>
 
@@ -308,6 +309,12 @@
         function loadMoreRows(count) {
             let searchInput = document.getElementById('searchInput');
             let showDiscarded = document.getElementById('showDiscarded');
+
+            columns = [registration, subject, author, name, price, dateAdded, lentTo, $class, lendDate, reservation, note];
+            
+            console.log(searchInput.value);
+            console.log(showDiscarded.checked);
+            console.log(columns);
             
 
             $.ajax({
@@ -317,7 +324,8 @@
                     count: count,
                     rowCount: rowCount,
                     searchInput: searchInput.value,
-                    showDiscarded: showDiscarded.checked
+                    showDiscarded: showDiscarded.checked,
+                    columns: columns
                 },
                 success: function(response) {
                     var tbody = $('#tableBody');
@@ -332,13 +340,139 @@
 
         let searchInput = document.getElementById('searchInput');
         let showDiscarded = document.getElementById('showDiscarded');
-
         searchInput.addEventListener('input', search);
         showDiscarded.addEventListener('input', search);
 
+        // search by
+        let registration = false;
+        let subject = false;
+        let author = false;
+        let name = false;
+        let price = false;
+        let dateAdded = false;
+        let lentTo = false;
+        let $class = false;
+        let lendDate = false;
+        let reservation = false;
+        let note = false;
 
-        //console.log(searchInput.value);
-        //console.log(showDiscarded.checked);
+        var columns = [registration, subject, author, name, price, dateAdded, lentTo, $class, lendDate, reservation, note];
+
+        var registrationEl = document.getElementById('registration');
+        let subjectEl = document.getElementById('subject');
+        let authorEl = document.getElementById('author');
+        let nameEl = document.getElementById('name');
+        let priceEl = document.getElementById('price');
+        let dateAddedEl = document.getElementById('dateAdded');
+        let lentToEl = document.getElementById('lentTo');
+        let $classEl = document.getElementById('class');
+        let lendDateEl = document.getElementById('lendDate');
+        let reservationEl = document.getElementById('reservation');
+        let noteEl = document.getElementById('note');
+
+
+        registrationEl.addEventListener('click', function() {
+            registration = !registration;
+            (searchInput.value != '') ? search() : ''; // change searched column
+
+            //style
+            let color = '#2693ff';
+            registration ? color = '#2667ff' : color = '#2693ff';
+            registrationEl.style.backgroundColor = color;
+        });
+        document.getElementById('subject').addEventListener('click', function() {
+            subject = !subject;
+            (searchInput.value != '') ? search() : ''; // change searched column
+
+            //style
+            let color = '#2693ff';
+            subject ? color = '#2667ff' : '#2693ff';
+            subjectEl.style.backgroundColor = color;
+        });
+        document.getElementById('author').addEventListener('click', function() {
+            author = !author;
+            (searchInput.value != '') ? search() : ''; // change searched column
+
+            //style
+            let color = '#2693ff';
+            author ? color = '#2667ff' : '#2693ff';
+            authorEl.style.backgroundColor = color;
+        });
+        document.getElementById('name').addEventListener('click', function() {
+            name = !name;
+            (searchInput.value != '') ? search() : ''; // change searched column
+
+            //style
+            let color = '#2693ff';
+            name ? color = '#2667ff' : '#2693ff';
+            nameEl.style.backgroundColor = color;
+        });
+        document.getElementById('price').addEventListener('click', function() {
+            price = !price;
+            (searchInput.value != '') ? search() : ''; // change searched column
+
+            //style
+            let color = '#2693ff';
+            price ? color = '#2667ff' : '#2693ff';
+            priceEl.style.backgroundColor = color;
+        });
+        document.getElementById('dateAdded').addEventListener('click', function() {
+            dateAdded = !dateAdded;
+            (searchInput.value != '') ? search() : ''; // change searched column
+
+            //style
+            let color = '#2693ff';
+            dateAdded ? color = '#2667ff' : '#2693ff';
+            dateAddedEl.style.backgroundColor = color;
+        });
+        document.getElementById('lentTo').addEventListener('click', function() {
+            lentTo = !lentTo;
+            (searchInput.value != '') ? search() : ''; // change searched column
+
+            //style
+            let color = '#2693ff';
+            lentTo ? color = '#2667ff' : '#2693ff';
+            lentToEl.style.backgroundColor = color;
+        });
+        document.getElementById('class').addEventListener('click', function() {
+            $class = !$class;
+            (searchInput.value != '') ? search() : ''; // change searched column
+
+            //style
+            let color = '#2693ff';
+            $class ? color = '#2667ff' : '#2693ff';
+            $classEl.style.backgroundColor = color;
+        });
+        document.getElementById('lendDate').addEventListener('click', function() {
+            lendDate = !lendDate;
+            (searchInput.value != '') ? search() : ''; // change searched column
+
+            //style
+            let color = '#2693ff';
+            lendDate ? color = '#2667ff' : '#2693ff';
+            lendDateEl.style.backgroundColor = color;
+        });
+        document.getElementById('reservation').addEventListener('click', function() {
+            reservation = !reservation;
+            (searchInput.value != '') ? search() : ''; // change searched column
+
+            //style
+            let color = '#2693ff';
+            reservation ? color = '#2667ff' : '#2693ff';
+            reservationEl.style.backgroundColor = color;
+        });
+        document.getElementById('note').addEventListener('click', function() {
+            note = !note;
+            (searchInput.value != '') ? search() : ''; // change searched column
+
+            //style
+            let color = '#2693ff';
+            note ? color = '#2667ff' : '#2693ff';
+            noteEl.style.backgroundColor = color;
+        });
+
+
+
 
         function search() {
             console.log('search')
@@ -346,15 +480,16 @@
             searchInput = document.getElementById('searchInput');
             showDiscarded = document.getElementById('showDiscarded');
 
-            console.log(searchInput.value);
-            console.log(showDiscarded.checked);
+            columns = [registration, subject, author, name, price, dateAdded, lentTo, $class, lendDate, reservation, note];
+
 
             $.ajax({
                 url: 'getSearchedData.php',
                 type: 'GET',
                 data: {
                     searchInput: searchInput.value,
-                    showDiscarded: showDiscarded.checked
+                    showDiscarded: showDiscarded.checked,
+                    columns: columns
                 },
                 success: function(response) {
                     var tbody = $('#tableBody');

@@ -10,6 +10,30 @@
 
     $searchInput = isset($_GET['searchInput']) ? mysqli_real_escape_string($conn, $_GET['searchInput']) : '';
     $showDiscarded = isset($_GET['showDiscarded']) ? mysqli_real_escape_string($conn, $_GET['showDiscarded']) : '';
+    $columns = isset($_GET['columns']) ? $_GET['columns'] : '';
+    
+
+
+    // search by
+    $searchBy = "name LIKE '%$searchInput%' OR author LIKE '%$searchInput%' OR publisher LIKE '%$searchInput%' OR isbn LIKE '%$searchInput%' OR note LIKE '%$searchInput%' OR lentTo LIKE '%$searchInput%' OR class LIKE '%$searchInput%'";
+    $columnClauses = ["registration LIKE '%$searchInput%'", "subject LIKE '%$searchInput%'", "author LIKE '%$searchInput%'", "name LIKE '%$searchInput%'", "price LIKE '%$searchInput%'", "dateAdded LIKE '%$searchInput%'", "lentTo LIKE '%$searchInput%'", "class LIKE '%$searchInput%'", "lendDate LIKE '%$searchInput%'", "reservation LIKE '%$searchInput%'", "note LIKE '%$searchInput%'"];
+    $someColumnSelected = false;
+
+    for ($i = 0; $i < count($columns); $i++) {
+        if ($columns[$i] == 'true') {
+            if (!$someColumnSelected) {
+                $searchBy = '';
+                $searchBy = $columnClauses[$i];
+            } 
+            
+            else {
+                $searchBy = $searchBy . ' OR ' . $columnClauses[$i];
+            }
+
+            $someColumnSelected = true;
+        }
+    }
+
 
     $rows = 100;
 
@@ -24,9 +48,8 @@
         }
 
         else {
-            $sql = "SELECT * FROM books WHERE name LIKE '%$searchInput%' OR author LIKE '%$searchInput%' OR isbn LIKE '%$searchInput%' OR note LIKE '%$searchInput%' OR lentTo LIKE '%$searchInput%' OR class LIKE '%$searchInput%' LIMIT $rows";
+            $sql = "SELECT * FROM books WHERE $searchBy LIMIT $rows";
         }
-        echo 'showDiscarded true';
     }
 
     else {
@@ -35,8 +58,7 @@
         }
 
         else {
-            echo 'showDiscarded false';
-            $sql = "SELECT * FROM books WHERE (name LIKE '%$searchInput%' OR author LIKE '%$searchInput%' OR isbn LIKE '%$searchInput%' OR note LIKE '%$searchInput%' OR lentTo LIKE '%$searchInput%' OR class LIKE '%$searchInput%') AND discarded=0 LIMIT $rows";
+            $sql = "SELECT * FROM books WHERE ($searchBy) AND discarded=0 LIMIT $rows";
         }     
     }
 
