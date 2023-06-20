@@ -480,6 +480,15 @@
             searchInput = document.getElementById('searchInput');
             showDiscarded = document.getElementById('showDiscarded');
 
+            if (searchInput.value == '') {
+                document.cookie = `searchBy=;`;
+                console.log(getCookie('searchBy'));
+            }
+
+            else {
+                console.log(getCookie('searchBy'))
+            }
+
             columns = [registration, subject, author, name, price, dateAdded, lentTo, $class, lendDate, reservation, note];
 
 
@@ -497,6 +506,23 @@
                 }
             });
         }
+
+
+        // Funkce pro získání hodnoty cookie podle názvu
+        function getCookie(name) {
+            var cookieName = name + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var cookieArray = decodedCookie.split(";");
+
+            for (var i = 0; i < cookieArray.length; i++) {
+                var cookie = cookieArray[i].trim();
+                if (cookie.indexOf(cookieName) === 0) {
+                    return cookie.substring(cookieName.length, cookie.length);
+                }
+            }
+
+            return "";
+        }
     </script>
 
 
@@ -505,19 +531,3 @@
     </footer>
 </body>
 </html>
-
-
-<script>
-function openPopup() {
-  // Vytvoříme nové okno
-  var popup = window.open("popupForm.php", "Popup", "width=500,height=500");
-
-  // Zamezíme přesměrování stránky
-  return false;
-}
-
-function openEditPopup(id) {
-    var popup = window.open("editPopup.php", "Popup", "width=500,height=500");
-    return false;
-}
-</script>

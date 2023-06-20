@@ -35,7 +35,12 @@
     }
 
 
+    // save searchBy to cookies
+    setcookie('searchBy', $searchBy);
+
+
     $rows = 100;
+    
 
     if (!$conn) {
         echo 'chyba pripojeni'.mysqli_connect_error();
