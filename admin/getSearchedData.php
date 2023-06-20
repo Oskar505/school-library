@@ -35,8 +35,9 @@
     }
 
 
-    // save searchBy to cookies
+    // save to cookies
     setcookie('searchBy', $searchBy);
+    setcookie('showDiscarded', $showDiscarded);
 
 
     $rows = 100;

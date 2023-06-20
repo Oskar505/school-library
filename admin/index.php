@@ -160,6 +160,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Merriweather&family=Playfair+Display&family=Roboto&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
     
@@ -170,9 +171,16 @@
 
 
     <main class="container">
-        <form action="addBook.php" method="post">
-            <input class='addBtn btn' type="submit" value="Přidat knihu">
-        </form>
+        <div class="adminButtons">
+            <form class="addBtnForm" action="addBook.php" method="post">
+                <input class='addBtn btn' type="submit" value="Přidat knihu">
+            </form>
+
+            <a href="downloadData.php" class="material-symbols-outlined downloadBtn">
+                <img class="downloadImg" src="/img/download.svg" alt="Stáhnout">
+            </a>
+        </div>
+        
 
         <div class='filters'>
             <input type="text" class='searchInput input' class='search' id='searchInput' placeholder='Vyhledat'>
@@ -226,6 +234,8 @@
                     }
 
 
+                    $notRetunedCount = 0;
+
                     for ($i = 0; $i < $rows; $i++) {
                         
                         $id = $data[$i]['id'];
@@ -264,6 +274,7 @@
                         if ($returnDateObj < $todayDateObj &&  $returnDate != '') {
                             $returnedInTime = false;
                             $returnedInTimeClass = 'notReturned';
+                            $notRetunedCount = $notRetunedCount + 1;
                         }
 
 
@@ -505,6 +516,22 @@
                     tbody.html(response);
                 }
             });
+        }
+
+        // set cookies for downloading data
+        searchInput.addEventListener('input', setDownloadCookies);
+        showDiscarded.addEventListener('input', setDownloadCookies);
+
+        document.cookie = `searchInput=''`;
+        document.cookie = `showDiscarded=false`;
+
+
+        function setDownloadCookies() {
+            searchInput = document.getElementById('searchInput');
+            showDiscarded = document.getElementById('showDiscarded');
+
+            document.cookie = `searchInput=${searchInput}`;
+            document.cookie = `showDiscarded=${showDiscarded}`;
         }
 
 

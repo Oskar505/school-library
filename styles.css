@@ -2,6 +2,18 @@
     margin: 0;
 }
 
+/* ICONS */
+
+.material-symbols-outlined {
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 48
+}
+
+
+/* ADMIN */
 
 .container {
     max-width: 1800px;
@@ -53,7 +65,27 @@
     padding: 5px 10px;
     font-family: 'Merriweather', serif;
     font-size: 18px;
-    height: 39px;
+    height: 40px;
+}
+
+.addBtnForm {
+    display: inline-block;
+}
+
+
+.downloadBtn {
+    width: 40px;
+    height: 40px;
+    color: black;
+    float: left;
+    position: absolute;
+    top: 196px;
+    left: 198px;
+}
+
+.downloadImg {
+    width: 40px;
+    height: 40px;
 }
 
 .filters {
