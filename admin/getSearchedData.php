@@ -11,6 +11,7 @@
     $searchInput = isset($_GET['searchInput']) ? mysqli_real_escape_string($conn, $_GET['searchInput']) : '';
     $showDiscarded = isset($_GET['showDiscarded']) ? mysqli_real_escape_string($conn, $_GET['showDiscarded']) : '';
     $columns = isset($_GET['columns']) ? $_GET['columns'] : '';
+    $showNotReturned = isset($_GET['showNotReturned']) ? mysqli_real_escape_string($conn, $_GET['showNotReturned']) : '';
     
 
 
@@ -48,25 +49,35 @@
     }
 
 
-    if ($showDiscarded == 'true') {
-        if ($searchInput == '') {
-            $sql = "SELECT * FROM books LIMIT $rows";
-        }
-
-        else {
-            $sql = "SELECT * FROM books WHERE $searchBy LIMIT $rows";
-        }
+    if ($showNotReturned == 'true') {
+        echo 'show';
+        $sql = "SELECT * FROM books WHERE returnDate < CURDATE()";
     }
 
     else {
-        if ($searchInput == '') {
-            $sql = "SELECT * FROM books WHERE discarded=0 LIMIT $rows";
-        }
+        echo 'ne';
 
+        if ($showDiscarded == 'true') {
+            if ($searchInput == '') {
+                $sql = "SELECT * FROM books LIMIT $rows";
+            }
+    
+            else {
+                $sql = "SELECT * FROM books WHERE $searchBy LIMIT $rows";
+            }
+        }
+    
         else {
-            $sql = "SELECT * FROM books WHERE ($searchBy) AND discarded=0 LIMIT $rows";
-        }     
+            if ($searchInput == '') {
+                $sql = "SELECT * FROM books WHERE discarded=0 LIMIT $rows";
+            }
+    
+            else {
+                $sql = "SELECT * FROM books WHERE ($searchBy) AND discarded=0 LIMIT $rows";
+            }     
+        }
     }
+
 
     $result = mysqli_query($conn, $sql);
 
@@ -122,7 +133,6 @@
             $returnedInTime = false;
             $returnedInTimeClass = 'notReturned';
         }
-
 
 
         echo "<tr class='dataRow " . ($i % 2 === 1 ? 'evenRow' : '') . ' ' . ($discarded == 1 ? 'discardedRow' : '') . ' ' . $returnedInTimeClass . " '>

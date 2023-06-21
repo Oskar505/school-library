@@ -187,6 +187,54 @@
             <label class='showDiscardedLabel label' for="showDiscarded">Zobrazit vyřazené</label>
             <input class='showDiscarded checkbox' type="checkbox" name="showDiscarded" id="showDiscarded">
         </div>
+
+        <?php
+            $conn = mysqli_connect('localhost', 'test', 'Test22knih*', 'knihovna');
+
+            if (!$conn) {
+                echo 'Připojení k databázi se nezdařilo';
+            }
+
+            // get count
+            $sql = "SELECT COUNT(*) FROM books";
+            $result = mysqli_query($conn, $sql);
+
+            if ($result === false) {
+                    echo 'Error: '.mysqli_error($conn);
+            }
+
+            $resultCount = mysqli_fetch_all($result, MYSQLI_ASSOC)[0]['COUNT(*)'];
+
+
+            // not returned
+            $sql = "SELECT COUNT(*) AS count FROM books WHERE returnDate < CURDATE()";
+            $result = mysqli_query($conn, $sql);
+
+            if ($result === false) {
+                echo 'Error: ' . mysqli_error($conn);
+            }
+
+            else {
+                $row = mysqli_fetch_assoc($result);
+                $notReturnedCount = $row['count'];
+            }
+
+            echo "
+            <div class='info'>
+            <div class='info-block'>
+                <h2>Počet výsledků:</h2>
+                <p class='result-count'>$resultCount</p>
+            </div>
+            <div class='info-block' id='notReturned'>
+                <h2>Nevrácené knihy:</h2>
+                <p class='unreturned-books'>$notReturnedCount</p>
+            </div>
+            </div>
+            ";
+
+        ?>
+        
+
         
 
         <table class='dataTable'>
@@ -274,7 +322,6 @@
                         if ($returnDateObj < $todayDateObj &&  $returnDate != '') {
                             $returnedInTime = false;
                             $returnedInTimeClass = 'notReturned';
-                            $notRetunedCount = $notRetunedCount + 1;
                         }
 
 
@@ -483,6 +530,16 @@
         });
 
 
+        // not returned
+        let showNotReturned = false;
+
+        document.getElementById('notReturned').addEventListener('click', function() {
+            showNotReturned = !showNotReturned;
+            console.log(showNotReturned);
+            search();
+        })
+
+
 
 
         function search() {
@@ -509,7 +566,8 @@
                 data: {
                     searchInput: searchInput.value,
                     showDiscarded: showDiscarded.checked,
-                    columns: columns
+                    columns: columns,
+                    showNotReturned: showNotReturned
                 },
                 success: function(response) {
                     var tbody = $('#tableBody');

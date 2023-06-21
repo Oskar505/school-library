@@ -80,13 +80,14 @@
     float: left;
     position: absolute;
     top: 196px;
-    left: 198px;
+    left: 11%;
 }
 
 .downloadImg {
     width: 40px;
     height: 40px;
 }
+
 
 .filters {
     margin-bottom: 30px;
@@ -102,6 +103,56 @@
     margin-left: 10px;
     
 }
+
+/*
+.info {
+    position: relative;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}*/
+
+.infoBall {
+    background-color: #2693ff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: black solid 1px;
+}
+
+.infoBall p {
+    margin: 0;
+}
+
+
+.info {
+    display: inline-block;
+  }
+  
+.info-block {
+    display: inline-block;
+    margin: 0 20px 20px 0;
+}
+
+.info-block h2 {
+    margin: 0;
+    font-weight: 400;
+}
+
+.info-block p {
+    text-align: center;
+}
+
+.result-count,
+.unreturned-books {
+    font-size: 20px;
+    font-weight: 400;
+}
+
 
 .dataTable, .dataTable th, .dataTable td {
     border: 1px solid black;
