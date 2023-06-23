@@ -6,13 +6,13 @@
         exit;
     }
 
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
 
+    require('/var/secrets.php');
+    $sqlUser = $secrets['sql-user'];
+    $sqlPassword = $secrets['sql-password'];
+    $database = $secrets['sql-database'];
 
-
-    $conn = mysqli_connect('localhost', 'test', 'Test22knih*', 'knihovna');
+    $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
 
     if (!$conn) {
         echo 'Připojení k databázi se nezdařilo';

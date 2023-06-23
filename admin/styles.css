@@ -1,0 +1,289 @@
+* {
+    margin: 0;
+}
+
+/* ICONS */
+
+.material-symbols-outlined {
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 48
+}
+
+
+/* ADMIN */
+
+.container {
+    max-width: 1800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.header {
+    background-color: #2693ff;
+    max-width: 1920px;
+    padding: 20px 192px 80px 192px;
+    margin-bottom: 39px;
+}
+
+.h1 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 50px;
+}
+
+.logoutBtn {
+    color: black;
+    text-decoration: none;
+    float: right;
+    font-size: 19px;
+    padding: 5px;
+    font-family: 'Merriweather', serif;
+}
+
+.btn {
+    margin-bottom: 39px;
+    margin-left: 1px;
+    background-color: #2693ff;
+    border: 2px solid black;
+    padding: 5px 10px;
+    font-family: 'Merriweather', serif;
+    font-size: 18px;
+    height: 39px;
+}
+
+
+
+
+.addBtn {
+    margin-bottom: 39px;
+    margin-left: 1px;
+    background-color: #2693ff;
+    border: 2px solid black;
+    padding: 5px 10px;
+    font-family: 'Merriweather', serif;
+    font-size: 18px;
+    height: 40px;
+}
+
+.addBtnForm {
+    display: inline-block;
+}
+
+
+.downloadBtn {
+    width: 40px;
+    height: 40px;
+    color: black;
+    float: left;
+    position: absolute;
+    top: 196px;
+    left: 11%;
+}
+
+.downloadImg {
+    width: 40px;
+    height: 40px;
+}
+
+
+.filters {
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.searchInput {
+    margin-right: 40px;
+}
+
+.showDiscarded {
+    margin-left: 10px;
+    
+}
+
+/*
+.info {
+    position: relative;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}*/
+
+.infoBall {
+    background-color: #2693ff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: black solid 1px;
+}
+
+.infoBall p {
+    margin: 0;
+}
+
+
+.info {
+    display: inline-block;
+  }
+  
+.info-block {
+    display: inline-block;
+    margin: 0 20px 20px 0;
+}
+
+.info-block h2 {
+    margin: 0;
+    font-weight: 400;
+}
+
+.info-block p {
+    text-align: center;
+}
+
+.result-count,
+.unreturned-books {
+    font-size: 20px;
+    font-weight: 400;
+}
+
+
+.dataTable, .dataTable th, .dataTable td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.dataTable {
+    margin-left: auto;
+    margin-right: auto;
+    width: 1800px;
+    border: 2px solid black;
+    font-family: 'Merriweather', serif;
+}
+
+.dataRow {
+    height: 40px;
+}
+
+.dataTable th, .dataTable td {
+    font-size: 17px;
+    text-align: center;
+}
+
+.headerRow th{
+    background-color: #2693ff;
+    font-size: 21px;
+    padding: 12px 6px;
+}
+
+.editBtn {
+    background-color: #2693ff;
+    border: none;
+    width: 100%;
+    height: 34px;
+    font-size: 18px;
+    font-family: 'Merriweather', serif;
+}
+
+.firstTd {
+    padding: 0px !important;
+    width: 132px;
+    background-color: #2693ff;
+    height: 40px;
+}
+
+.evenRow {
+    background-color: #89c4ff;
+}
+
+.discardedRow {
+    background-color: #a7a7a7;
+    color: #2b2b2b;
+}
+
+.notReturned {
+    background-color: rgb(255, 0, 0);
+}
+
+.adminH1, .logoutBtn {
+    display: inline-block;
+}
+
+.expandTableBtn {
+    margin-top: 30px;
+    width: 132px;
+    height: 40px;
+}
+
+
+/* EDIT */
+
+.label {
+    /*padding-right: 25px;*/
+    font-size: 22px;
+    font-family: 'Merriweather', serif;
+    width: 208px;
+}
+
+.editBookTable {
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.editBookButtons {
+    width: 67px;
+    margin-left: auto;
+    margin-right: auto;
+    display: inline;
+}
+
+.submitDeleteBtn {
+    background-color: red;
+    margin-top: 25px;
+    width: 91px;
+    height: 39px;
+}
+
+.submitEditBtn {
+    margin-left: 119px;
+    margin-top: 25px;
+    width: 91px;
+    height: 39px;
+}
+
+.editBookCenterBtns {
+    margin-left: 102px;
+    margin-right: auto;
+    width: 212px;
+}
+
+.input {
+    font-size: 20px;
+    font-family: 'Merriweather', serif;
+    width: 200px;
+}
+
+.checkbox {
+    width: 20px;
+    height: 20px;
+    margin-top: 3px;
+}
+
+.middleColumn {
+    width: 29px;
+}
+
+
+/* ADD */
+
+.dateLabel {
+    display: block;
+    font-size: 17px;
+}

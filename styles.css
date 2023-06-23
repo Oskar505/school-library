@@ -2,157 +2,113 @@
     margin: 0;
 }
 
-/* ICONS */
-
-.material-symbols-outlined {
-    font-variation-settings:
-    'FILL' 0,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 48
-}
-
-
-/* ADMIN */
-
 .container {
-    max-width: 1800px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-
-.header {
-    background-color: #2693ff;
     max-width: 1920px;
-    padding: 20px 192px 80px 192px;
-    margin-bottom: 39px;
+    margin: 0 auto;
 }
 
-.h1 {
-    font-family: 'Roboto', sans-serif;
+
+/* HEADER */
+
+.headerContainer {
+    background-color: #EDEDE3;
+    max-width: 1920px;
+    height: 100px;
+    text-align: center;
+    padding: 50px 0;
+    display: flex;
+    align-content: center;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.logo {
+    max-width: 128px;
+    display: inline-block;
+    margin-right: 15px;
+}
+
+h1 {
     font-size: 50px;
-}
-
-.logoutBtn {
-    color: black;
-    text-decoration: none;
-    float: right;
-    font-size: 19px;
-    padding: 5px;
-    font-family: 'Merriweather', serif;
-}
-
-.btn {
-    margin-bottom: 39px;
-    margin-left: 1px;
-    background-color: #2693ff;
-    border: 2px solid black;
-    padding: 5px 10px;
-    font-family: 'Merriweather', serif;
-    font-size: 18px;
-    height: 39px;
-}
-
-
-
-
-.addBtn {
-    margin-bottom: 39px;
-    margin-left: 1px;
-    background-color: #2693ff;
-    border: 2px solid black;
-    padding: 5px 10px;
-    font-family: 'Merriweather', serif;
-    font-size: 18px;
-    height: 40px;
-}
-
-.addBtnForm {
+    color: #294a70;
+    font-family: "Merriweather Sans",sans-serif;
     display: inline-block;
 }
 
-
-.downloadBtn {
-    width: 40px;
-    height: 40px;
-    color: black;
-    float: left;
+.adminLink {
     position: absolute;
-    top: 196px;
-    left: 11%;
+    float: right;
+    right: 0;
+    top: 0;
+    padding: 3px;
+    margin: 8px;
+    color: #294a70;
+    text-decoration: none;
 }
 
-.downloadImg {
-    width: 40px;
-    height: 40px;
-}
-
-
-.filters {
-    margin-bottom: 30px;
+nav {
+    background-color: #294a70;
+    max-width: 1920px;
+    height: 50px;
+    border-bottom: 5px solid #f4a024;
     display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: wrap;
+    font-family: 'Open Sans', sans-serif;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 0 20px;
+    font-size: 22px;
+    height: 50px;
+    border-right: 1px solid white;
+    display: flex;
+    align-content: center;
+    flex-wrap: wrap;
+}
+
+nav a:first-child {
+    border-left: 1px solid white;
+}
+
+
+
+/* MAIN */
+
+main {
+    background-color: #EDEDE3;
+    font-family: 'Open Sans', sans-serif;
+    display: flex;
+    justify-content: center;
     align-items: center;
+}
+
+.dataContainer {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px 0;
 }
 
 .searchInput {
-    margin-right: 40px;
+    width: 300px;
+    height: 27px;
+    border: 1px solid #294a70;
+    font-size: 19px;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 30px;
 }
 
-.showDiscarded {
-    margin-left: 10px;
-    
+.searchInput:focus {
+    border: 2px solid #f4a024 !important;
 }
-
-/*
-.info {
-    position: relative;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}*/
-
-.infoBall {
-    background-color: #2693ff;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: black solid 1px;
-}
-
-.infoBall p {
-    margin: 0;
-}
-
-
-.info {
-    display: inline-block;
-  }
-  
-.info-block {
-    display: inline-block;
-    margin: 0 20px 20px 0;
-}
-
-.info-block h2 {
-    margin: 0;
-    font-weight: 400;
-}
-
-.info-block p {
-    text-align: center;
-}
-
-.result-count,
-.unreturned-books {
-    font-size: 20px;
-    font-weight: 400;
-}
-
 
 .dataTable, .dataTable th, .dataTable td {
     border: 1px solid black;
@@ -162,128 +118,24 @@
 .dataTable {
     margin-left: auto;
     margin-right: auto;
-    width: 1800px;
+    width: 600px;
     border: 2px solid black;
-    font-family: 'Merriweather', serif;
 }
 
-.dataRow {
+tbody tr {
     height: 40px;
+    background-color: white;
+    color: #294a70;
 }
 
 .dataTable th, .dataTable td {
-    font-size: 17px;
+    font-size: 22px;
     text-align: center;
 }
 
-.headerRow th{
-    background-color: #2693ff;
+thead th{
+    background-color: #294a70;
     font-size: 21px;
     padding: 12px 6px;
-}
-
-.editBtn {
-    background-color: #2693ff;
-    border: none;
-    width: 100%;
-    height: 34px;
-    font-size: 18px;
-    font-family: 'Merriweather', serif;
-}
-
-.firstTd {
-    padding: 0px !important;
-    width: 132px;
-    background-color: #2693ff;
-    height: 40px;
-}
-
-.evenRow {
-    background-color: #89c4ff;
-}
-
-.discardedRow {
-    background-color: #a7a7a7;
-    color: #2b2b2b;
-}
-
-.notReturned {
-    background-color: rgb(255, 0, 0);
-}
-
-.adminH1, .logoutBtn {
-    display: inline-block;
-}
-
-.expandTableBtn {
-    margin-top: 30px;
-    width: 132px;
-    height: 40px;
-}
-
-
-/* EDIT */
-
-.label {
-    /*padding-right: 25px;*/
-    font-size: 22px;
-    font-family: 'Merriweather', serif;
-    width: 208px;
-}
-
-.editBookTable {
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.editBookButtons {
-    width: 67px;
-    margin-left: auto;
-    margin-right: auto;
-    display: inline;
-}
-
-.submitDeleteBtn {
-    background-color: red;
-    margin-top: 25px;
-    width: 91px;
-    height: 39px;
-}
-
-.submitEditBtn {
-    margin-left: 119px;
-    margin-top: 25px;
-    width: 91px;
-    height: 39px;
-}
-
-.editBookCenterBtns {
-    margin-left: 102px;
-    margin-right: auto;
-    width: 212px;
-}
-
-.input {
-    font-size: 20px;
-    font-family: 'Merriweather', serif;
-    width: 200px;
-}
-
-.checkbox {
-    width: 20px;
-    height: 20px;
-    margin-top: 3px;
-}
-
-.middleColumn {
-    width: 29px;
-}
-
-
-/* ADD */
-
-.dateLabel {
-    display: block;
-    font-size: 17px;
+    color: white;
 }

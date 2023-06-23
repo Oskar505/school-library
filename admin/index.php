@@ -7,6 +7,15 @@
     }
 
 
+    // get secrets
+
+    require('/var/secrets.php');
+
+    $sqlUser = $secrets['sql-user'];
+    $sqlPassword = $secrets['sql-password'];
+    $database = $secrets['sql-database'];
+
+
     if (isset($_POST['add'])) {
         $registration = $_POST['registration'];
         $isbn = $_POST['isbn'];
@@ -30,8 +39,7 @@
 
 
 
-
-        $conn = mysqli_connect('localhost', 'test', 'Test22knih*', 'knihovna');
+        $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
 
         if (!$conn) {
             echo 'Připojení k databázi se nezdařilo';
@@ -90,7 +98,7 @@
         $allData = [$registration, $isbn, $subject, $class, $publisher, $author, $name, $price, $dateAdded, $lentTo, $lendDate, $returnDate, $reservation, $note, $discarded, $id];
 
 
-        $conn = mysqli_connect('localhost', 'test', 'Test22knih*', 'knihovna');
+        $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
 
         if (!$conn) {
             echo 'Připojení k databázi se nezdařilo';
@@ -127,7 +135,7 @@
         $id = $_POST['id'];
 
 
-        $conn = mysqli_connect('localhost', 'test', 'Test22knih*', 'knihovna');
+        $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
 
         if (!$conn) {
             echo 'Připojení k databázi se nezdařilo';
@@ -152,7 +160,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="styles.css">
     <title>Administrace</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -189,7 +197,7 @@
         </div>
 
         <?php
-            $conn = mysqli_connect('localhost', 'test', 'Test22knih*', 'knihovna');
+            $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
 
             if (!$conn) {
                 echo 'Připojení k databázi se nezdařilo';
@@ -232,7 +240,7 @@
             </div>
             ";
 
-        ?>
+        ?>  
         
 
         
@@ -259,7 +267,7 @@
                 <?php
                     $rows = 100;
 
-                    $conn = mysqli_connect('localhost', 'test', 'Test22knih*', 'knihovna');
+                    $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
 
                     if (!$conn) {
                         echo 'chyba pripojeni'.mysqli_connect_error();

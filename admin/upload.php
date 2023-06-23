@@ -6,9 +6,9 @@
         exit;
     }
 
+    require('/var/secrets.php');
 
-
-    $conn = mysqli_connect('localhost', 'test', 'Test22knih*', 'knihovna');
+    $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
 
     if (!$conn) {
         echo 'Připojení k databázi se nezdařilo';

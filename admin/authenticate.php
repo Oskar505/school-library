@@ -1,7 +1,14 @@
 <?php
     session_start();
 
-    $con = mysqli_connect('localhost', 'test', 'Test22knih*', 'knihovna');
+    require('/var/secrets.php');
+    $sqlUser = $secrets['sql-user'];
+    $sqlPassword = $secrets['sql-password'];
+    $database = $secrets['sql-database'];
+
+
+    $con = mysqli_connect('localhost', $sqlUser, $sqlPassword, 'knihovna');
+
 
     if ( mysqli_connect_errno() ) {
         // error
@@ -23,7 +30,6 @@
             $stmt->bind_result($id, $password);
             $stmt->fetch();
             // Account exist
-            // Note: remember to use password_hash in your registration file to store the hashed passwords.
             if (password_verify($_POST['password'], $password)) {
                 // password ok
                 session_regenerate_id();

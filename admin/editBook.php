@@ -15,7 +15,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Přidat knihu</title>
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="styles.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,9 +38,14 @@
             // get id
             if (isset($_POST['id'])) {
                 $id = $_POST['id'];
+
+                require('/var/secrets.php');
+                $sqlUser = $secrets['sql-user'];
+                $sqlPassword = $secrets['sql-password'];
+                $database = $secrets['sql-database'];
                 
                 //connection
-                $conn = mysqli_connect('localhost', 'test', 'Test22knih*', 'knihovna');
+                $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
             
                 if (!$conn) {
                     echo 'chyba pripojeni'.mysqli_connect_error();

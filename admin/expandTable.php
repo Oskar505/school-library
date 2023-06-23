@@ -6,11 +6,13 @@
         exit;
     }
 
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
 
-    $conn = mysqli_connect('localhost', 'test', 'Test22knih*', 'knihovna');
+    require('/var/secrets.php');
+    $sqlUser = $secrets['sql-user'];
+    $sqlPassword = $secrets['sql-password'];
+    $database = $secrets['sql-database'];
+
+    $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
 
     $count = isset($_GET['count']) ? intval($_GET['count']) : 0;
     $rowCount = isset($_GET['rowCount']) ? intval($_GET['rowCount']) : 0;

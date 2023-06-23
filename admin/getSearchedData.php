@@ -6,7 +6,12 @@
         exit;
     }
 
-    $conn = mysqli_connect('localhost', 'test', 'Test22knih*', 'knihovna');
+    require('/var/secrets.php');
+    $sqlUser = $secrets['sql-user'];
+    $sqlPassword = $secrets['sql-password'];
+    $database = $secrets['sql-database'];
+
+    $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
 
     $searchInput = isset($_GET['searchInput']) ? mysqli_real_escape_string($conn, $_GET['searchInput']) : '';
     $showDiscarded = isset($_GET['showDiscarded']) ? mysqli_real_escape_string($conn, $_GET['showDiscarded']) : '';
