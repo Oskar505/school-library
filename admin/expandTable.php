@@ -13,11 +13,13 @@
     $conn = mysqli_connect('localhost', 'test', 'Test22knih*', 'knihovna');
 
     $count = isset($_GET['count']) ? intval($_GET['count']) : 0;
-    $rowCount = isset($_GET['rowCount']) ? intval($_GET['rowCount']) : 0;
+    $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
     $searchInput = isset($_GET['searchInput']) ? mysqli_real_escape_string($conn, $_GET['searchInput']) : '';
     $showDiscarded = isset($_GET['showDiscarded']) ? mysqli_real_escape_string($conn, $_GET['showDiscarded']) : '';
-    $columns = isset($_GET['columns']) ? $_GET['columns'] : '';
+    $columns = isset($_GET['columns']) ? $_GET['columns'] : array(false, false, false, false, false, false, false, false, false, false, false);
 
+    echo gettype($columns);
+    print_r($columns);
 
     // search by
     $searchBy = "name LIKE '%$searchInput%' OR author LIKE '%$searchInput%' OR publisher LIKE '%$searchInput%' OR isbn LIKE '%$searchInput%' OR note LIKE '%$searchInput%' OR lentTo LIKE '%$searchInput%' OR class LIKE '%$searchInput%'";
@@ -47,21 +49,21 @@
 
     if ($showDiscarded == 'true') {
         if ($searchInput == '') {
-            $sql = "SELECT * FROM books LIMIT $rowCount, $count";
+            $sql = "SELECT * FROM books LIMIT $offset, $count";
         }
 
         else {
-            $sql = "SELECT * FROM books WHERE $searchBy LIMIT $rowCount, $count";
+            $sql = "SELECT * FROM books WHERE $searchBy LIMIT $offset, $count";
         }
     }
 
     else {
         if ($searchInput == '') {
-            $sql = "SELECT * FROM books WHERE discarded=0 LIMIT $rowCount, $count";
+            $sql = "SELECT * FROM books WHERE discarded=0 LIMIT $offset, $count";
         }
 
         else {
-            $sql = "SELECT * FROM books WHERE ($searchBy) AND discarded=0 LIMIT $rowCount, $count";
+            $sql = "SELECT * FROM books WHERE ($searchBy) AND discarded=0 LIMIT $offset, $count";
         }     
     }
 

@@ -204,6 +204,7 @@
             }
 
             $resultCount = mysqli_fetch_all($result, MYSQLI_ASSOC)[0]['COUNT(*)'];
+            global $resultCount;
 
 
             // not returned
@@ -257,7 +258,7 @@
 
             <tbody id='tableBody'>
                 <?php
-                    $rows = 100;
+                    $rows = 50;
 
                     $conn = mysqli_connect('localhost', 'test', 'Test22knih*', 'knihovna');
 
@@ -271,7 +272,7 @@
 
                     if ($result === false) {
                             echo 'Error: '.mysqli_error($conn);
-                    }
+                    }                                             
 
 
                     $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -354,25 +355,61 @@
                 ?>
             </tbody>
         </table>
+        
+        <button class='tablePagesControl btn' onclick="changePage('previous')">Předchozí</button>
+        <button class='tablePagesControl btn' onclick="changePage('next')">Další</button>
+        <select name='pageSelect' id='pageSelect'>
+            <?php 
+                $pageCount = $resultCount / 50;
+                $pageCount = ceil($pageCount);
 
-        <button class='expandTableBtn btn' onclick="loadMoreRows(100)">Další</button>
-
+                for ($i = 1; $i <= $pageCount; $i++) {
+                    //$page = $i++;
+                    $page = $i;
+                    echo "<option value='$i'>$i</option>";
+                }
+            ?>
+        </select>
     </main>
 
 
-    <!-- expandTableAJAX -->
+
+
+
+
     <script>
-        var rowCount = <?php echo $rows; ?>;
+
+        let page = document.getElementById('pageSelect');
+        let actualPageNum = null;
+
+        //page.value = 1;
+
         
-        function loadMoreRows(count) {
+        function changePage(pageNum) {
+            count = 50;
+
+            console.log('changePage');
+
+            actualPageNum == null ? actualPageNum = 1 : ''  ;
+
+            pageNum == 'next' ? pageNum = actualPageNum ++ : '';
+            pageNum == 'previous' ? pageNum = actualPageNum -- : '';
+
+            console.log(page.value);
+
+            page.selectedIndex = pageNum;
+
+            let offset = actualPageNum * 50;
+
+
             let searchInput = document.getElementById('searchInput');
             let showDiscarded = document.getElementById('showDiscarded');
 
             columns = [registration, subject, author, name, price, dateAdded, lentTo, $class, lendDate, reservation, note];
             
-            console.log(searchInput.value);
-            console.log(showDiscarded.checked);
             console.log(columns);
+
+            actualPageNum = pageNum;
             
 
             $.ajax({
@@ -380,15 +417,14 @@
                 type: 'GET',
                 data: {
                     count: count,
-                    rowCount: rowCount,
+                    offset: offset,
                     searchInput: searchInput.value,
                     showDiscarded: showDiscarded.checked,
-                    columns: columns
+                    columns: columns.value
                 },
                 success: function(response) {
                     var tbody = $('#tableBody');
-                    tbody.append(response);
-                    rowCount += count;
+                    tbody.html(response);
                 }
             });
         }
@@ -429,6 +465,15 @@
         let noteEl = document.getElementById('note');
 
 
+        // event listeners
+
+        //expand
+        page.addEventListener('change', function () {
+            changePage(page);
+        });
+
+
+        //search
         registrationEl.addEventListener('click', function() {
             registration = !registration;
             (searchInput.value != '') ? search() : ''; // change searched column
