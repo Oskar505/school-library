@@ -23,8 +23,7 @@ function fill(isbnVal) {
         }
 
         return response.json();
-    })
-    .then(data => {
+    }).then(data => {
         console.log(data)
 
         //data = JSON.parse(data);

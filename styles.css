@@ -104,6 +104,7 @@ main {
     display: block;
     margin: 0 auto;
     margin-bottom: 30px;
+    margin-top: 20px;
 }
 
 .searchInput:focus {
