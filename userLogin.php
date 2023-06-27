@@ -20,6 +20,6 @@
         <input type="submit" value="Přihlásit se">
     </form>
 
-    <p>Přihlaste se pomocí školního emailu a hesla k bakalářům</p>
+    <p>Přihlaste se pomocí školního emailu a hesla do moodlu</p>
 </body>
 </html>

@@ -27,7 +27,7 @@
     <header class="indexHeader container">
         <div class="headerContainer">
             <img class="logo" src="https://www.gykovy.cz/wp-content/uploads/2021/02/cropped-cropped-GYKOVY-LOGO_bila-budova-okoli-kruhu_web-1.png" alt="gykovy logo">
-            <h1>Školní knihovna GYKOVY</h1>
+            <h1 class="mainH1">Školní knihovna GYKOVY</h1>
             <a class='adminLink' href="userLogin.php">Přihlásit se</a>
         </div>
 

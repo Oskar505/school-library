@@ -45,16 +45,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $name?></title>
+
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1 class="moreInfoH1"><?php echo $name?></h1>
-    <h2><?php echo $author?></h2>
+    <header class="container moreInfoHeader">
+        <h1 class="bookName"><?php echo $name?></h1>
+        <h2 class="author"><?php echo $author?></h2>
+    </header>
     
 
-    <p id="bookInfo">Popis</p>
-    <p class="bookInfoSource">Popis knihy z <a href="">google books</a></p>
 
-    <button class='btn' onclick="reserve()">Rezervovat</button>
+    <main class="container moreInfoMain">
+        <div class="description">
+            <p id="bookInfo">Popis</p>
+            <p class="bookInfoSource">Zdroj: <a id="bookSourceLink" href="" target="_blank">google books</a></p>
+        </div>
+        
+        <img class="bookImg" id="thumbnail" src="" alt="Fotka knihy">
+
+        <button class='btn reservationBtn' onclick="reserve()">Rezervovat</button>
+    </main>
+    
 
 
     <script>
@@ -79,27 +91,41 @@
 
         console.log(url);
 
-        fetch(url).then(response => {
+        fetch(url)
+        .then(response => {
             if (!response.ok) {
                 throw new Error('Chyba při komunikaci s Google Books API: ' + response.status);
             }
 
             return response.json();
-        }).then(data => {
+        })
+        .then(data => {
             console.log(data);
 
             let description = data.items[0].volumeInfo.description;
-            console.log(description)
+            console.log(description);
 
-            let bookInfoElement = document.getElementById('bookInfo')
+            var book = data.items[0];
+            var sourceLink = book.volumeInfo.infoLink;
+            var thumbnailUrl = book.volumeInfo.imageLinks.thumbnail;
+            // new link
+            var bookId = book.id;
+            var bookTitle = book.volumeInfo.title.replace(/\s/g, "_");
+            var googleBooksUrl = "https://www.google.cz/books/edition/" + bookTitle + "/" + bookId + "?hl=cs&gbpv=0";
+            console.log(googleBooksUrl);
+
+
+            let bookInfoElement = document.getElementById('bookInfo');
+            let sourceLinkElement = document.getElementById('bookSourceLink');
+            let thumbnailElement = document.getElementById('thumbnail');
 
             bookInfoElement.textContent = description;
+            sourceLinkElement.href = googleBooksUrl;
+            thumbnailElement.src = thumbnailUrl;
 
         }).catch(error => {
             console.error('Chyba: ', error)
         })
     </script>
-
-    <script src="indexScript.js"></script>
 </body>
 </html>
