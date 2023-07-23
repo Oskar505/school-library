@@ -37,7 +37,7 @@
     display: inline-block;
 }
 
-.adminLink {
+.loginLink {
     position: absolute;
     float: right;
     right: 0;
@@ -166,7 +166,7 @@ thead th{
     display: block;
     padding: 20px 30px;
     font-family: 'Open Sans', sans-serif;
-    height: 300px;
+    height: 740px;
 }
 
 .description {

@@ -6,6 +6,12 @@
         exit;
     }
 
+    /*
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+    */
+
 
     // get secrets
 
@@ -29,13 +35,15 @@
         $lentTo = $_POST['lentTo'];
         $lendDate = $_POST['lendDate'];
         $returnDate = $_POST['returnDate'];
+        $history = '';
         $reservation = $_POST['reservation'];
+        $reservationExpiration = '';
         $note = $_POST['note'];
         $discarded = $_POST['discarded'];
 
 
         
-        $allData = [$registration, $isbn, $subject, $class, $publisher, $author, $name, $price, $dateAdded, $lentTo, $lendDate, $returnDate, $reservation, $note, $discarded];
+        $allData = [$registration, $isbn, $subject, $class, $publisher, $author, $name, $price, $dateAdded, $lentTo, $lendDate, $returnDate, $history, $reservation, $reservationExpiration, $note, $discarded];
 
 
 
@@ -52,19 +60,27 @@
         
 
         // discarded
-        if ($allData[14] == 'on') {
-            $allData[14] = 1;
+        if ($allData[16] == 'on') {
+            $allData[16] = 1;
         }
         
         else {
-            $allData[14] = 0;
+            $allData[16] = 0;
+        }
+
+
+        // reservationExpiration
+        if ($reservation !== '') {
+            $today = date('Y-m-d');
+            $reservationExpiration = date('Y-m-d', strtotime($today . ' +3 days')); // + 3 days
+            $allData[13] = $reservationExpiration;
         }
 
 
         
-        $stmt = mysqli_prepare($conn, "INSERT INTO books (registration, isbn, subject, class, publisher, author, name, price, dateAdded, lentTo, lendDate, returnDate, reservation, note, discarded) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = mysqli_prepare($conn, "INSERT INTO books (registration, isbn, subject, class, publisher, author, name, price, dateAdded, lentTo, lendDate, returnDate, history, reservation, reservationExpiration, note, discarded) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-        mysqli_stmt_bind_param($stmt, "ssssssssssssssi", $allData[0], $allData[1], $allData[2], $allData[3], $allData[4], $allData[5], $allData[6], $allData[7], $allData[8], $allData[9], $allData[10], $allData[11], $allData[12], $allData[13], $allData[14]);
+        mysqli_stmt_bind_param($stmt, "ssssssssssssssssi", $allData[0], $allData[1], $allData[2], $allData[3], $allData[4], $allData[5], $allData[6], $allData[7], $allData[8], $allData[9], $allData[10], $allData[11], $allData[12], $allData[13], $allData[14], $allData[15], $allData[16]);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
 
@@ -91,11 +107,13 @@
         $lentTo = $_POST['lentTo'];
         $lendDate = $_POST['lendDate'];
         $returnDate = $_POST['returnDate'];
+        $history = '';
         $reservation = $_POST['reservation'];
+        $reservationExpiration = '';
         $note = $_POST['note'];
         $discarded = $_POST['discarded'];
 
-        $allData = [$registration, $isbn, $subject, $class, $publisher, $author, $name, $price, $dateAdded, $lentTo, $lendDate, $returnDate, $reservation, $note, $discarded, $id];
+        $allData = [$registration, $isbn, $subject, $class, $publisher, $author, $name, $price, $dateAdded, $lentTo, $lendDate, $returnDate, $history, $reservation, $reservationExpiration, $note, $discarded, $id];
 
 
         $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
@@ -110,16 +128,49 @@
         }, $allData);      
 
         // discarded
-        if ($allData[14] == 'on') {
-            $allData[14] = 1;
+        if ($allData[16] == 'on') {
+            $allData[16] = 1;
         }
         
         else {
-            $allData[14] = 0;
+            $allData[16] = 0;
         }
 
-        $stmt = mysqli_prepare($conn, "UPDATE books SET registration = ?, isbn = ?, subject = ?, class = ?, publisher = ?, author = ?, name = ?, price = ?, dateAdded = ?, lentTo = ?, lendDate = ?, returnDate = ?, reservation = ?, note = ?, discarded = ? WHERE id=?");
-        mysqli_stmt_bind_param($stmt, "ssssssssssssssii", $allData[0], $allData[1], $allData[2], $allData[3], $allData[4], $allData[5], $allData[6], $allData[7], $allData[8], $allData[9], $allData[10], $allData[11], $allData[12], $allData[13], $allData[14], $allData[15]);
+
+        // reservationExpiration
+        if ($reservation !== '') {
+            $today = date('Y-m-d');
+            $reservationExpiration = date('Y-m-d', strtotime($today . ' +3 days')); // + 3 days
+            $allData[14] = $reservationExpiration;
+        }
+
+
+        // Získání stávajícího seznamu
+        $query = "SELECT history FROM books WHERE id = $id";
+        $result = mysqli_query($conn, $query);
+        $row = mysqli_fetch_assoc($result);
+        $history = $row['history'];
+
+        if ($lentTo != '') {
+            if ($history != '') {
+                $allData[12] = $history . ', ' . $lentTo;
+            }
+
+            else {
+                $allData[12] = $lentTo;
+            }
+        }
+
+        else {
+            $allData[12] = $history;
+        }
+        
+        echo $allData[12];
+
+        // FIXME:
+
+        $stmt = mysqli_prepare($conn, "UPDATE books SET registration = ?, isbn = ?, subject = ?, class = ?, publisher = ?, author = ?, name = ?, price = ?, dateAdded = ?, lentTo = ?, lendDate = ?, returnDate = ?, history = ?, reservation = ?, reservationExpiration = ?, note = ?, discarded = ? WHERE id=?");
+        mysqli_stmt_bind_param($stmt, "ssssssssssssssssii", $allData[0], $allData[1], $allData[2], $allData[3], $allData[4], $allData[5], $allData[6], $allData[7], $allData[8], $allData[9], $allData[10], $allData[11], $allData[12], $allData[13], $allData[14], $allData[15], $allData[16], $allData[17]);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
 

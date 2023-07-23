@@ -7,6 +7,9 @@
     }
 
     require('/var/secrets.php');
+    $sqlUser = $secrets['sql-user'];
+    $sqlPassword = $secrets['sql-password'];
+    $database = $secrets['sql-database'];
 
     $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
 
@@ -70,11 +73,11 @@
 
 
 
-                $allData = [$getData[1], '', $getData[2], $getData[10], '', $getData[4], $getData[5], $getData[6], $getData[7], $getData[9], $getData[11], $returnDate, '', $getData[14], $discarded];
+                $allData = [$getData[1], '', $getData[2], $getData[10], '', $getData[4], $getData[5], $getData[6], $getData[7], $getData[9], $getData[11], $returnDate, '', '', $getData[14], $discarded];
     
-                $stmt = mysqli_prepare($conn, "INSERT INTO books (registration, isbn, subject, class, publisher, author, name, price, dateAdded, lentTo, lendDate, returnDate, reservation, note, discarded) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt = mysqli_prepare($conn, "INSERT INTO books (registration, isbn, subject, class, publisher, author, name, price, dateAdded, lentTo, lendDate, returnDate, reservation, reservationExpiration, note, discarded) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-                mysqli_stmt_bind_param($stmt, "ssssssssssssssi", $allData[0], $allData[1], $allData[2], $allData[3], $allData[4], $allData[5], $allData[6], $allData[7], $allData[8], $allData[9], $allData[10], $allData[11], $allData[12], $allData[13], $allData[14]);
+                mysqli_stmt_bind_param($stmt, "sssssssssssssssi", $allData[0], $allData[1], $allData[2], $allData[3], $allData[4], $allData[5], $allData[6], $allData[7], $allData[8], $allData[9], $allData[10], $allData[11], $allData[12], $allData[13], $allData[14], $allData[15]);
                 mysqli_stmt_execute($stmt);
                 mysqli_stmt_close($stmt);
             }

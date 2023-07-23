@@ -28,7 +28,19 @@
         <div class="headerContainer">
             <img class="logo" src="https://www.gykovy.cz/wp-content/uploads/2021/02/cropped-cropped-GYKOVY-LOGO_bila-budova-okoli-kruhu_web-1.png" alt="gykovy logo">
             <h1 class="mainH1">Školní knihovna GYKOVY</h1>
-            <a class='adminLink' href="userLogin.php">Přihlásit se</a>
+            
+            <?php
+                session_start();
+
+                if (isset($_SESSION['userLoggedIn']) || isset($_SESSION['loggedin'])) {
+                    echo "<a class='loginLink' href='admin/logout.php'>" . $_SESSION['firstName'] /*. ' ' . $_SESSION['lastName']*/ . "<br> Odhlásit se</a>";
+                }
+                
+
+                else {
+                    echo "<a class='loginLink' href='userLogin.php'>Přihlásit se</a>";
+                }
+            ?>
         </div>
 
         <nav>
@@ -44,6 +56,9 @@
 
     <main class="container">
         <div class="dataContainer">
+
+            
+
             <input class="searchInput" id="searchInput" type="text" placeholder="Vyhledat" value="">
 
 
@@ -89,7 +104,7 @@
                             $returnDate = $data[$i]['returnDate'];
                             $reservation = $data[$i]['reservation'];
 
-                            $state = '';
+                            $state = 'V knihovně';
 
                             if ($returnDate != '') {
                                 if ($reservation != '') {
@@ -105,7 +120,7 @@
 
                             else {
                                 if ($reservation != '') {
-                                    $state = "Zarezervováno do +7 dní";
+                                    $state = "Zarezervováno do +3 dní";
                                 }
                             }
 

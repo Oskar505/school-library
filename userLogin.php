@@ -8,11 +8,11 @@
 <body>
     <h1>Přihlaste se</h1>
 
-    <form action="authenticateUser" method="post">
+    <form action="authenticateUser.php" autocapitalize="off" method="post">
         <label for="username">
             <i class="fas fa-user"></i>
         </label>
-        <input type="text" name="username" placeholder="Email" id="username" required>
+        <input type="text" name="username" placeholder="Uživatelské jméno" id="username" required>
         <label for="password">
             <i class="fas fa-lock"></i>
         </label>
@@ -20,6 +20,6 @@
         <input type="submit" value="Přihlásit se">
     </form>
 
-    <p>Přihlaste se pomocí školního emailu a hesla do moodlu</p>
+    <p>Přihlaste se pomocí uživatelského jména a hesla do moodlu</p>
 </body>
 </html>
