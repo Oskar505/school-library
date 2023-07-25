@@ -145,21 +145,23 @@ thead th{
 /* BOOK INFO */
 
 .moreInfoHeader {
-    background-color: #294a70;
-    padding: 20px 30px;
+    background-color: #edede3;
     font-family: "Merriweather Sans",sans-serif;
-    height: 150px;
+    height: 180px;
     border-bottom: 5px solid #f4a024;
 }
 
 .bookName {
     font-size: 50px;
+    padding: 20px 0 0 30px;
 }
 
 .author {
     font-size: 28px;
     margin-left: 5px;
     font-weight: 400;
+    padding-left: 30px;
+    padding-bottom: 20px;
 }
 
 .moreInfoMain {
@@ -171,10 +173,20 @@ thead th{
 
 .description {
     max-width: 1700px;
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    justify-content: space-between;
 }
 
 #bookInfo {
     font-size: 22px;
+}
+
+.bookImg {
+    width: 150px;
+    order: 2;
+    margin-left: 100px;
 }
 
 .bookInfoSource {
@@ -187,19 +199,12 @@ thead th{
     text-decoration: none;
 }
 
-.bookImg {
-    float: right;
-    position: absolute;
-    top: 217px;
-    right: 30px;
-    width: 150px;
-}
-
 .btn {
-    background-color: #294a70;
-    border: 2px solid #f4a024;
+    /*background-color: #294a70;*/
+    background-color: #f4a024;
+    border: 2px solid black;
     padding: 7px 10px;
     font-size: 23px;
-    margin-top: 70px;
+    margin-top: 50px;
     font-family: 'Open Sans', sans-serif;
 }

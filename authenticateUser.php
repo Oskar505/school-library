@@ -27,7 +27,7 @@
         }
 
 
-        $sql = "SELECT firstName, lastName, class FROM users WHERE login='$username'";
+        $sql = "SELECT firstName, lastName, class, reserved, borrowed FROM users WHERE login='$username'";
         $result = mysqli_query($conn, $sql);
 
         if ($result === false) {
@@ -39,6 +39,8 @@
         $firstName = $data['firstName'];
         $lastName = $data['lastName'];
         $class = $data['class'];
+        $reserved = $data['reserved'];
+        $borrowed = $data['borrowed'];
 
         if ($class === 'Admin' || $username === 'AdmOskar') { 
           session_regenerate_id();
@@ -47,6 +49,8 @@
           $_SESSION['firstName'] = $firstName . ' (admin)';
           $_SESSION['lastName'] = $lastName;
           $_SESSION['id'] = $id;
+          $_SESSION['reserved'] = $reserved;
+          $_SESSION['borrowed'] = $borrowed;
         }
 
         else {
@@ -56,6 +60,8 @@
           $_SESSION['firstName'] = $firstName;
           $_SESSION['lastName'] = $lastName;
           $_SESSION['id'] = $id;
+          $_SESSION['reserved'] = $reserved;
+          $_SESSION['borrowed'] = $borrowed;
         }
         
 
