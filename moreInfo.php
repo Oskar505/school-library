@@ -12,6 +12,32 @@
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
 
+
+    // update reserved books in session
+    if (isset($_SESSION['userLoggedIn'])) {
+        $userLogin = $_SESSION['login'];
+
+        $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
+
+        $sql = "SELECT reserved, borrowed FROM users WHERE login = '$userLogin'";
+        $result = mysqli_query($conn, $sql);
+
+        if ($result === false) {
+            echo 'Error: '.mysqli_error($conn);
+        }
+        
+        $data = mysqli_fetch_all($result, MYSQLI_ASSOC)[0];
+        $reservedBooks = $data['reserved'];
+        $borrowedBooks = $data['borrowed'];
+
+        $_SESSION['reserved'] = $reservedBooks;
+        $_SESSION['borrowed'] = $borrowedBooks;
+    }
+    
+
+    $reservationOk = false;
+
+
     // get book data
     if (isset($_GET['id'])) {
         $bookId = intval($_GET['id']);
@@ -42,66 +68,157 @@
         $reserveBtnText = 'Rezervovat';
 
 
-        // reserve book
+        // reserve book or cancel reservation
         if (isset($_POST['reserve'])) {
             if (isset($_SESSION['userLoggedIn'])) {
                 $bookId = intval($_POST['id']);
                 $userLogin = $_SESSION['login'];
 
 
-                $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
+                $reservedBooks = $_SESSION['reserved'];
+                $reservedBooks = explode(',', $reservedBooks);
 
-                if (!$conn) {
-                    echo 'chyba pripojeni'.mysqli_connect_error();
-                }
+                if (!in_array($bookId, $reservedBooks)) { // reserve
+                    $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
 
-                // escape string
-                $bookId = mysqli_real_escape_string($conn, $bookId); 
-                $userLogin = mysqli_real_escape_string($conn, $userLogin);
+                    if (!$conn) {
+                        echo 'chyba pripojeni'.mysqli_connect_error();
+                    }
+
+                    // escape string
+                    $bookId = mysqli_real_escape_string($conn, $bookId); 
+                    $userLogin = mysqli_real_escape_string($conn, $userLogin);
 
 
-                // if book is not reserved
-                $sql = "SELECT COUNT(*) FROM books WHERE id = $bookId AND (reservation IS NULL OR reservation = '')";
-                $result = mysqli_query($conn, $sql);
-
-                if ($result === false) {
-                    echo 'Error: '.mysqli_error($conn);
-                }
-                
-                $reserved = mysqli_fetch_all($result, MYSQLI_ASSOC)[0]['COUNT(*)'];
-
-                
-                if ($reserved != 0) {
-                    $sql = "UPDATE books SET reservation='$userLogin' WHERE id=$bookId";
+                    // if book is not reserved
+                    $sql = "SELECT COUNT(*) FROM books WHERE id = $bookId AND (reservation IS NULL OR reservation = '')";
                     $result = mysqli_query($conn, $sql);
 
                     if ($result === false) {
-                            echo 'Error: '.mysqli_error($conn);
+                        echo 'Error: '.mysqli_error($conn);
+                    }
+                    
+                    $reserved = mysqli_fetch_all($result, MYSQLI_ASSOC)[0]['COUNT(*)'];
+
+                    
+                    if ($reserved != 0) {
+                        // reservation expiration date
+                        $today = new DateTime();
+                        $today->add(new DateInterval('P3D'));
+                        $reservationExpiration =  $today->format('Y-m-d');
+
+                        // update books table
+                        $sql = "UPDATE books SET reservation='$userLogin', reservationExpiration='$reservationExpiration' WHERE id=$bookId";
+                        $result = mysqli_query($conn, $sql);
+
+                        if ($result === false) {
+                                echo 'Error: '.mysqli_error($conn);
+                        }
+
+
+                        // update users table
+                        $sql = "UPDATE users 
+                        SET reserved = IF(reserved IS NULL OR reserved = '', '$bookId', CONCAT(reserved, ',', '$bookId'))
+                        WHERE login='$userLogin'";
+
+                        $result = mysqli_query($conn, $sql);
+
+                        if ($result === false) {
+                                echo 'Error: '.mysqli_error($conn);
+                        }
+
+                        else {
+                            $reservationOk = true;
+
+                            echo '<h1>Kniha byla zarezervována</h1>
+                            <a href="index.php">Domů</a>';
+                            exit;
+                        }
                     }
 
-                    // update users table
-                    $sql = "UPDATE users 
-                    SET reserved = IF(reserved IS NULL OR reserved = '', '$bookId', CONCAT(reserved, ',', '$bookId')) 
-                    WHERE login='$userLogin'";
-
-                    $result = mysqli_query($conn, $sql);
-
-                    if ($result === false) {
-                            echo 'Error: '.mysqli_error($conn);
-                    }
 
                     else {
-                        $reserveBtnText = 'Rezervováno';
+                        echo '<h1>Rezervace se nezdařila.</h1>
+                        <p>Tato kniha není volná.</p>
+                        <a href="index.php">Domů</a>';
+                        exit;
                     }
                 }
 
 
-                else {
-                    echo '<h1>Rezervace se nezdařila.</h1>
-                    <p>Tato kniha není volná.</p>
-                    <a href="index.php">Domů</a>';
-                    exit;
+
+
+                else { // cancel reservation
+                    $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
+
+                    if (!$conn) {
+                        echo 'chyba pripojeni'.mysqli_connect_error();
+                    }
+
+                    // escape string
+                    $bookId = mysqli_real_escape_string($conn, $bookId); 
+                    $userLogin = mysqli_real_escape_string($conn, $userLogin);
+
+
+                    // if book is not reserved
+                    $sql = "SELECT COUNT(*) FROM books WHERE id = $bookId AND (reservation IS NULL OR reservation = '')";
+                    $result = mysqli_query($conn, $sql);
+
+                    if ($result === false) {
+                        echo 'Error: '.mysqli_error($conn);
+                    }
+                    
+                    $reserved = mysqli_fetch_all($result, MYSQLI_ASSOC)[0]['COUNT(*)'];
+
+                    
+                    if ($reserved == 0) { // book is reserved
+                        // update books table
+                        $sql = "UPDATE books SET reservation=NULL, reservationExpiration=NULL WHERE id=$bookId";
+                        $result = mysqli_query($conn, $sql);
+
+                        if ($result === false) {
+                            echo 'Error: '.mysqli_error($conn);
+                        }
+
+
+                        // update users table
+                        $reservedBooks = $_SESSION['reserved'];
+                        $reservedBooks = explode(',', $reservedBooks);
+
+                        $index = array_search($bookId, $reservedBooks, true); // get index
+                        if ($index !== false) {
+                            unset($reservedBooks[$index]); // delete
+                            $reservedBooks = implode(',', $reservedBooks);
+                        }
+
+                        $sql = "UPDATE users SET reserved='$reservedBooks' WHERE login='$userLogin'";
+                        $result = mysqli_query($conn, $sql);
+
+                        if ($result === false) {
+                            echo 'Error: '.mysqli_error($conn);
+                        }
+
+                        $_SESSION['reserved'] = $reservedBooks; // update session
+
+
+                        echo '<h1>Rezervace byla zrušena</h1>
+                        <a href="index.php">Domů</a>';
+                        exit;
+                    }
+
+
+                    else {
+                        echo '<h1>Zrušení rezervace se nezdařilo.</h1>
+                        <p>Tato kniha není rezervována. V tabulce books není zapsaná rezervace.</p>
+                        <a href="index.php">Domů</a>';
+                        exit;
+                    }
                 }
+
+                
+
+
+                
             }
 
 
@@ -123,6 +240,70 @@
         <p>Vraťte se na hlavní stránku a zkuste to znovu</p>';
         exit;
     }
+
+
+
+ // reservation btn text and reservation info
+
+    //default values
+    $reserveBtnText = 'Rezervovat';
+    $reservationInfo = '<span class="material-symbols-outlined bookAvailable">done</span>
+    <p>V knihovně</p>';
+    $reserveBtnDeactivate = '';
+
+
+    $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
+
+    if (!$conn) {
+        echo 'chyba pripojeni'.mysqli_connect_error();
+    }
+
+    // if book is not reserved
+    $sql = "SELECT COUNT(*) FROM books WHERE id = $bookId AND (reservation IS NULL OR reservation = '')";
+    $result = mysqli_query($conn, $sql);
+
+    if ($result === false) {
+        echo 'Error: '.mysqli_error($conn);
+    }
+    
+    $reserved = mysqli_fetch_all($result, MYSQLI_ASSOC)[0]['COUNT(*)'];
+
+
+    if (isset($_SESSION['userLoggedIn'])) {
+        $reservedBooks = $_SESSION['reserved'];
+        $reservedBooks = explode(',', $reservedBooks);
+
+
+        if (in_array($bookId, $reservedBooks) || $reservationOk) { // rezervovano uzivatelem
+            $reserveBtnText = 'Zrušit rezervaci';
+            $reservationInfo = '
+            <span class="material-symbols-outlined bookAvailable">done</span>
+            <p>Rezervováno</p>';
+            echo 'ok';
+            echo $reservationOk;
+        }
+
+
+        elseif ($reserved == 0) {
+            $reserveBtnText = 'Rezervovat';
+            $reservationInfo = '
+            <span class="material-symbols-outlined bookNotAvailable">close</span>
+            <p>Rezervováno</p>';
+            echo 'not available';
+            $reserveBtnDeactivate = 'deactivateBtn';
+        }
+    }
+
+    else {
+        if ($reserved == 0) {
+            $reserveBtnText = 'Rezervovat';
+            $reservationInfo = '
+            <span class="material-symbols-outlined bookNotAvailable">close</span>
+            <p>Rezervováno</p>';
+            echo 'not available';
+            $reserveBtnDeactivate = 'deactivateBtn';
+        }
+    }
 ?>
 
 
@@ -134,6 +315,8 @@
     <title><?php echo $name?></title>
 
     <link rel="stylesheet" href="styles.css">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
 </head>
 <body>
     <header class="container moreInfoHeader">
@@ -161,10 +344,15 @@
             <img class="bookImg" id="thumbnail" src="" alt="Fotka knihy">
         </div>
 
+
         <form action="moreInfo.php?id=<?php echo $bookId ?>" method="post">
             <input type="hidden" name="id" value="<?php echo $bookId ?>">
-            <input type="submit" name="reserve" value="<?php echo $reserveBtnText ?>" class="btn reservationBtn">
+            <input type="submit" name="reserve" value="<?php echo $reserveBtnText ?>" class="btn reservationBtn <?php echo $reserveBtnDeactivate ?>">
         </form>
+
+        <div class="reservationInfo">
+            <?php echo $reservationInfo ?>
+        </div>  
     </main>
     
 

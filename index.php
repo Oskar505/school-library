@@ -69,9 +69,9 @@
             <table class="dataTable">
                 <thead>
                     <tr>
-                        <th>Autor</th>
-                        <th>Název</th>
-                        <th>Stav</th>
+                        <th class="sideColumn">Autor</th>
+                        <th class="mainColumn">Název</th>
+                        <th class="sideColumn">Stav</th>
                     </tr>
                 </thead>
 
