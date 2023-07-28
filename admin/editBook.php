@@ -14,7 +14,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Přidat knihu</title>
+    <title>Upravit knihu</title>
     <link rel="stylesheet" href="styles.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -75,7 +75,9 @@
                 $class = $data[0]['class'];
                 $lendDate = $data[0]['lendDate'];
                 $returnDate = $data[0]['returnDate'];
+                $history = $data[0]['history'];
                 $reservation = $data[0]['reservation'];
+                $reservationExpiration = $data[0]['reservationExpiration'];
                 $note = $data[0]['note'];
                 $discarded = $data[0]['discarded'];
 
@@ -89,11 +91,97 @@
                     $discarded = '';
                 }
 
+
+                //history
+                if ($history == '') {
+                    $history = 'Tato kniha ještě nebyla půjčena';
+                }
+
+
+
                 // html
                 echo "<input type='hidden' name='id' value=$id>";
             
                 echo "
                 <table class='editBookTable'>
+                    <tr class='column'>
+                        <td class='label'>
+                            <label for='lentTo'>Půjčeno</label>
+                        </td>
+
+                        <td class='middleColumn'></td>
+
+                        <td>
+                            <input class='input' type='text' id='lentTo' name='lentTo' placeholder='Vypůjčeno' value='$lentTo'>
+                        </td>
+                    </tr>
+
+                    <tr class='column'>
+                        <td class='label'>
+                            <label for='class'>Třída</label>
+                        </td>
+
+                        <td class='middleColumn'></td>
+
+                        <td>
+                            <input class='input' type='text' id='class' name='class' placeholder='Třída' value='$class'>
+                        </td>
+                    </tr>
+
+                    <tr class='column'>
+                        <td class='label'>
+                            <label for='lendDate'>Datum půjčení</label>
+                        </td>
+
+                        <td class='middleColumn'></td>
+
+                        <td>
+                            <input class='input' type='date' id='lendDate' name='lendDate' value='$lendDate'>
+                        </td>
+                    </tr>
+
+                    <tr class='column'>
+                        <td class='label'>
+                            <label for='returnDate'>Datum vrácení</label>
+                        </td>
+
+                        <td class='middleColumn'></td>
+
+                        <td>
+                            <input class='input' type='date' id='returnDate' name='returnDate' value='$returnDate'>
+                        </td>
+                    </tr>
+
+                    <tr class='column'>
+                        <td class='label'>
+                            <label for='reservation'>Rezervace</label>
+                        </td>
+
+                        <td class='middleColumn'></td>
+
+                        <td>
+                            <input class='input' type='text' id='reservation' name='reservation' placeholder='Rezervace' value='$reservation'>
+                        </td>
+                    </tr>
+
+                    <tr class='column'>
+                        <td class='label'>
+                            <label for='reservation'>Konec rezervace</label>
+                        </td>
+
+                        <td class='middleColumn'></td>
+
+                        <td>
+                            <input class='input' type='text' id='reservationExpiration' name='reservationExpiration' placeholder='Konec rezervace' value='$reservationExpiration'>
+                        </td>
+                    </tr>
+
+
+
+                    <tr class='break'></tr>
+
+
+
                     <tr class='column'>
                         <td class='label'>
                             <label for='registration'>Registrační číslo</label>
@@ -192,66 +280,6 @@
 
                     <tr class='column'>
                         <td class='label'>
-                            <label for='lentTo'>Půjčeno</label>
-                        </td>
-
-                        <td class='middleColumn'></td>
-
-                        <td>
-                            <input class='input' type='text' id='lentTo' name='lentTo' placeholder='Vypůjčeno' value='$lentTo'>
-                        </td>
-                    </tr>
-
-                    <tr class='column'>
-                        <td class='label'>
-                            <label for='class'>Třída</label>
-                        </td>
-
-                        <td class='middleColumn'></td>
-
-                        <td>
-                            <input class='input' type='text' id='class' name='class' placeholder='Třída' value='$class'>
-                        </td>
-                    </tr>
-
-                    <tr class='column'>
-                        <td class='label'>
-                            <label for='lendDate'>Datum půjčení</label>
-                        </td>
-
-                        <td class='middleColumn'></td>
-
-                        <td>
-                            <input class='input' type='date' id='lendDate' name='lendDate' value='$lendDate'>
-                        </td>
-                    </tr>
-
-                    <tr class='column'>
-                        <td class='label'>
-                            <label for='returnDate'>Datum vrácení</label>
-                        </td>
-
-                        <td class='middleColumn'></td>
-
-                        <td>
-                            <input class='input' type='date' id='returnDate' name='returnDate' value='$returnDate'>
-                        </td>
-                    </tr>
-
-                    <tr class='column'>
-                        <td class='label'>
-                            <label for='reservation'>Rezervace</label>
-                        </td>
-
-                        <td class='middleColumn'></td>
-
-                        <td>
-                            <input class='input' type='text' id='reservation' name='reservation' placeholder='Rezervace' value='$reservation'>
-                        </td>
-                    </tr>
-
-                    <tr class='column'>
-                        <td class='label'>
                             <label for='note'>Poznámka</label>
                         </td>
 
@@ -259,6 +287,18 @@
 
                         <td>
                             <input class='input' type='text' name='note' id='note' placeholder='poznámka' value='$note'>
+                        </td>
+                    </tr>
+
+                    <tr class='column'>
+                        <td class='label'>
+                            <label for='discarded'>Historie</label>
+                        </td>
+
+                        <td class='middleColumn'></td>
+
+                        <td>
+                            <p class='history' id='history'>$history</p>
                         </td>
                     </tr>
 
@@ -274,12 +314,14 @@
                         </td>
                     </tr>
 
-                    <tr class='column'>
+                    <tr class='column btnColumn'>
                         <td>
                             <input class='submitEditBtn btn' type='submit' name='edit' value='Upravit'>
                         </td>
 
-                        <td></td>
+                        <td class='backBtnTd'>
+                            <button onclick='back()' class='btn backBtn'>Zpět</button>
+                        </td>
 
                         <td>
                             <input class='submitDeleteBtn btn' type='submit' value='Smazat' name='delete'>
@@ -300,5 +342,50 @@
 
 
     <script src="returnAutoFill.js"></script>
+
+    <script>
+        let historyElem = document.getElementById('history');
+        let history = historyElem.textContent;
+        let shortHistory;
+        let long = false;
+        let shortened = false;
+
+        console.log(history)
+
+        if (history != '' && history.includes(',')) { // long
+            shortHistory = history.split(',')[0] + ', ...';
+            historyElem.textContent = shortHistory;
+            long = true;
+            shortened = true
+            console.log('long');
+        }
+
+
+        historyElem.addEventListener('click', function(e) {
+            historyElem = document.getElementById('history');
+
+            console.log('click');
+
+            if (long) {
+                if (shortened) {
+                    historyElem.textContent = history;
+                    shortened = false;
+                    console.log(history);
+                }
+
+                else {
+                    historyElem.textContent = shortHistory;
+                    shortened = true;
+                    console.log(shortHistory);
+                }
+            }
+        });
+
+
+
+        function back() {
+            window.location.href = 'index.php';
+        }
+    </script>
 </body>
 </html>

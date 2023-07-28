@@ -45,7 +45,6 @@
 
 .btn {
     margin-bottom: 39px;
-    margin-left: 1px;
     background-color: #2693ff;
     border: 2px solid black;
     padding: 5px 10px;
@@ -258,6 +257,17 @@
     height: 39px;
 }
 
+.btnColumn {
+    height: 40px;
+}
+
+.backBtn {
+    margin-top: 23px;
+    margin-left: 10px;
+    margin-right: 10px;
+    background-color: gray;
+}
+
 .editBookCenterBtns {
     margin-left: 102px;
     margin-right: auto;
@@ -265,6 +275,12 @@
 }
 
 .input {
+    font-size: 20px;
+    font-family: 'Merriweather', serif;
+    width: 200px;
+}
+
+.history {
     font-size: 20px;
     font-family: 'Merriweather', serif;
     width: 200px;
@@ -278,6 +294,10 @@
 
 .middleColumn {
     width: 29px;
+}
+
+.break {
+    height: 20px;
 }
 
 

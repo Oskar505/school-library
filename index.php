@@ -84,7 +84,7 @@
                         }
     
     
-                        $sql = "SELECT id, author, name, returnDate, reservation FROM books WHERE discarded=0 LIMIT 50";
+                        $sql = "SELECT id, author, name, returnDate, reservation, reservationExpiration FROM books WHERE discarded=0 LIMIT 50";
                         $result = mysqli_query($conn, $sql);
     
                         if ($result === false) {
@@ -107,24 +107,38 @@
                             $name = $data[$i]['name'];
                             $returnDate = $data[$i]['returnDate'];
                             $reservation = $data[$i]['reservation'];
+                            $reservationExpiration = $data[$i]['reservationExpiration'];
 
                             $state = 'V knihovně';
 
-                            if ($returnDate != '') {
-                                if ($reservation != '') {
-                                    $availableDate = date('Y-m-d', strtotime($returnDate . ' +7 days'));
 
-                                    $state = "Zarezervováno do $availableDate";
+                            if ($returnDate != '') {
+                                if ($reservation != '') { // lent + reserved
+                                    $availableDate = date('Y-m-d', strtotime($returnDate . ' +3 days'));
+
+                                    //change date format
+                                    $dateTimeObj = new DateTime($availableDate);
+                                    $availableDate = $dateTimeObj->format('j. n.');
+
+                                    $state = "Rezervováno do $availableDate";
                                 }
 
-                                else {
+                                else { // lent
+                                    //change date format
+                                    $dateTimeObj = new DateTime($returnDate);
+                                    $returnDate = $dateTimeObj->format('j. n.');
+
                                     $state = "Půjčeno do $returnDate";
                                 } 
                             }
 
                             else {
-                                if ($reservation != '') {
-                                    $state = "Zarezervováno do +3 dní";
+                                if ($reservation != '') { // reserved
+                                    //change date format
+                                    $dateTimeObj = new DateTime($reservationExpiration);
+                                    $reservationExpiration = $dateTimeObj->format('j. n.');
+
+                                    $state = "Rezervováno do " . $reservationExpiration;
                                 }
                             }
 

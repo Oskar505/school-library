@@ -134,66 +134,6 @@
 
         <tr class='column'>
             <td class='label'>
-                <label for='lentTo'>Půjčeno</label>
-            </td>
-
-            <td class='middleColumn'></td>
-
-            <td>
-                <input class='input' type='text' id='lentTo' name='lentTo' placeholder='Vypůjčeno'>
-            </td>
-        </tr>
-
-        <tr class='column'>
-            <td class='label'>
-                <label for='class'>Třída</label>
-            </td>
-
-            <td class='middleColumn'></td>
-
-            <td>
-                <input class='input' type='text' id='class' name='class' placeholder='Třída'>
-            </td>
-        </tr>
-
-        <tr class='column'>
-            <td class='label'>
-                <label for='lendDate'>Datum půjčení</label>
-            </td>
-
-            <td class='middleColumn'></td>
-
-            <td>
-                <input class='input' type='date' id='lendDate' name='lendDate'>
-            </td>
-        </tr>
-
-        <tr class='column'>
-            <td class='label'>
-                <label for='returnDate'>Datum vrácení</label>
-            </td>
-
-            <td class='middleColumn'></td>
-
-            <td>
-                <input class='input' type='date' id='returnDate' name='returnDate'>
-            </td>
-        </tr>
-
-        <tr class='column'>
-            <td class='label'>
-                <label for='reservation'>Rezervace</label>
-            </td>
-
-            <td class='middleColumn'></td>
-
-            <td>
-                <input class='input' type='text' id='reservation' name='reservation' placeholder='Rezervace'>
-            </td>
-        </tr>
-
-        <tr class='column'>
-            <td class='label'>
                 <label for='note'>Poznámka</label>
             </td>
 

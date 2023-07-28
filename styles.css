@@ -245,3 +245,9 @@ thead th{
     font-weight: bold !important;
     font-size: 30px !important;
 }
+
+.bookLentToSomeone {
+    color: #ffd900;
+    /*font-weight: bold !important;*/
+    font-size: 30px !important;
+}

@@ -1,11 +1,23 @@
 console.log('test')
 
 const isbn = document.getElementById('isbn');
-const fillBtn = document.getElementById('fillBtn');
+/*const fillBtn = document.getElementById('fillBtn');
+
 
 fillBtn.addEventListener('click', function() {
     fill(isbn.value);
-});
+});*/
+
+isbn.addEventListener('input', function(e) {
+    console.log(isbn.value.length);
+
+    if (isbn.value.length == 13) {
+        console.log('if')
+        fill(isbn.value);
+    }
+})
+
+
 
 
 function fill(isbnVal) {
@@ -31,7 +43,7 @@ function fill(isbnVal) {
         let author = data.items[0].volumeInfo.authors[0];
         let publisher = data.items[0].volumeInfo.publisher;
 
-        if (publisher == 'CZECH') {
+        if (publisher == 'CZECH' || publisher == null) {
             publisher = '';
         }
 

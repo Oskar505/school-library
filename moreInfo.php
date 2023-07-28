@@ -258,7 +258,8 @@
         echo 'chyba pripojeni'.mysqli_connect_error();
     }
 
-    // if book is not reserved
+    // book reservation
+    // not available = 0, available = 1
     $sql = "SELECT COUNT(*) FROM books WHERE id = $bookId AND (reservation IS NULL OR reservation = '')";
     $result = mysqli_query($conn, $sql);
 
@@ -267,6 +268,19 @@
     }
     
     $reserved = mysqli_fetch_all($result, MYSQLI_ASSOC)[0]['COUNT(*)'];
+
+
+    // lent to someone
+    // not available = 0, available = 1
+    $sql = "SELECT COUNT(*) FROM books WHERE id = $bookId AND (lentTo IS NULL OR lentTo = '')";
+    $result = mysqli_query($conn, $sql);
+
+    if ($result === false) {
+        echo 'Error: '.mysqli_error($conn);
+    }
+    
+    $lentToSomeone = mysqli_fetch_all($result, MYSQLI_ASSOC)[0]['COUNT(*)'];
+
 
 
     if (isset($_SESSION['userLoggedIn'])) {
@@ -279,29 +293,41 @@
             $reservationInfo = '
             <span class="material-symbols-outlined bookAvailable">done</span>
             <p>Rezervováno</p>';
-            echo 'ok';
             echo $reservationOk;
         }
 
 
-        elseif ($reserved == 0) {
+        elseif ($reserved == 0) { // not available
             $reserveBtnText = 'Rezervovat';
             $reservationInfo = '
             <span class="material-symbols-outlined bookNotAvailable">close</span>
             <p>Rezervováno</p>';
-            echo 'not available';
             $reserveBtnDeactivate = 'deactivateBtn';
+        }
+        
+
+        elseif ($lentToSomeone == 0 && $reserved != 0) {
+            $reserveBtnText = 'Rezervovat';
+            $reservationInfo = '
+            <span class="material-symbols-outlined bookLentToSomeone">priority_high</span>
+            <p>Půjčeno</p>';
         }
     }
 
     else {
-        if ($reserved == 0) {
+        if ($reserved == 0) { // not available
             $reserveBtnText = 'Rezervovat';
             $reservationInfo = '
             <span class="material-symbols-outlined bookNotAvailable">close</span>
             <p>Rezervováno</p>';
-            echo 'not available';
             $reserveBtnDeactivate = 'deactivateBtn';
+        }
+
+        elseif ($lentToSomeone == 0 && $reserved != 0) {
+            $reserveBtnText = 'Rezervovat';
+            $reservationInfo = '
+            <span class="material-symbols-outlined bookLentToSomeone">priority_high</span>
+            <p>Půjčeno</p>';
         }
     }
 ?>
