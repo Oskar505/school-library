@@ -1,4 +1,6 @@
 <?php
+    //TODO: upozornit admina kdyz pujcuje knihu nekomu kdo ju nema rezervovanou, ukazovat pocet pujcenych knih pri pujcovani nove
+
     session_start();
 
     if (!isset($_SESSION['loggedin'])) {

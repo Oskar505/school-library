@@ -32,6 +32,8 @@
 
         $_SESSION['reserved'] = $reservedBooks;
         $_SESSION['borrowed'] = $borrowedBooks;
+
+        $conn->close();
     }
     
 
@@ -64,6 +66,7 @@
 
         $name = $data[0]['name'];
         $author = $data[0]['author'];
+        $returnDate = $data[0]['returnDate'];
 
         $reserveBtnText = 'Rezervovat';
 
@@ -79,7 +82,6 @@
                 $reservedBooks = explode(',', $reservedBooks);
 
                 if (!in_array($bookId, $reservedBooks)) { // reserve
-                    $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
 
                     if (!$conn) {
                         echo 'chyba pripojeni'.mysqli_connect_error();
@@ -100,12 +102,38 @@
                     
                     $reserved = mysqli_fetch_all($result, MYSQLI_ASSOC)[0]['COUNT(*)'];
 
+                    // reservation limit (3)
+                    $sql = "SELECT reserved FROM users WHERE login = '$userLogin'";
+                    $result = $conn->query($sql);
+
+                    if ($result->num_rows > 0) {
+                        $row = $result->fetch_assoc();
+                        $reservedString = $row['reserved'];
+
+                        // split
+                        if ($reservedString != null) {
+                            $reservedArray = explode(',', $reservedString);
+                            $reservedBooksCount = count($reservedArray);
+                        }
+                    }
+
+
+
                     
-                    if ($reserved != 0) {
+                    if ($reserved != 0 && $reservedBooksCount < 3) {
                         // reservation expiration date
-                        $today = new DateTime();
-                        $today->add(new DateInterval('P3D'));
-                        $reservationExpiration =  $today->format('Y-m-d');
+                        if ($returnDate != '') { // lent
+                            $returnDateObj = new DateTime($returnDate);
+                            $returnDateObj->add(new DateInterval('P3D')); // +3 d
+                            $reservationExpiration = $returnDateObj->format('Y-m-d');
+                        }
+
+                        else { // available
+                            $today = new DateTime();
+                            $today->add(new DateInterval('P3D'));// +3 d
+                            $reservationExpiration = $today->format('Y-m-d');
+                        }
+
 
                         // update books table
                         $sql = "UPDATE books SET reservation='$userLogin', reservationExpiration='$reservationExpiration' WHERE id=$bookId";
@@ -139,7 +167,7 @@
 
                     else {
                         echo '<h1>Rezervace se nezdařila.</h1>
-                        <p>Tato kniha není volná.</p>
+                        <p>Tato kniha není volná, nebo jste překročili limit rezervací.</p>
                         <a href="index.php">Domů</a>';
                         exit;
                     }
@@ -149,12 +177,6 @@
 
 
                 else { // cancel reservation
-                    $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
-
-                    if (!$conn) {
-                        echo 'chyba pripojeni'.mysqli_connect_error();
-                    }
-
                     // escape string
                     $bookId = mysqli_real_escape_string($conn, $bookId); 
                     $userLogin = mysqli_real_escape_string($conn, $userLogin);
@@ -229,6 +251,9 @@
                 exit;
             }
         }
+
+
+        $conn->close();
     }
 
 
@@ -281,21 +306,25 @@
     
     $lentToSomeone = mysqli_fetch_all($result, MYSQLI_ASSOC)[0]['COUNT(*)'];
 
+    $conn->close();
+
 
 
     if (isset($_SESSION['userLoggedIn'])) {
         $reservedBooks = $_SESSION['reserved'];
-        $reservedBooks = explode(',', $reservedBooks);
 
+        if ($reservedBooks != null) {
+            $reservedBooks = explode(',', $reservedBooks);
 
-        if (in_array($bookId, $reservedBooks) || $reservationOk) { // rezervovano uzivatelem
-            $reserveBtnText = 'Zrušit rezervaci';
-            $reservationInfo = '
-            <span class="material-symbols-outlined bookAvailable">done</span>
-            <p>Rezervováno</p>';
-            echo $reservationOk;
+            if (in_array($bookId, $reservedBooks) || $reservationOk) { // rezervovano uzivatelem
+                $reserveBtnText = 'Zrušit rezervaci';
+                $reservationInfo = '
+                <span class="material-symbols-outlined bookAvailable">done</span>
+                <p>Rezervováno</p>';
+                echo $reservationOk;
+            }
         }
-
+        
 
         elseif ($reserved == 0) { // not available
             $reserveBtnText = 'Rezervovat';
