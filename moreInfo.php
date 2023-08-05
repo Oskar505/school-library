@@ -111,7 +111,9 @@
                         $reservedString = $row['reserved'];
 
                         // split
-                        if ($reservedString != null) {
+                        $reservedBooksCount = 0;
+
+                        if ($reservedString != null && $reservedString != '') {
                             $reservedArray = explode(',', $reservedString);
                             $reservedBooksCount = count($reservedArray);
                         }
