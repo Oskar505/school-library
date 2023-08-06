@@ -300,6 +300,28 @@
     height: 20px;
 }
 
+.tdWithIcon {
+    display: inline-block;
+}
+
+.usernameWarning {
+    color: red;
+    font-weight: normal;
+    font-size: 30px;
+    position: absolute;
+    margin-left: 10px;
+    display: none;
+
+    font-family: 'Material Symbols Outlined';
+    font-style: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+}
+
 
 /* ADD */
 

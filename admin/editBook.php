@@ -22,6 +22,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather&family=Playfair+Display&family=Roboto&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
     <?php
@@ -29,7 +32,7 @@
         include 'adminHeader.php'; 
     ?>
 
-    <form class="inputForm" method="post" action="index.php">
+    <form class="inputForm" method="post" action="index.php" autocomplete="off">
 
         <?php
             /*
@@ -113,8 +116,11 @@
 
                         <td class='middleColumn'></td>
 
-                        <td>
-                            <input class='input' type='text' id='lentTo' name='lentTo' placeholder='Vypůjčeno' value='$lentTo'>
+                        <td class='tdWithIcon'>
+                            <input class='input' list='suggestionsList' type='text' id='lentTo' name='lentTo' placeholder='Vypůjčeno' value='$lentTo'>
+                            <datalist id='suggestionsList'></datalist>
+
+                            <span class='usernameWarning' id='lentToUsernameWarning'>warning</span>
                         </td>
                     </tr>
 
@@ -162,7 +168,10 @@
                         <td class='middleColumn'></td>
 
                         <td>
-                            <input class='input' type='text' id='reservation' name='reservation' placeholder='Rezervace' value='$reservation'>
+                            <input class='input' type='text' list='reservationSuggestionsList' id='reservation' name='reservation' placeholder='Rezervace' value='$reservation'>
+                            <datalist id='reservationSuggestionsList'></datalist>
+
+                            <span class='usernameWarning' id='reservationUsernameWarning'>warning</span>
                         </td>
                     </tr>
 
@@ -343,7 +352,7 @@
     </form>
 
 
-    <script src="returnAutoFill.js"></script>
+    <script src="editBook.js"></script>
 
     <script>
         let historyElem = document.getElementById('history');
