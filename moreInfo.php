@@ -6,6 +6,8 @@
     $database = $secrets['sql-database'];
 
 
+    include 'functions.php';
+
     session_start();
 
     ini_set('display_errors', 1);
@@ -168,10 +170,7 @@
 
 
                     else {
-                        echo '<h1>Rezervace se nezdařila.</h1>
-                        <p>Tato kniha není volná, nebo jste překročili limit rezervací.</p>
-                        <a href="index.php">Domů</a>';
-                        exit;
+                        showError('Rezervace se nezdařila.', 'Překročili jste limit rezervací, nebo tato kniha byla už rezervována.');
                     }
                 }
 
@@ -232,10 +231,7 @@
 
 
                     else {
-                        echo '<h1>Zrušení rezervace se nezdařilo.</h1>
-                        <p>Tato kniha není rezervována. V tabulce books není zapsaná rezervace.</p>
-                        <a href="index.php">Domů</a>';
-                        exit;
+                        showError('Zrušení rezervace se nezdařilo.', 'Tato kniha není rezervována. V tabulce books není zapsaná rezervace.');
                     }
                 }
 
@@ -247,10 +243,7 @@
 
 
             else {
-                echo '<h1>Rezervace se nezdařila.</h1>
-                <a href="userLogin.php">Přihlaste se.</a>
-                <p>Pokud jste přihlášeni jako administrátor, přihlašte se uživatelským účtem.</p>';
-                exit;
+                showError('Rezervace se nezdařila', 'Pokud jste přihlášeni jako administrátor, přihlašte se uživatelským účtem.');
             }
         }
 
@@ -263,9 +256,7 @@
 
     // error
     else {
-        echo '<h1>Nepodařilo se získat id knihy</h1>
-        <p>Vraťte se na hlavní stránku a zkuste to znovu</p>';
-        exit;
+        showError('Nepodařilo se získat id knihy', 'Vraťte se na hlavní stránku a zkuste to znovu');
     }
 
 
@@ -282,7 +273,7 @@
     $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
 
     if (!$conn) {
-        echo 'chyba pripojeni'.mysqli_connect_error();
+        showError('Chyba připojení', 'Nastala chyba připojení k databázi, zkuste to prosím později.');
     }
 
     // book reservation
@@ -291,7 +282,7 @@
     $result = mysqli_query($conn, $sql);
 
     if ($result === false) {
-        echo 'Error: '.mysqli_error($conn);
+        showError('Chyba databáze', 'Nastala chyba čtení dat z databáze, zkuste to prosím později.');
     }
     
     $reserved = mysqli_fetch_all($result, MYSQLI_ASSOC)[0]['COUNT(*)'];
@@ -303,7 +294,7 @@
     $result = mysqli_query($conn, $sql);
 
     if ($result === false) {
-        echo 'Error: '.mysqli_error($conn);
+        showError('Chyba databáze', 'Nastala chyba čtení dat z databáze, zkuste to prosím později.');
     }
     
     $lentToSomeone = mysqli_fetch_all($result, MYSQLI_ASSOC)[0]['COUNT(*)'];

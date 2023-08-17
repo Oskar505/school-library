@@ -6,6 +6,10 @@
     $sqlPassword = $secrets['sql-password'];
     $database = $secrets['sql-database'];
 
+
+    include 'functions.php';
+
+
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
@@ -73,18 +77,20 @@
 
                 <tbody id="tableBody">
                     <?php
-                        $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
-
-                        if (!$conn) {
-                            echo 'chyba pripojeni'.mysqli_connect_error();
+                        try {
+                            $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
                         }
-    
+                        
+                        catch (mysqli_sql_exception $e) {
+                            showError('Chyba připojení', 'Nastala chyba připojení k databázi, zkuste to prosím později.');
+                        }
+
     
                         $sql = "SELECT id, author, name, returnDate, reservation, reservationExpiration FROM books WHERE discarded=0 LIMIT 50";
                         $result = mysqli_query($conn, $sql);
     
                         if ($result === false) {
-                                echo 'Error: '.mysqli_error($conn);
+                            showError('Chyba databáze', 'Nastala chyba čtení dat z databáze, zkuste to prosím později.');
                         }
     
     

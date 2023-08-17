@@ -13,9 +13,9 @@
     error_reporting(E_ALL);
 
 
+    include '../functions.php';
 
     // get secrets
-
     require('/var/secrets.php');
 
     $sqlUser = $secrets['sql-user'];
@@ -48,10 +48,18 @@
 
 
 
-        $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
+        try {
+            $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
+        }
+        
+        catch (mysqli_sql_exception $e) {
+            showError('Chyba připojení', "Nastala chyba připojení k databázi, zkuste to prosím později.");
+        }
+
+        
 
         if (!$conn) {
-            echo 'Připojení k databázi se nezdařilo';
+            showError('Chyba databáze', 'Nastala chyba čtení dat z databáze, zkuste to prosím později.');
         }
 
 
@@ -119,16 +127,60 @@
         $allData = [$registration, $isbn, $subject, $class, $publisher, $author, $name, $price, $dateAdded, $lentTo, $lendDate, $returnDate, $history, $reservation, $reservationExpiration, $note, $discarded, $id];
 
 
-        $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
+        try {
+            $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
+        }
+        
+        catch (mysqli_sql_exception $e) {
+            showError('Chyba připojení', "Nastala chyba připojení k databázi, zkuste to prosím později.");
+        }
+
+
 
         if (!$conn) {
-            echo 'Připojení k databázi se nezdařilo';
+            showError('Chyba databáze', 'Nastala chyba čtení dat z databáze, zkuste to prosím později.');
         }
 
 
         $allData = array_map(function($value) use ($conn) {
             return empty($value) ? NULL : mysqli_real_escape_string($conn, $value);
-        }, $allData);      
+        }, $allData);
+
+
+        // control username
+        if (!empty($lentTo)) {
+            $sql = "SELECT COUNT(*) FROM users WHERE login='$lentTo'";
+            $result = mysqli_query($conn, $sql);
+
+            if ($result === false) {
+                showError('Chyba databáze', 'Nastala chyba čtení dat z databáze, zkuste to prosím později.');
+            }
+
+            $usersCount = mysqli_fetch_all($result, MYSQLI_ASSOC)[0]['COUNT(*)'];
+
+
+            if ($usersCount == 0) {
+                showError('Úprava se nezdařila.', "Zadali jste neplatné uživatelské jméno \"$lentTo\" do políčka půjčeno.", '/admin');
+            }
+        }
+
+
+        if (!empty($reservation)) {
+            $sql = "SELECT COUNT(*) FROM users WHERE login='$reservation'";
+            $result = mysqli_query($conn, $sql);
+
+            if ($result === false) {
+                showError('Chyba databáze', 'Nastala chyba čtení dat z databáze, zkuste to prosím později.');
+            }
+
+            $usersCount = mysqli_fetch_all($result, MYSQLI_ASSOC)[0]['COUNT(*)'];
+
+
+            if ($usersCount == 0) {
+                showError('Úprava se nezdařila.', "Zadali jste neplatné uživatelské jméno \"$reservation\" do políčka rezervace.", '/admin');
+            }
+        }
+
 
         // discarded
         if ($allData[16] == 'on') {
@@ -169,16 +221,10 @@
         }
         
 
-
-        //update books
-        $stmt = mysqli_prepare($conn, "UPDATE books SET registration = ?, isbn = ?, subject = ?, class = ?, publisher = ?, author = ?, name = ?, price = ?, dateAdded = ?, lentTo = ?, lendDate = ?, returnDate = ?, history = ?, reservation = ?, reservationExpiration = ?, note = ?, discarded = ? WHERE id=?");
-        mysqli_stmt_bind_param($stmt, "ssssssssssssssssii", $allData[0], $allData[1], $allData[2], $allData[3], $allData[4], $allData[5], $allData[6], $allData[7], $allData[8], $allData[9], $allData[10], $allData[11], $allData[12], $allData[13], $allData[14], $allData[15], $allData[16], $allData[17]);
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_close($stmt);
+        // update books jsem presunul dolu protoze update useru muze hazet chyby tak at se to upravi jen kdyz je vse ok
 
 
-
-        //update users
+        //UPDATE USERS
         $lentTo = $allData[9];
 
         if ($oldLentTo != $lentTo) {
@@ -189,7 +235,7 @@
             $result = mysqli_query($conn, $sql);
             
             if ($result === false) {
-                echo 'Error: '.mysqli_error($conn);
+                showError('Chyba databáze', 'Nastala chyba čtení dat z databáze, zkuste to prosím později.');
             }
         
             $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -242,10 +288,11 @@
 
 
             else {
-                echo 'else <br>';
                 //TODO: vymazat u jednoho usera a druhemu to pridat nebo napsat chybu
+                showError('Úprava se nezdařila', 'Kniha musí být před dalším půjčením vrácena do knihovny.', '/admin');
             }
         }
+
 
 
         // reservation
@@ -307,13 +354,25 @@
 
 
             else {
-                echo 'else <br>';
                 //TODO: vymazat u jednoho usera a druhemu to pridat nebo napsat chybu
+                showError('Úprava se nezdařila', 'Rezervace musí být před dalším rezervováním zrušena.', '/admin');
             }
         }
 
 
+
+
+
+        //UPDATE BOOKS - moved
+        $stmt = mysqli_prepare($conn, "UPDATE books SET registration = ?, isbn = ?, subject = ?, class = ?, publisher = ?, author = ?, name = ?, price = ?, dateAdded = ?, lentTo = ?, lendDate = ?, returnDate = ?, history = ?, reservation = ?, reservationExpiration = ?, note = ?, discarded = ? WHERE id=?");
+        mysqli_stmt_bind_param($stmt, "ssssssssssssssssii", $allData[0], $allData[1], $allData[2], $allData[3], $allData[4], $allData[5], $allData[6], $allData[7], $allData[8], $allData[9], $allData[10], $allData[11], $allData[12], $allData[13], $allData[14], $allData[15], $allData[16], $allData[17]);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+
+
         
+
+
         // send form only once
         header('Location: index.php');
         exit;
@@ -325,10 +384,17 @@
         $id = $_POST['id'];
 
 
-        $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
+        try {
+            $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
+        }
+        
+        catch (mysqli_sql_exception $e) {
+            showError('Chyba připojení', "Nastala chyba připojení k databázi, zkuste to prosím později.");
+        }
+
 
         if (!$conn) {
-            echo 'Připojení k databázi se nezdařilo';
+            showError('Chyba databáze', 'Nastala chyba čtení dat z databáze, zkuste to prosím později.');
         }
 
 
@@ -387,10 +453,17 @@
         </div>
 
         <?php
-            $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
+            try {
+                $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
+            }
+            
+            catch (mysqli_sql_exception $e) {
+                showError('Chyba připojení', "Nastala chyba připojení k databázi, zkuste to prosím později.");
+            }
+
 
             if (!$conn) {
-                echo 'Připojení k databázi se nezdařilo';
+                showError('Chyba databáze', 'Nastala chyba čtení dat z databáze, zkuste to prosím později.');
             }
 
             // get count
@@ -398,7 +471,7 @@
             $result = mysqli_query($conn, $sql);
 
             if ($result === false) {
-                    echo 'Error: '.mysqli_error($conn);
+                showError('Chyba databáze', 'Nastala chyba čtení dat z databáze, zkuste to prosím později.');
             }
 
             $resultCount = mysqli_fetch_all($result, MYSQLI_ASSOC)[0]['COUNT(*)'];
@@ -409,7 +482,7 @@
             $result = mysqli_query($conn, $sql);
 
             if ($result === false) {
-                echo 'Error: ' . mysqli_error($conn);
+                showError('Chyba databáze', 'Nastala chyba čtení dat z databáze, zkuste to prosím později.');
             }
 
             else {
@@ -457,10 +530,12 @@
                 <?php
                     $rows = 100;
 
-                    $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
-
-                    if (!$conn) {
-                        echo 'chyba pripojeni'.mysqli_connect_error();
+                    try {
+                        $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
+                    }
+                    
+                    catch (mysqli_sql_exception $e) {
+                        showError('Chyba připojení', "Nastala chyba připojení k databázi, zkuste to prosím později.");
                     }
 
 
