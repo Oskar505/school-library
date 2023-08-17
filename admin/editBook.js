@@ -102,19 +102,36 @@ function updateSuggestions(inputId, suggestionsListId, warningIconId) {
         console.log('hide');
         let usernameWarning = document.getElementById(warningIconId);
         usernameWarning.style.display = 'none';
-
+        
+        // logins
         suggestions.forEach(function (value) {
           var option = document.createElement('option');
-          option.value = value;
-
+          option.value = value['login'];
+          console.log(value['login']);
           datalist.append(option);
         });
+
+        
+        //class
+        let lentToEl = document.getElementById('lentTo');
+        let classEl = document.getElementById('class');
+
+        if (lentToEl.value != '') {
+          classEl.value = suggestions[0]['class'];
+        }
+
+        else {
+          classEl.value = '';
+        }
       }
       
       else {
         console.log('show');
         let usernameWarning = document.getElementById(warningIconId);
         usernameWarning.style.display = 'inline-block';
+
+        let classEl = document.getElementById('class');
+        classEl.value = '';
       }
     },
     error: function () {

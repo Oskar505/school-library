@@ -105,7 +105,11 @@
 
 
                 // html
-                echo "<input type='hidden' name='id' value=$id>";
+                echo "
+                <input type='hidden' name='id' value=$id>
+                <input type='hidden' name='oldLentTo' value=$lentTo>
+                <input type='hidden' name='oldReservation' value=$reservation>
+                ";
             
                 echo "
                 <table class='editBookTable'>
@@ -120,7 +124,7 @@
                             <input class='input' list='suggestionsList' type='text' id='lentTo' name='lentTo' placeholder='Vypůjčeno' value='$lentTo'>
                             <datalist id='suggestionsList'></datalist>
 
-                            <span class='usernameWarning' id='lentToUsernameWarning'>warning</span>
+                            <span class='usernameWarning' id='lentToUsernameWarning' title='Uživatelské jméno neexistuje'>warning</span>
                         </td>
                     </tr>
 
@@ -183,7 +187,7 @@
                         <td class='middleColumn'></td>
 
                         <td>
-                            <input class='input' type='text' id='reservationExpiration' name='reservationExpiration' placeholder='Konec rezervace' value='$reservationExpiration'>
+                            <input class='input' type='date' id='reservationExpiration' name='reservationExpiration' placeholder='Konec rezervace' title='Pokud prázdné vyplní se automaticky +3 dny.' value='$reservationExpiration'>
                         </td>
                     </tr>
 
@@ -303,7 +307,7 @@
 
                     <tr class='column'>
                         <td class='label'>
-                            <label for='discarded'>Historie</label>
+                            <label for='history'>Historie</label>
                         </td>
 
                         <td class='middleColumn'></td>

@@ -434,7 +434,7 @@
 
 
 
-        let url = "https://www.googleapis.com/books/v1/volumes?q=" + name + "+inauthor:" + author;
+        let url = "https://www.googleapis.com/books/v1/volumes?q=" + name /*+ "+inauthor:" + author*/;
 
         console.log(url);
 

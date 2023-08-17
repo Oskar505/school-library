@@ -6,11 +6,12 @@
         exit;
     }
 
-    /*
+
+
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
-    */
+
 
 
     // get secrets
@@ -92,7 +93,6 @@
 
 
     // edit
-
     if (isset($_POST['edit'])) {
         $id = $_POST['id'];
         $registration = $_POST['registration'];
@@ -112,7 +112,10 @@
         $reservationExpiration = '';
         $note = $_POST['note'];
         $discarded = $_POST['discarded'];
+        $oldLentTo = $_POST['oldLentTo'];
+        $oldReservation = $_POST['oldReservation'];
 
+        //TODO: ten list allData je na nic
         $allData = [$registration, $isbn, $subject, $class, $publisher, $author, $name, $price, $dateAdded, $lentTo, $lendDate, $returnDate, $history, $reservation, $reservationExpiration, $note, $discarded, $id];
 
 
@@ -145,7 +148,7 @@
         }
 
 
-        // Získání stávajícího seznamu
+        // history
         $query = "SELECT history FROM books WHERE id = $id";
         $result = mysqli_query($conn, $query);
         $row = mysqli_fetch_assoc($result);
@@ -165,20 +168,156 @@
             $allData[12] = $history;
         }
         
-        echo $allData[12];
 
-        // FIXME:
 
+        //update books
         $stmt = mysqli_prepare($conn, "UPDATE books SET registration = ?, isbn = ?, subject = ?, class = ?, publisher = ?, author = ?, name = ?, price = ?, dateAdded = ?, lentTo = ?, lendDate = ?, returnDate = ?, history = ?, reservation = ?, reservationExpiration = ?, note = ?, discarded = ? WHERE id=?");
         mysqli_stmt_bind_param($stmt, "ssssssssssssssssii", $allData[0], $allData[1], $allData[2], $allData[3], $allData[4], $allData[5], $allData[6], $allData[7], $allData[8], $allData[9], $allData[10], $allData[11], $allData[12], $allData[13], $allData[14], $allData[15], $allData[16], $allData[17]);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
 
+
+
+        //update users
+        $lentTo = $allData[9];
+
+        if ($oldLentTo != $lentTo) {
+            empty($oldLentTo) ? $login = $lentTo : $login = $oldLentTo; // get right login
+            mysqli_real_escape_string($conn, $login);
+
+            $sql = "SELECT borrowed, reserved, borrowedHistory FROM users WHERE login = '$login'";
+            $result = mysqli_query($conn, $sql);
+            
+            if ($result === false) {
+                echo 'Error: '.mysqli_error($conn);
+            }
+        
+            $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+
+            $bookId = $allData[0];
+
+            $borrowed = $data[0]['borrowed'];
+            $reserved = $data[0]['reserved'];
+            $borrowedHistory = $data[0]['borrowedHistory'];
+
+            // get arrays
+            !empty($borrowed) ? $borrowed = explode(',', $borrowed): $borrowed = array();
+            !empty($reserved) ? $reserved = explode(',', $reserved): $reserved = array();
+            !empty($borrowedHistory) ? $borrowedHistory = explode(',', $borrowedHistory): $borrowedHistory = array();
+
+
+            if (empty($oldLentTo) && !empty($lentTo) && !in_array($bookId, $borrowed)) { // bookId is not in borrowed - borrow book
+                // borrowed
+                array_push($borrowed, $bookId); // add new book id
+
+                // borrowed history
+                array_push($borrowedHistory, $bookId);
+
+
+                // array to string
+                $borrowed = implode(',', $borrowed);
+                $borrowedHistory = implode(',', $borrowedHistory);
+
+                // update users
+                $stmt = mysqli_prepare($conn, "UPDATE users SET borrowed = ?, borrowedHistory = ? WHERE login=?");
+                mysqli_stmt_bind_param($stmt, "sss", $borrowed, $borrowedHistory, $login);
+                mysqli_stmt_execute($stmt);
+                mysqli_stmt_close($stmt);
+            }
+
+
+            else if (!empty($oldLentTo) && empty($lentTo)) {// book is in users - return book
+                $borrowed = array_diff($borrowed, array($bookId));
+
+                // array to string
+                $borrowed = implode(',', $borrowed);
+
+                // update users
+                $stmt = mysqli_prepare($conn, "UPDATE users SET borrowed = ? WHERE login=?");
+                mysqli_stmt_bind_param($stmt, "ss", $borrowed,  $login);
+                mysqli_stmt_execute($stmt);
+                mysqli_stmt_close($stmt);
+            }
+
+
+            else {
+                echo 'else <br>';
+                //TODO: vymazat u jednoho usera a druhemu to pridat nebo napsat chybu
+            }
+        }
+
+
+        // reservation
+        $reservation = $allData[13];
+
+        if ($oldReservation != $reservation) {
+            empty($oldReservation) ? $login = $reservation : $login = $oldReservation; // get right login
+
+            mysqli_real_escape_string($conn, $login);
+
+            $sql = "SELECT reserved FROM users WHERE login = '$login'";
+            $result = mysqli_query($conn, $sql);
+            
+            if ($result === false) {
+                echo 'Error: '.mysqli_error($conn);
+            }
+        
+            $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+
+            $bookId = $allData[0];
+
+            $reserved = $data[0]['reserved'];
+
+            // get array
+            !empty($reserved) ? $reserved = explode(',', $reserved): $reserved = [];
+
+
+            // reserved
+            if (empty($oldReservation) && !empty($reservation) && !in_array($bookId, $reserved)) { // bookId is not in reserved - borrow book
+
+                // reserved
+                array_push($reserved, $bookId); // add new book id
+
+                // array to string
+                $reserved = implode(',', $reserved);
+
+                // update users
+                $stmt = mysqli_prepare($conn, "UPDATE users SET reserved = ? WHERE login=?");
+                mysqli_stmt_bind_param($stmt, "ss", $reserved, $login);
+                mysqli_stmt_execute($stmt);
+                mysqli_stmt_close($stmt);
+            }
+
+
+            else if (!empty($oldReservation) && empty($reservation)) {// book is in users - return book
+
+                $reserved = array_diff($reserved, array($bookId));
+
+                // array to string
+                $reserved = implode(',', $reserved);
+
+                // update users
+                $stmt = mysqli_prepare($conn, "UPDATE users SET reserved = ? WHERE login=?");
+                mysqli_stmt_bind_param($stmt, "ss", $reserved,  $login);
+                mysqli_stmt_execute($stmt);
+                mysqli_stmt_close($stmt);
+            }
+
+
+            else {
+                echo 'else <br>';
+                //TODO: vymazat u jednoho usera a druhemu to pridat nebo napsat chybu
+            }
+        }
+
+
+        
         // send form only once
         header('Location: index.php');
         exit;
     }
-
 
     //delete
 
@@ -235,7 +374,7 @@
                 <input class='addBtn btn' type="submit" value="Přidat knihu">
             </form>
 
-            <a href="downloadData.php" class="material-symbols-outlined downloadBtn">
+            <a href="downloadData.php" class="material-symbols-outlined downloadBtn" title="Stáhnout">
                 <img class="downloadImg" src="/img/download.svg" alt="Stáhnout">
             </a>
         </div>
@@ -372,16 +511,23 @@
 
 
                         // book wasnt returned in time
+                        
                         $returnedInTime = true;
                         $returnedInTimeClass = '';
-                        $returnDateObj = new DateTime($returnDate);
-                        $todayDateObj = new DateTime();
+
+                        if ($returnDate != null) {
+                            $returnDateObj = new DateTime($returnDate);
+                            $todayDateObj = new DateTime();
 
 
-                        if ($returnDateObj < $todayDateObj &&  $returnDate != '') {
-                            $returnedInTime = false;
-                            $returnedInTimeClass = 'notReturned';
+                            if ($returnDateObj < $todayDateObj &&  $returnDate != '') {
+                                $returnedInTime = false;
+                                $returnedInTimeClass = 'notReturned';
+                            }
                         }
+
+                       
+                        
 
 
 

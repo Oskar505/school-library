@@ -1,4 +1,13 @@
 <?php
+    session_start();
+
+    if (!isset($_SESSION['loggedin'])) {
+        header('Location: login.php');
+        exit;
+    }
+
+    
+
     // Připojení k databázi (nahraďte 'your_username', 'your_password' a 'your_database_name' vhodnými údaji)
     $host = 'localhost';
     
@@ -21,18 +30,18 @@
     $query = $_GET['query'];
 
     // Sestavení SQL dotazu na získání odpovídajících položek z databáze
-    $sql = "SELECT login FROM users WHERE login LIKE '%" . $query . "%' LIMIT 10";
+    $sql = "SELECT login, class FROM users WHERE login LIKE '%" . $query . "%' LIMIT 10";
 
-    $result = $conn->query($sql);
-    if ($result->num_rows > 0) {
-        // Vrácení výsledku jako JSON
-        $suggestions = array();
+    $result = mysqli_query($conn, $sql);
+    
+    if ($result === false) {
+        echo 'Error: '.mysqli_error($conn);
+    }
 
-        while ($row = $result->fetch_assoc()) {
-            $suggestions[] = $row['login'];
-        }
+    $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-        echo json_encode($suggestions);
+    if (count($data) > 0) {
+        echo json_encode($data);
     }
     
     else {
