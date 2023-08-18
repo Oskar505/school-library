@@ -162,6 +162,7 @@
                         else {
                             $reservationOk = true;
 
+                            //TODO: nejaky lepsi upozorneni
                             echo '<h1>Kniha byla zarezervována</h1>
                             <a href="index.php">Domů</a>';
                             exit;

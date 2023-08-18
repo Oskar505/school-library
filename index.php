@@ -26,6 +26,8 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="/styles.css">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
 </head>
 <body>
     <header class="indexHeader container">
@@ -33,18 +35,39 @@
             <img class="logo" src="https://www.gykovy.cz/wp-content/uploads/2021/02/cropped-cropped-GYKOVY-LOGO_bila-budova-okoli-kruhu_web-1.png" alt="gykovy logo">
             <h1 class="mainH1">Školní knihovna GYKOVY</h1>
             
-            <?php
-                session_start();
+            <div class="userBar">
+                <div class="material-symbols-outlined myBooksIcon">book</div>
 
-                if (isset($_SESSION['userLoggedIn']) || isset($_SESSION['loggedin'])) {
-                    echo "<a class='loginLink' href='admin/logout.php'>" . $_SESSION['firstName'] /*. ' ' . $_SESSION['lastName']*/ . "<br> Odhlásit se</a>";
-                }
+                <div class="account">
+                    <div class="material-symbols-outlined accountCircle" onclick="toggleDropdown()">account_circle</div>
+                    
+                    <?php
+                        session_start();
+
+                        if (isset($_SESSION['userLoggedIn']) || isset($_SESSION['loggedin'])) {
+                            $firstName = $_SESSION['firstName'];
+
+                            $dropdown = "
+                                <p class='dropdownOption'>$firstName</p>
+                                <hr class='dropdownDivider'>
+                                <a class='dropdownOption' href='admin/logout.php'>Odhlásit se</a>
+                            ";
+                        }
+                        
+
+                        else {
+                            $dropdown = "
+                                <a class='dropdownOption' href='/userLogin.php'>Přihlásit se</a>
+                            ";
+                        }
+                    ?>
+
+                    <div class="accountDropdown" id="accountDropdown">
+                        <?php echo $dropdown ?>
+                    </div>
+                </div>
                 
-
-                else {
-                    echo "<a class='loginLink' href='userLogin.php'>Přihlásit se</a>";
-                }
-            ?>
+            </div>
         </div>
 
         <nav>
@@ -203,6 +226,44 @@
                     tbody.html(response);
                 }
             });
+        }
+
+
+        // account dropdown
+
+        // load dropdown
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleDropdown();
+        });
+
+        function toggleDropdown() {
+            let dropdown = document.getElementById("accountDropdown");
+
+            if (dropdown.style.display === "none") {
+                dropdown.style.display = "block";
+                document.addEventListener('click', closeDropdownOnClickOutside);
+                console.log('show');
+            } 
+            
+            else {
+                dropdown.style.display = "none";
+                document.removeEventListener('click', closeDropdownOnClickOutside);
+                console.log('hide');
+            }
+
+            event.stopPropagation()
+        }
+
+
+        function closeDropdownOnClickOutside(event) {
+            var dropdown = document.getElementById("accountDropdown");
+            var targetElement = event.target;
+            console.log('out');
+
+            if (!dropdown.contains(targetElement)) {
+                dropdown.style.display = "none";
+                document.removeEventListener('click', closeDropdownOnClickOutside);
+            }
         }
     </script>
 </body>
