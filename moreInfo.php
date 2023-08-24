@@ -368,7 +368,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
 </head>
 <body>
-    <header class="container moreInfoHeader">
+    <header class="container header">
         <h1 class="bookName"><?php echo $name?></h1>
         <h2 class="author"><?php echo $author?></h2>
 

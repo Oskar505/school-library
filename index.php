@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="/styles.css">
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
     <header class="indexHeader container">
@@ -36,10 +37,17 @@
             <h1 class="mainH1">Školní knihovna GYKOVY</h1>
             
             <div class="userBar">
-                <div class="material-symbols-outlined myBooksIcon">book</div>
+                <a href="/settings.php">
+                    <div class="material-symbols-outlined settingsIcon" id="settingsIcon">settings</div>
+                </a>
+                
+                <a href="/myBooks.php">
+                    <div class="material-symbols-outlined myBooksIcon" id="myBooksIcon">book</div>
+                </a>
+                
 
                 <div class="account">
-                    <div class="material-symbols-outlined accountCircle" onclick="toggleDropdown()">account_circle</div>
+                    <div class="material-symbols-outlined accountCircle" id="accountCircle">account_circle</div>
                     
                     <?php
                         session_start();
@@ -193,6 +201,7 @@
 
     </footer>
     
+    <script src="accountDropdown.js"></script>
 
     <script>
         function openMoreInfo(id, name) {
@@ -202,18 +211,14 @@
 
 
         // search
-
         let searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('input', search);
 
 
 
         function search() {
-            console.log('search')
-
             searchInput = document.getElementById('searchInput');
 
-            console.log(searchInput.value);
 
             $.ajax({
                 url: 'getSearchedDataUser.php',
@@ -226,44 +231,6 @@
                     tbody.html(response);
                 }
             });
-        }
-
-
-        // account dropdown
-
-        // load dropdown
-        document.addEventListener('DOMContentLoaded', function() {
-            toggleDropdown();
-        });
-
-        function toggleDropdown() {
-            let dropdown = document.getElementById("accountDropdown");
-
-            if (dropdown.style.display === "none") {
-                dropdown.style.display = "block";
-                document.addEventListener('click', closeDropdownOnClickOutside);
-                console.log('show');
-            } 
-            
-            else {
-                dropdown.style.display = "none";
-                document.removeEventListener('click', closeDropdownOnClickOutside);
-                console.log('hide');
-            }
-
-            event.stopPropagation()
-        }
-
-
-        function closeDropdownOnClickOutside(event) {
-            var dropdown = document.getElementById("accountDropdown");
-            var targetElement = event.target;
-            console.log('out');
-
-            if (!dropdown.contains(targetElement)) {
-                dropdown.style.display = "none";
-                document.removeEventListener('click', closeDropdownOnClickOutside);
-            }
         }
     </script>
 </body>
