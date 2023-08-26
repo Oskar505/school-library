@@ -124,6 +124,7 @@ body {
     font-size: 23px;
     color: #294a70;
     text-decoration: none;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .dropdownOption:first-child {
@@ -439,7 +440,7 @@ thead th{
     flex-direction: column;
 }
 
-.reserved h2, .borrowed h2 {
+.myBooksMain h2{
     font-size: 30px;
     text-align: center;
     margin-bottom: 20px;
@@ -478,6 +479,7 @@ thead th{
     font-size: 22px;
     padding: 10px 15px;
     text-align: center;
+    cursor: pointer;
 }
 
 .myBooksTr td:first-child {
@@ -486,4 +488,32 @@ thead th{
 
 .myBooksTr td:last-child {
     border-radius: 0 10px 10px 0;
+}
+
+.notLoggedIn {
+    width: 496px;
+    margin: 0 auto;
+    font-size: 33px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #294a70;
+    font-family: "Merriweather Sans",sans-serif;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.notLoggedIn:hover {
+    text-decoration: underline;
+}
+
+.noBooksH2 {
+    width: 496px;
+    margin: 0 auto;
+    font-size: 33px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #294a70;
+    font-family: "Merriweather Sans",sans-serif;
+    text-decoration: none;
+    font-weight: bold;
 }

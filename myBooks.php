@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cs">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="styles.css">
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <header class="header container">
@@ -62,12 +63,12 @@
 
 
 
-    <main class="myBooksMain container">
-        <section class="reserved">
+    <main class="myBooksMain container" id="myBooksMain">
+        <section class="reserved" id="myBooksReserved">
             <h2>Rezervováno</h2>
 
 
-            <table>
+            <table id="reservedTable">
                 <thead>
                     <tr>
                         <th>Název</th>
@@ -75,45 +76,19 @@
                     </tr>
                 </thead>
 
-                <tbody>
+                <tbody id="reservedTbody">
                     <tr class="tableSplit"></tr>
-
-                    <tr class="myBooksTr">
-                        <td>Název knížky</td>
-                        <td>25. 9.</td>
-                    </tr>
-
-                    <tr class="tableSplit"></tr>
-
-                    <tr class="myBooksTr">
-                        <td>Název knížky</td>
-                        <td>25. 9.</td>
-                    </tr>
-
-                    <tr class="tableSplit"></tr>
-
-                    <tr class="myBooksTr">
-                        <td>Název knížky</td>
-                        <td>25. 9.</td>
-                    </tr>
-
-                    <tr class="tableSplit"></tr>
-
-                    <tr class="myBooksTr">
-                        <td>Název knížky</td>
-                        <td>25. 9.</td>
-                    </tr>
                 </tbody>
             </table>
         </section>
 
 
 
-        <section class="borrowed">
+        <section class="borrowed" id="myBooksBorrowed">
             <h2>Půjčeno</h2>
 
 
-            <table>
+            <table id="borrowedTable">
                 <thead>
                     <tr>
                         <th>Název</th>
@@ -121,34 +96,8 @@
                     </tr>
                 </thead>
 
-                <tbody>
+                <tbody id="borrowedTbody">
                     <tr class="tableSplit"></tr>
-
-                    <tr class="myBooksTr" class="myBooksTr">
-                        <td>Název knížky</td>
-                        <td>25. 9.</td>
-                    </tr>
-
-                    <tr class="tableSplit"></tr>
-
-                    <tr class="myBooksTr">
-                        <td>Název knížky</td>
-                        <td>25. 9.</td>
-                    </tr>
-
-                    <tr class="tableSplit"></tr>
-
-                    <tr class="myBooksTr">
-                        <td>Název knížky</td>
-                        <td>25. 9.</td>
-                    </tr>
-
-                    <tr class="tableSplit"></tr>
-
-                    <tr class="myBooksTr">
-                        <td>Název knížky</td>
-                        <td>25. 9.</td>
-                    </tr>
                 </tbody>
             </table>
         </section>
@@ -156,5 +105,6 @@
 
 
     <script src="accountDropdown.js"></script>
+    <script src="/scripts/myBooks.js"></script>
 </body>
 </html>

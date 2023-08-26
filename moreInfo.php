@@ -144,7 +144,7 @@
                         $result = mysqli_query($conn, $sql);
 
                         if ($result === false) {
-                                echo 'Error: '.mysqli_error($conn);
+                            echo 'Error: '.mysqli_error($conn);
                         }
 
 
@@ -303,8 +303,11 @@
     $conn->close();
 
 
+    $reservedByUser = false;
+
 
     if (isset($_SESSION['userLoggedIn'])) {
+
         $reservedBooks = $_SESSION['reserved'];
 
         if ($reservedBooks != null) {
@@ -315,12 +318,12 @@
                 $reservationInfo = '
                 <span class="material-symbols-outlined bookAvailable">done</span>
                 <p>Rezervováno</p>';
-                echo $reservationOk;
+                $reservedByUser = true;
             }
         }
         
 
-        elseif ($reserved == 0) { // not available
+        if ($reserved == 0 && !$reservedByUser) { // not available
             $reserveBtnText = 'Rezervovat';
             $reservationInfo = '
             <span class="material-symbols-outlined bookNotAvailable">close</span>
@@ -334,6 +337,17 @@
             $reservationInfo = '
             <span class="material-symbols-outlined bookLentToSomeone">priority_high</span>
             <p>Půjčeno</p>';
+
+
+            //pujceno uzivatelem
+            $borrowedBooks = $_SESSION['borrowed'];
+            $borrowedBooks = explode(',', $borrowedBooks);
+
+            if (in_array($bookId, $borrowedBooks)) {
+                $reservationInfo = '
+                <span class="material-symbols-outlined bookAvailable">done</span>
+                <p>Půjčeno</p>';
+            }
         }
     }
 
