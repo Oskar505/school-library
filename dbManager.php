@@ -321,7 +321,7 @@
             $borrowed = explode(',', $borrowed);
 
             foreach($borrowed as $bookIdUsers) {
-                $sql = "SELECT lentTo FROM books WHERE id='$bookIdUsers'";
+                $sql = "SELECT id, lentTo FROM books WHERE id='$bookIdUsers'";
                 $result = mysqli_query($conn, $sql);
 
                 if ($result === false) {
@@ -343,7 +343,7 @@
             $reserved = explode(',', $reserved);
 
             foreach($reserved as $bookIdUsers) {
-                $sql = "SELECT reservation FROM books WHERE id='$bookIdUsers'";
+                $sql = "SELECT id, reservation FROM books WHERE id='$bookIdUsers'";
                 $result = mysqli_query($conn, $sql);
 
                 if ($result === false) {
@@ -381,6 +381,44 @@
 
     $result = $conn->query($sql);
     */
+
+
+
+
+
+    // EXTEND RESERVATION IF BOOK WASN'T RETURNED IN TIME
+
+    $sql = "SELECT id, reservation, reservationExpiration FROM books WHERE STR_TO_DATE(returnDate, '%Y-%m-%d') < CURDATE() AND reservation IS NOT NULL AND reservation != ''";
+    $result = mysqli_query($conn, $sql);
+
+    if ($result === false) {
+        echo 'Error: '.mysqli_error($conn);
+    }
+
+    $books = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+
+    foreach ($books as $book) {
+        $bookId = $book['id'];
+        $reservation = $book['reservation'];
+
+        $today = new DateTime();
+        $today->add(new DateInterval('P3D'));
+        $reservationExpiration = $today->format('Y-m-d');
+
+        //TODO: send email
+
+        $sql = "UPDATE books SET reservationExpiration='$reservationExpiration' WHERE id='$bookId'";
+        $result = mysqli_query($conn, $sql);
+
+        if ($result === false) {
+            echo 'Error: '.mysqli_error($conn);
+        }
+
+        echo "Extended reservation: book: $id, user: $reservation.";
+    }
+
+
 
     $conn->close();
 ?>

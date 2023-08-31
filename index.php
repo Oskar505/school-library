@@ -150,10 +150,11 @@
                                     $availableDate = date('Y-m-d', strtotime($returnDate . ' +3 days'));
 
                                     //change date format
-                                    $dateTimeObj = new DateTime($availableDate);
-                                    $availableDate = $dateTimeObj->format('j. n.');
+                                    $dateTimeObj = new DateTime($reservationExpiration);
+                                    $day = $dateTimeObj->format('j.');
+                                    $month = $dateTimeObj->format('n.');
 
-                                    $state = "Rezervováno do $availableDate";
+                                    $state = "Rezervováno do $day&nbsp;$month"; //nedělitelná mezera v datu
                                 }
 
                                 else { // lent
@@ -169,9 +170,10 @@
                                 if ($reservation != '') { // reserved
                                     //change date format
                                     $dateTimeObj = new DateTime($reservationExpiration);
-                                    $reservationExpiration = $dateTimeObj->format('j. n.');
+                                    $day = $dateTimeObj->format('j.');
+                                    $month = $dateTimeObj->format('n.');
 
-                                    $state = "Rezervováno do " . $reservationExpiration;
+                                    $state = "Rezervováno do $day&nbsp;$month"; //nedělitelná mezera v datu
                                 }
                             }
 

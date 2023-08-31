@@ -128,8 +128,18 @@
                         // reservation expiration date
                         if ($returnDate != '') { // lent
                             $returnDateObj = new DateTime($returnDate);
-                            $returnDateObj->add(new DateInterval('P3D')); // +3 d
-                            $reservationExpiration = $returnDateObj->format('Y-m-d');
+                            $today = new DateTime();
+
+                            if ($today > $returnDateObj) { // if book wasn't returned in time, adds 3 days to today's date
+                                $today->add(new DateInterval('P3D')); // +3 d
+                                $reservationExpiration = $today->format('Y-m-d');
+                            }
+
+                            else {
+                                $returnDateObj->add(new DateInterval('P3D')); // +3 d
+                                $reservationExpiration = $returnDateObj->format('Y-m-d');
+                            }
+                            
                         }
 
                         else { // available
@@ -244,7 +254,7 @@
 
 
             else {
-                showError('Rezervace se nezdařila', 'Pokud jste přihlášeni jako administrátor, přihlašte se uživatelským účtem.');
+                showError('Rezervace se nezdařila', 'Přihlašte se prosím uživatelským účtem.');
             }
         }
 
