@@ -51,6 +51,10 @@
           $_SESSION['id'] = $id;
           $_SESSION['reserved'] = $reserved;
           $_SESSION['borrowed'] = $borrowed;
+
+
+          header('Location: /admin');
+          exit;
         }
 
         else {
@@ -62,12 +66,12 @@
           $_SESSION['id'] = $id;
           $_SESSION['reserved'] = $reserved;
           $_SESSION['borrowed'] = $borrowed;
-        }
-        
 
-        // redirect to index
-        header('Location: index.php');
-        exit;
+
+          // redirect to index
+          header('Location: index.php');
+          exit;
+        }
       }
 
       else {

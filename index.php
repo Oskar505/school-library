@@ -203,7 +203,7 @@
 
     </footer>
     
-    <script src="accountDropdown.js"></script>
+    <script src="/scripts/accountDropdown.js"></script>
 
     <script>
         function openMoreInfo(id, name) {

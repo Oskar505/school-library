@@ -2,7 +2,7 @@
     session_start();
 
     if (!isset($_SESSION['loggedin'])) {
-        header('Location: login.php');
+        header('Location: /userLogin.php');
         exit;
     }
 
@@ -166,7 +166,7 @@
 
             <td>
                 <form method="post" action="addBook.php">
-                    <button class='submitDeleteBtn btn' type="submit" name="back">Zpět</button>
+                    <button class='submitDeleteBtn backBtn btn' type="submit" name="back">Zpět</button>
                 </form>
             </td>
         </tr>
@@ -174,7 +174,7 @@
     </form>
 
 
-    <script src="addFormAutoFill.js"></script>
+    <script src="/scripts/addFormAutoFill.js"></script>
 </body>
 </html>
 

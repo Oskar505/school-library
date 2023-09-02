@@ -2,7 +2,7 @@
     session_start();
 
     if (!isset($_SESSION['loggedin'])) {
-        header('Location: login.php');
+        header('Location: /userLogin.php');
         exit;
     }
 
@@ -84,6 +84,15 @@
             $reservationExpiration = date('Y-m-d', strtotime($today . ' +3 days')); // + 3 days
             $allData[13] = $reservationExpiration;
         }
+
+
+        // delete user info - reservations ...
+        $allData[9] = '';
+        $allData[10] = '';
+        $allData[11] = '';
+        $allData[12] = '';
+        $allData[13] = '';
+        $allData[14] = '';
 
 
         
@@ -656,7 +665,7 @@
             
 
             $.ajax({
-                url: 'expandTable.php',
+                url: '/getDataForAjax/expandTable.php',
                 type: 'GET',
                 data: {
                     count: count,
@@ -841,7 +850,7 @@
 
 
             $.ajax({
-                url: 'getSearchedData.php',
+                url: '/getDataForAjax/getSearchedData.php',
                 type: 'GET',
                 data: {
                     searchInput: searchInput.value,

@@ -16,9 +16,10 @@ $.ajax({
             let borrowed = response[1];
             let newLine;
 
+            console.log(response);
 
 
-            if (reserved == [] && borrowed == []) { // hide both tables
+            if (reserved[0]['id'] == '' && borrowed[0]['id'] == '') { // hide both tables
                 let myBooksMain = document.getElementById('myBooksMain');
                 let noBooksH2 = document.createElement('h2');
 
@@ -30,7 +31,7 @@ $.ajax({
             }
 
 
-            else if (reserved == []) { // hide reserved table
+            else if (reserved[0]['id'] == '') { // hide reserved table
                 let myBooksMain = document.getElementById('myBooksMain');
                 myBooksMain.style.maxWidth = '500px';
 
@@ -39,7 +40,7 @@ $.ajax({
             }
 
 
-            else if (borrowed == []) { // hide borrowed table
+            else if (borrowed[0]['id'] == '') { // hide borrowed table
                 let myBooksMain = document.getElementById('myBooksMain');
                 myBooksMain.style.maxWidth = '500px';
 

@@ -104,7 +104,7 @@
     </main>
 
 
-    <script src="accountDropdown.js"></script>
+    <script src="/scripts/accountDropdown.js"></script>
     <script src="/scripts/myBooks.js"></script>
 </body>
 </html>

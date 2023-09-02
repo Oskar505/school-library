@@ -322,6 +322,20 @@
     direction: ltr;
 }
 
+.returnDateTd {
+    position: relative;
+}
+
+.infiniteDate {
+    position: absolute;
+    font-weight: bold !important;
+    font-size: 26px;
+    top: 15%;
+    left: 70%;
+    cursor: pointer;
+    user-select: none;
+}
+
 
 /* ADD */
 

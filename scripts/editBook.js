@@ -90,7 +90,7 @@ function updateSuggestions(inputId, suggestionsListId, warningIconId) {
 
   // AJAX požadavek na získání nových hodnot z databáze
   $.ajax({
-    url: 'getUsernameSuggestions.php', // PHP soubor, který získává hodnoty z databáze
+    url: '/getDataForAjax/getUsernameSuggestions.php', // PHP soubor, který získává hodnoty z databáze
     type: 'GET',
     data: { query: input },
     success: function (response) {
@@ -148,3 +148,27 @@ document.getElementById('lentTo').addEventListener('input', function() {
 document.getElementById('reservation').addEventListener('input', function() {
   updateSuggestions('reservation', 'reservationSuggestionsList', 'reservationUsernameWarning');
 })
+
+
+
+
+//infinite date
+
+let infiniteBtn = document.getElementById('infiniteDateBtn');
+
+infiniteBtn.addEventListener('click', function() {
+  setInfiniteDate();
+});
+
+
+function setInfiniteDate() {
+  console.log('infinite');
+  returnDateEl.value = '2969-06-20';
+
+  let today = new Date();
+  let year = today.getFullYear();
+  let month = (today.getMonth() + 1).toString().padStart(2, '0'); // Přidáváme 1, protože měsíce jsou číslovány od 0.
+  let day = today.getDate().toString().padStart(2, '0');
+
+  lendDateEl.value = year + '-' + month + '-' + day;
+}

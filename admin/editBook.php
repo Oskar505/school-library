@@ -4,7 +4,7 @@
     session_start();
 
     if (!isset($_SESSION['loggedin'])) {
-        header('Location: login.php');
+        header('Location: /userLogin.php');
         exit;
     }
 ?>
@@ -159,8 +159,9 @@
 
                         <td class='middleColumn'></td>
 
-                        <td>
+                        <td class='returnDateTd'>
                             <input class='input' type='date' id='returnDate' name='returnDate' value='$returnDate'>
+                            <span class='material-symbols-outlined infiniteDate' id='infiniteDateBtn' title='Půjčit napořád'>all_inclusive</span>
                         </td>
                     </tr>
 
@@ -356,7 +357,7 @@
     </form>
 
 
-    <script src="editBook.js"></script>
+    <script src="/scripts/editBook.js"></script>
 
     <script>
         let historyElem = document.getElementById('history');
