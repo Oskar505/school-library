@@ -76,7 +76,7 @@
                 echo'<br>';
                 echo "Uživatel: $lastName $firstName, Uživatelské jméno: $login, třída: $class<br />";*/
 
-                array_push($data, array('firstName'=>$firstName, 'lastName'=>$lastName, 'login'=>$login, 'class'=>$class));
+                array_push($data, ['firstName'=>$firstName, 'lastName'=>$lastName, 'login'=>$login, 'class'=>$class[0], 'graduate'=>$class[1]]);
             }
         } 
         
@@ -84,17 +84,6 @@
             echo "Hledání v AD selhalo.";
         }
 
-
-        
-        /*
-        $result = ldap_search($ad, $dn, '', $attributes);
-
-        $users = ldap_get_entries($ad, $result);
-
-        for ($i=0; $i<$users["count"]; $i++){
-            echo $users[$i]["displayname"][0]."(".$users[$i]["l"][0].")<br />";
-        }
-        */
 
 
         ldap_unbind($ad);
@@ -126,6 +115,7 @@
             $lastName = $data[$i]['lastName'];
             $login = $data[$i]['login'];
             $class = $data[$i]['class'];
+            $graduate = $data[$i]['graduate'];
 
 
             // get count
@@ -137,6 +127,8 @@
             }
 
             $count = mysqli_fetch_assoc($result)['count'];
+
+            echo "$firstName $lastName, login: $login,  class: $class,   graduate: $graduate <br>";
 
 
             if ($count == 0) { // if user is not in db
@@ -164,9 +156,17 @@
                 */
 
                 
-                if ($class != $dbClass) {
+                if ($class != $dbClass && $graduate == false) { // next grade
                     $stmt = mysqli_prepare($conn, "UPDATE users SET class = ? WHERE login = ?");
                     mysqli_stmt_bind_param($stmt, "ss", $class, $login);
+                    mysqli_stmt_execute($stmt);
+                    mysqli_stmt_close($stmt);
+                }
+
+
+                elseif ($graduate == true) { // graduate
+                    $stmt = mysqli_prepare($conn, "UPDATE users SET graduate = 1 WHERE login = ?");
+                    mysqli_stmt_bind_param($stmt, "s",  $login);
                     mysqli_stmt_execute($stmt);
                     mysqli_stmt_close($stmt);
                 }
@@ -188,81 +188,101 @@
         // years
         $class = '';
         $year = date('Y');
-        $yearNum = intval(substr($year, -1));
-        $endYearNum = intval(substr($login, 1));
+        $yearNum = intval(substr($year, -1)); //3
+        $endYearNum = intval(substr($login, 1));//1
 
-        $endYearNum == 0 ? $endYearNum = 10 : ''; // pokud je 2030 tak aby tam nebyla 0 ale 10
 
-        $today = new DateTime();
-        
-        // prazdniny
+        // počítáme rok, který byl v prvním pololetí, pokud je druhé tak odečíst 1 rok
         $targetMonth = 7;
         $targetDay = 1;
-
+        $today = new DateTime();
 
         $currentMonth = (int) $today->format('n');  // Získání aktuálního měsíce jako číslo
         $currentDay = (int) $today->format('j');  // Získání aktuálního dne jako číslo
-
-        //$yearNum--;
 
         if ($currentMonth < $targetMonth || ($currentMonth == $targetMonth && $currentDay < $targetDay)) {
             $yearNum--; // druhe pololeti, novy rok ale ne novy skolni rok
         }
 
-        $remainingYears = $endYearNum - $yearNum;
+
+
+        if ($endYearNum != $yearNum) { // student ještě není absolvent
+
+            $endYearNum == 0 ? $endYearNum = 10 : ''; // pokud je 2030 tak aby tam nebyla 0 ale 10
+
+            $endYearNum < $yearNum ? $endYearNum = $endYearNum + 10 : '';
+
+
+            $remainingYears = $endYearNum - $yearNum;
+
+
+            
+            // class
+            $eightYearGrades = ['P', 'S', 'T', 'K', 'Q', 'X', 'M', 'O']; // zkratky rocniku na osmiletym
+            $graduate = false;
+
+
+            if (!preg_match("/\d/", $login)) { // staff
+                $classType = 'Zaměstnanec';
+                $class = $classType;
+            }
+
+            elseif ($remainingYears > 0) { // student, not graduate
+                // get classNum
+                $fourYearStudent ? $classNum = 5 - $remainingYears : $classNum = 9 - $remainingYears;
+
+
+
+                if (substr($login, 2, 1) == 'u') { // A na ctyrletym
+                    $classType = 'A';
+                    $class = $classNum . '.' . $classType;
+                }
         
-        if ($fourYearStudent) {
-            $classNum = 5 - $remainingYears;
-        }
-
-        $fourYearStudent ? $classNum = 5 - $remainingYears : $classNum = 9 - $remainingYears;
-
+                elseif (substr($login, 2, 1) == 'v') { // B na ctyrletym
+                    $classType = 'B';
+                    $class = $classNum . '.' . $classType;
+                }
         
-        // class
+                elseif (substr($login, 2, 1) == 'x') { // gate
+                    $classType = $eightYearGrades[$classNum - 1] . 'A';
+                    $class = $classNum . '.' . $classType;
+                }
+        
+                elseif (substr($login, 2, 1) == 'y') { // ozon
+                    $classType = $eightYearGrades[$classNum - 1] . 'B';
+                    $class = $classNum . '.' . $classType;
+                }
+        
+                elseif (substr($login, 2, 1) == 's') { // sestra
+                    $classType = 'PS';
+                    $class = $classNum . '.' . $classType;
+                }
+        
+                elseif (substr($login, 2, 1) == 't') { // ekonom
+                    $classType = 'AK';
+                    $class = $classNum . '.' . $classType;
+                }
+        
+                else {
+                    $class = 'Get class error';
+                }
+            }
 
-        $eightYearGrades = ['P', 'S', 'T', 'K', 'Q', 'X', 'M', 'O']; // zkratky rocniku na osmiletym
 
-
-        if (!preg_match("/\d/", $login)) {
-            $classType = 'Zaměstnanec';
-            $class = $classType;
+            else {
+                $class = 'Get class error: there should not be graduate.';
+            }
         }
 
-        elseif (substr($login, 2, 1) == 'u') { // A na ctyrletym
-            $classType = 'A';
-            $class = $classNum . '.' . $classType;
-        }
- 
-        elseif (substr($login, 2, 1) == 'v') { // B na ctyrletym
-            $classType = 'B';
-            $class = $classNum . '.' . $classType;
-        }
 
-        elseif (substr($login, 2, 1) == 'x') { // gate
-            $classType = $eightYearGrades[$classNum - 1] . 'A';
-            $class = $classNum . '.' . $classType;
-        }
-
-        elseif (substr($login, 2, 1) == 'y') { // ozon
-            $classType = $eightYearGrades[$classNum - 1] . 'B';
-            $class = $classNum . '.' . $classType;
-        }
-
-        elseif (substr($login, 2, 1) == 's') { // sestra
-            $classType = 'PS';
-            $class = $classNum . '.' . $classType;
-        }
-
-        elseif (substr($login, 2, 1) == 't') { // ekonom
-            $classType = 'AK';
-            $class = $classNum . '.' . $classType;
-        }
 
         else {
-            $class = 'Get class error';
+            $graduate = true;
         }
+
+        
         
 
-        return $class;
+        return [$class, $graduate];
     }
 ?>
