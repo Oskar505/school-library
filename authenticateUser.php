@@ -42,7 +42,7 @@
         $reserved = $data['reserved'];
         $borrowed = $data['borrowed'];
 
-        if ($class === 'Admin' || $username === 'AdmOskar') { 
+        if ($class === 'Admin' || $username === 'admin') { 
           session_regenerate_id();
           $_SESSION['loggedin'] = TRUE;
           $_SESSION['login'] = $username;

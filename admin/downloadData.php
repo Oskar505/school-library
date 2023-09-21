@@ -6,6 +6,7 @@
         exit;
     }
 
+    require_once '/functions.php';
 
     require('/var/secrets.php');
     $sqlUser = $secrets['sql-user'];
@@ -19,33 +20,15 @@
     }
 
 
-    // get cookies, if cookie doesn't exist set it to ''
-    $searchBy = isset($_COOKIE['searchBy']) ? $_COOKIE['searchBy'] : '';
-    $showDiscarded = isset($_COOKIE['showDiscarded']) ? $_COOKIE['showDiscarded'] : 'false';
-    $searchInput = isset($_COOKIE['searchInput']) ? $_COOKIE['searchInput'] : '';
+    // GET DATA
+
+    
+    
+    
+    $where = getWhere();
 
 
-
-    if ($showDiscarded == 'true') {
-        if ($searchBy == '') {
-            $sql = "SELECT * FROM books";
-        }
-
-        else {
-            $sql = "SELECT * FROM books WHERE $searchBy";
-        }
-    }
-
-    else {
-        if ($searchBy == '') {
-            $sql = "SELECT * FROM books WHERE discarded=0";
-        }
-
-        else {
-            $sql = "SELECT * FROM books WHERE ($searchBy) AND discarded=0";
-        }     
-    }
-
+    $sql = "SELECT * FROM books $where";
 
     $result = mysqli_query($conn, $sql);
 
@@ -55,7 +38,9 @@
 
     $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-    //print_r($data);
+
+
+    // WRITE
 
     if ($result->num_rows > 0) {
         // Otevření souboru pro zápis

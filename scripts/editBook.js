@@ -1,5 +1,10 @@
 console.log('returnAutoFill.js');
 
+function isEmpty(value) {
+  return value == null || value === "" || (Array.isArray(value) && value.length === 0);
+}
+
+
 
 // add 3 months to lend date and set it as return date
 document.getElementById('lendDate').addEventListener('change', function() {
@@ -113,16 +118,19 @@ function updateSuggestions(inputId, suggestionsListId, warningIconId) {
 
         
         //class
-        let lentToEl = document.getElementById('lentTo');
-        let classEl = document.getElementById('class');
+        if (inputId == 'lentTo') {
+          let lentToEl = document.getElementById('lentTo');
+          let classEl = document.getElementById('class');
 
-        if (lentToEl.value != '') {
-          classEl.value = suggestions[0]['class'];
-        }
+          if (lentToEl.value != '') {
+            classEl.value = suggestions[0]['class'];
+          }
 
-        else {
-          classEl.value = '';
+          else {
+            classEl.value = '';
+          }
         }
+        
       }
       
       else {
@@ -171,4 +179,60 @@ function setInfiniteDate() {
   let day = today.getDate().toString().padStart(2, '0');
 
   lendDateEl.value = year + '-' + month + '-' + day;
+}
+
+
+
+
+// SELECT INPUTS
+
+let tableRows = document.querySelectorAll('.label');
+let activatedInputs = [];
+let selectedInputsEl = document.getElementById('selectedInputs');
+
+
+if (selectedInputsEl.value != 'editOne') {
+  tableRows.forEach(function(row) {
+    row.classList.add('deactivateLine'); // deactivate all
+  
+    row.addEventListener('click', function(event) {
+      let disabled = event.currentTarget.classList.contains('deactivateLine');
+      let id = event.currentTarget.id;
+  
+      if (disabled && id != 15 && id != 17) { // activate
+        row.classList.remove('deactivateLine');
+  
+  
+        // add to list
+        let index = activatedInputs.indexOf(id);
+        if (index === -1) { // list doesnt contains id
+          activatedInputs.push(id);
+        }
+  
+        console.log(JSON.stringify(activatedInputs));
+  
+        selectedInputsEl.value = JSON.stringify(activatedInputs);
+      }
+  
+  
+      else {
+        row.classList.add('deactivateLine');
+  
+  
+        // delete from list
+        let index = activatedInputs.indexOf(id);
+        if (index !== -1) { // list contains id
+          activatedInputs.splice(index, 1);
+        }
+  
+        console.log(JSON.stringify(activatedInputs));
+        
+  
+        selectedInputsEl.value = JSON.stringify(activatedInputs);
+  
+      }
+  
+      //console.log(selectedInputsEl.value);
+    })
+  })
 }

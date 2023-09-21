@@ -336,6 +336,14 @@
     user-select: none;
 }
 
+.deactivateLine {
+    color: #a7a7a7;
+}
+
+.input::placeholder {
+    color: #a7a7a7;
+}
+
 
 /* ADD */
 

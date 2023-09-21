@@ -25,6 +25,7 @@
     $columnClauses = ["registration LIKE '%$searchInput%'", "subject LIKE '%$searchInput%'", "author LIKE '%$searchInput%'", "name LIKE '%$searchInput%'", "price LIKE '%$searchInput%'", "dateAdded LIKE '%$searchInput%'", "lentTo LIKE '%$searchInput%'", "class LIKE '%$searchInput%'", "lendDate LIKE '%$searchInput%'", "reservation LIKE '%$searchInput%'", "note LIKE '%$searchInput%'"];
     $someColumnSelected = false;
 
+    
     for ($i = 0; $i < count($columns); $i++) {
         if ($columns[$i] == 'true') {
             if (!$someColumnSelected) {
@@ -42,8 +43,8 @@
 
 
     // save to cookies
-    setcookie('searchBy', $searchBy);
-    setcookie('showDiscarded', $showDiscarded);
+    setcookie('searchBy', $searchBy, 0, '/admin');
+    setcookie('showDiscarded', $showDiscarded, 0, '/admin');
 
 
     $rows = 100;

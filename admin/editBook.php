@@ -55,52 +55,84 @@
                 if (!$conn) {
                     echo 'chyba pripojeni'.mysqli_connect_error();
                 }
+
+                $selectedLinesVal = '';
+
+
+                if ($id != 'all') {
+                    $selectedLinesVal = 'editOne';
+
+                    $sql = "SELECT * FROM books WHERE id=$id";
+                    $result = mysqli_query($conn, $sql);
                 
-
-                $sql = "SELECT * FROM books WHERE id=$id";
-                $result = mysqli_query($conn, $sql);
-            
-                if ($result === false) {
-                    echo 'Error: '.mysqli_error($conn);
-                }
-            
-                $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-                // variables
-                $id = $data[0]['id'];
-                $registration = $data[0]['registration'];
-                $isbn = $data[0]['isbn'];
-                $subject = $data[0]['subject'];
-                $publisher = $data[0]['publisher'];
-                $author = $data[0]['author'];
-                $name = $data[0]['name'];
-                $price = $data[0]['price'];
-                $dateAdded = $data[0]['dateAdded'];
-                $lentTo = $data[0]['lentTo'];
-                $class = $data[0]['class'];
-                $lendDate = $data[0]['lendDate'];
-                $returnDate = $data[0]['returnDate'];
-                $history = $data[0]['history'];
-                $reservation = $data[0]['reservation'];
-                $reservationExpiration = $data[0]['reservationExpiration'];
-                $note = $data[0]['note'];
-                $discarded = $data[0]['discarded'];
-
-
-                // checkbox value
-                if ($discarded == 1) {
-                    $discarded = "checked='true'";
-                }
+                    if ($result === false) {
+                        echo 'Error: '.mysqli_error($conn);
+                    }
                 
-                else {
+                    $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+                    // variables
+                    $id = $data[0]['id'];
+                    $registration = $data[0]['registration'];
+                    $isbn = $data[0]['isbn'];
+                    $subject = $data[0]['subject'];
+                    $publisher = $data[0]['publisher'];
+                    $author = $data[0]['author'];
+                    $name = $data[0]['name'];
+                    $price = $data[0]['price'];
+                    $dateAdded = $data[0]['dateAdded'];
+                    $lentTo = $data[0]['lentTo'];
+                    $class = $data[0]['class'];
+                    $lendDate = $data[0]['lendDate'];
+                    $returnDate = $data[0]['returnDate'];
+                    $history = $data[0]['history'];
+                    $reservation = $data[0]['reservation'];
+                    $reservationExpiration = $data[0]['reservationExpiration'];
+                    $note = $data[0]['note'];
+                    $discarded = $data[0]['discarded'];
+
+
+                    // checkbox value
+                    if ($discarded == 1) {
+                        $discarded = "checked='true'";
+                    }
+                    
+                    else {
+                        $discarded = '';
+                    }
+
+
+                    //history
+                    if ($history == '') {
+                        $history = 'Tato kniha ještě nebyla půjčena';
+                    }
+                }
+
+
+
+                else { // hromadna uprava
+                    $id = '';
+                    $registration = '';
+                    $isbn = '';
+                    $subject = '';
+                    $publisher = '';
+                    $author = '';
+                    $name = '';
+                    $price = '';
+                    $dateAdded = '';
+                    $lentTo = '';
+                    $class = '';
+                    $lendDate = '';
+                    $returnDate = '';
+                    $history = '';
+                    $reservation = '';
+                    $reservationExpiration = '';
+                    $note = '';
                     $discarded = '';
                 }
+                
 
-
-                //history
-                if ($history == '') {
-                    $history = 'Tato kniha ještě nebyla půjčena';
-                }
+                
 
 
 
@@ -109,11 +141,12 @@
                 <input type='hidden' name='id' value=$id>
                 <input type='hidden' name='oldLentTo' value=$lentTo>
                 <input type='hidden' name='oldReservation' value=$reservation>
+                <input type='hidden' name='selectedInputs' id='selectedInputs' value=$selectedLinesVal>
                 ";
             
                 echo "
                 <table class='editBookTable'>
-                    <tr class='column'>
+                    <tr class='column' id='0'>
                         <td class='label'>
                             <label for='lentTo'>Půjčeno</label>
                         </td>
@@ -128,7 +161,7 @@
                         </td>
                     </tr>
 
-                    <tr class='column'>
+                    <tr class='column' id='1'>
                         <td class='label'>
                             <label for='class'>Třída</label>
                         </td>
@@ -140,7 +173,7 @@
                         </td>
                     </tr>
 
-                    <tr class='column'>
+                    <tr class='column' id='2'>
                         <td class='label'>
                             <label for='lendDate'>Datum půjčení</label>
                         </td>
@@ -152,7 +185,7 @@
                         </td>
                     </tr>
 
-                    <tr class='column'>
+                    <tr class='column' id='3'>
                         <td class='label'>
                             <label for='returnDate'>Datum vrácení</label>
                         </td>
@@ -165,7 +198,7 @@
                         </td>
                     </tr>
 
-                    <tr class='column'>
+                    <tr class='column' id='4'>
                         <td class='label'>
                             <label for='reservation'>Rezervace</label>
                         </td>
@@ -180,7 +213,7 @@
                         </td>
                     </tr>
 
-                    <tr class='column'>
+                    <tr class='column' id='5'>
                         <td class='label'>
                             <label for='reservation'>Konec rezervace</label>
                         </td>
@@ -198,7 +231,7 @@
 
 
 
-                    <tr class='column'>
+                    <tr class='column' id='6'>
                         <td class='label'>
                             <label for='registration'>Registrační číslo</label>
                         </td>
@@ -210,7 +243,7 @@
                         </td>
                     </tr>
 
-                    <tr class='column'>
+                    <tr class='column' id='7'>
                         <td class='label'>
                             <label for='isbn'>Isbn</label>
                         </td>
@@ -222,7 +255,7 @@
                         </td>
                     </tr>
 
-                    <tr class='column'>
+                    <tr class='column' id='8'>
                         <td class='label'>
                             <label for='subject'>Okruh</label>
                         </td>
@@ -234,7 +267,7 @@
                         </td>
                     </tr>
 
-                    <tr class='column'>
+                    <tr class='column' id='9'>
                         <td class='label'>
                             <label for='publisher'>Vydavatel</label>
                         </td>
@@ -246,7 +279,7 @@
                         </td>
                     </tr>
 
-                    <tr class='column'>
+                    <tr class='column' id='10'>
                         <td class='label'>
                             <label for='author'>Autor</label>
                         </td>
@@ -258,7 +291,7 @@
                         </td>
                     </tr>
 
-                    <tr class='column'>
+                    <tr class='column' id='11'>
                         <td class='label'>
                             <label for='name'>Název</label>
                         </td>
@@ -270,7 +303,7 @@
                         </td>
                     </tr>
 
-                    <tr class='column'>
+                    <tr class='column' id='12'>
                         <td class='label'>
                             <label for='price'>Cena</label>
                         </td>
@@ -282,7 +315,7 @@
                         </td>
                     </tr>
 
-                    <tr class='column'>
+                    <tr class='column' id='13'>
                         <td class='label'>
                             <label for='dateAdded'>Zaevidování</label>
                         </td>
@@ -294,7 +327,7 @@
                         </td>
                     </tr>
 
-                    <tr class='column'>
+                    <tr class='column' id='14'>
                         <td class='label'>
                             <label for='note'>Poznámka</label>
                         </td>
@@ -306,7 +339,7 @@
                         </td>
                     </tr>
 
-                    <tr class='column'>
+                    <tr class='column' id='15'>
                         <td class='label'>
                             <label for='history'>Historie</label>
                         </td>
@@ -318,7 +351,7 @@
                         </td>
                     </tr>
 
-                    <tr class='column'>
+                    <tr class='column' id='16'>
                         <td class='label'>
                             <label for='discarded'>Vyřazeno</label>
                         </td>
@@ -330,7 +363,7 @@
                         </td>
                     </tr>
 
-                    <tr class='column btnColumn'>
+                    <tr class='column btnColumn' id='17'>
                         <td>
                             <input class='submitEditBtn btn' type='submit' name='edit' value='Upravit'>
                         </td>

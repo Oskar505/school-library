@@ -79,7 +79,7 @@
 
 
         // reservationExpiration
-        if ($reservation !== '') {
+        if (!empty($reservation)) {
             $today = date('Y-m-d');
             $reservationExpiration = date('Y-m-d', strtotime($today . ' +3 days')); // + 3 days
             $allData[13] = $reservationExpiration;
@@ -111,6 +111,29 @@
 
     // edit
     if (isset($_POST['edit'])) {
+        try {
+            $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
+        }
+        
+        catch (mysqli_sql_exception $e) {
+            showError('Chyba připojení', "Nastala chyba připojení k databázi, zkuste to prosím později.");
+        }
+
+        if (!$conn) {
+            showError('Chyba databáze', 'Nastala chyba čtení dat z databáze, zkuste to prosím později.');
+        }
+
+
+
+
+        $lines = $_POST['selectedInputs'];
+        $editAll = false;
+        $editLentTo = true;
+        $editReservation = true;
+        $editReservationExpiration = true;
+        $editDiscarded = true;
+        $bookIdList = [];
+
         $id = $_POST['id'];
         $registration = $_POST['registration'];
         $isbn = $_POST['isbn'];
@@ -132,32 +155,43 @@
         $oldLentTo = $_POST['oldLentTo'];
         $oldReservation = $_POST['oldReservation'];
 
-        //TODO: ten list allData je na nic
-        $allData = [$registration, $isbn, $subject, $class, $publisher, $author, $name, $price, $dateAdded, $lentTo, $lendDate, $returnDate, $history, $reservation, $reservationExpiration, $note, $discarded, $id];
+
+        // escape string
 
 
-        try {
-            $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
+        if ($lines != 'editOne') {
+            $lines = json_decode($lines);
+
+            if (empty($lines)) { // edit nothing
+                header('Location: /admin/index.php');
+                exit;
+            }
+
+            $editAll = true;
+
+            $editLentTo = in_array('0', $lines);
+            $editReservation = in_array('4', $lines);
+            $editReservation = in_array('5', $lines);
+            $editDiscarded = in_array('16', $lines);
         }
-        
-        catch (mysqli_sql_exception $e) {
-            showError('Chyba připojení', "Nastala chyba připojení k databázi, zkuste to prosím později.");
+
+
+        // pouziti variable variable $$
+        $variableNames = ["registration", "isbn", "subject", "class", "publisher", "author", "name", "price", "dateAdded", "lentTo", "lendDate", "returnDate", "history", "reservation", "reservationExpiration", "note", "discarded", "id"];
+
+        // escape strings
+        foreach ($variableNames as $variableName) {
+            if (isset($$variableName)) { // Kontrola, zda proměnná existuje
+                $value = $$variableName; // Získání hodnoty proměnné
+                $$variableName = empty($value) ? NULL : mysqli_real_escape_string($conn, $value); // Aktualizace hodnoty proměnné
+            }
         }
 
 
-
-        if (!$conn) {
-            showError('Chyba databáze', 'Nastala chyba čtení dat z databáze, zkuste to prosím později.');
-        }
-
-
-        $allData = array_map(function($value) use ($conn) {
-            return empty($value) ? NULL : mysqli_real_escape_string($conn, $value);
-        }, $allData);
 
 
         // control username
-        if (!empty($lentTo)) {
+        if (!empty($lentTo) && $editLentTo) {
             $sql = "SELECT COUNT(*) FROM users WHERE login='$lentTo'";
             $result = mysqli_query($conn, $sql);
 
@@ -174,7 +208,7 @@
         }
 
 
-        if (!empty($reservation)) {
+        if (!empty($reservation) && $editReservation) {
             $sql = "SELECT COUNT(*) FROM users WHERE login='$reservation'";
             $result = mysqli_query($conn, $sql);
 
@@ -192,54 +226,134 @@
 
 
         // discarded
-        if ($allData[16] == 'on') {
-            $allData[16] = 1;
+        if ($editDiscarded) {
+            if ($discarded == 'on') {
+                $discarded = 1;
+            }
+            
+            else {
+                $discarded = 0;
+            }
         }
         
-        else {
-            $allData[16] = 0;
-        }
 
 
         // reservationExpiration
-        if ($reservation !== '') {
+        if (!empty($reservation) && $editReservationExpiration) {
             $today = date('Y-m-d');
             $reservationExpiration = date('Y-m-d', strtotime($today . ' +3 days')); // + 3 days
-            $allData[14] = $reservationExpiration;
         }
 
 
         // history
-        $query = "SELECT history FROM books WHERE id = $id";
-        $result = mysqli_query($conn, $query);
-        $row = mysqli_fetch_assoc($result);
-        $history = $row['history'];
+        if ($lentTo != '' && !$editAll) {
+            $query = "SELECT history FROM books WHERE id = $id";
+            $result = mysqli_query($conn, $query);
+            $row = mysqli_fetch_assoc($result);
+            $history = $row['history'];
 
-        if ($lentTo != '') {
+
             if ($history != '') {
-                $allData[12] = $history . ', ' . $lentTo;
+                $history = $history . ', ' . $lentTo;
             }
 
             else {
-                $allData[12] = $lentTo;
+                $history = $lentTo;
             }
         }
 
-        else {
-            $allData[12] = $history;
+
+
+        // edit all - generate sql
+
+        if ($editAll) {
+            // generate sql
+            $where = getWhere();
+
+            $columns = ['lentTo', 'class', 'lendDate', 'returnDate', 'reservation', 'reservationExpiration', 'registration', 'isbn', 'subject', 'publisher', 'author', 'name', 'price', 'dateAdded', 'note', '', 'discarded'];
+            $dataList = [$lentTo, $class, $lendDate, $returnDate, $reservation, $reservationExpiration, $registration, $isbn, $subject, $publisher, $author, $name, $price, $dateAdded, $note, '', $discarded];
+            $set = '';
+
+            if ($editLentTo && empty($lentTo)) {
+                $lentTo = null;
+                $lendDate = null;
+                $class = null;
+                $returnDate = null;
+            }
+
+            if ($editReservation && empty($reservation)) {
+                $reservation = null;
+                $reservationExpiration = null;
+            }
+            
+
+
+            foreach ($lines as $line) {
+                $column = $columns[$line];
+                $dataToUpdate = $dataList[$line];
+
+                
+                
+                // TODO: nastavit to jako null pokud je to prazdny
+                if ($set == '') {
+                    $set = empty($dataToUpdate) ? "SET $column = NULL" : "SET $column = '$dataToUpdate'";
+                }
+
+                else {
+                    $set = "$set, $column = '$dataToUpdate'";
+                    $set = empty($dataToUpdate) ? "$set, $column = NULL" : "$set, $column = '$dataToUpdate'";
+                }
+            }
+
+            
+
+
+
+            if ($editLentTo || $editReservation) {
+                $sql = "SELECT id FROM books $where";
+                $result = mysqli_query($conn, $sql);
+                
+                if ($result === false) {
+                    showError('Chyba databáze', 'Nastala chyba čtení dat z databáze, zkuste to prosím později.');
+                }
+            
+                $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+                
+
+                foreach ($data as $book) {
+                    array_push($bookIdList, $book['id']);
+                }
+
+
+                
+            }
+
+
+
+            $booksSql = "UPDATE books $set $where";
+            echo $booksSql;
         }
-        
+
+
+
+
 
         // update books jsem presunul dolu protoze update useru muze hazet chyby tak at se to upravi jen kdyz je vse ok
 
 
         //UPDATE USERS
-        $lentTo = $allData[9];
+        if (($oldLentTo != $lentTo) || ($editAll && $editLentTo)) {
+            if (!$editAll) {
+                empty($oldLentTo) ? $login = $lentTo : $login = $oldLentTo; // get right login
+                mysqli_real_escape_string($conn, $login);
+            }
 
-        if ($oldLentTo != $lentTo) {
-            empty($oldLentTo) ? $login = $lentTo : $login = $oldLentTo; // get right login
-            mysqli_real_escape_string($conn, $login);
+            else {
+                $login = $lentTo;
+            }
+            
 
+            // get data to update
             $sql = "SELECT borrowed, reserved, borrowedHistory FROM users WHERE login = '$login'";
             $result = mysqli_query($conn, $sql);
             
@@ -250,24 +364,40 @@
             $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 
-            $bookId = $allData[0];
+            $bookId = $id;
 
             $borrowed = $data[0]['borrowed'];
             $reserved = $data[0]['reserved'];
             $borrowedHistory = $data[0]['borrowedHistory'];
 
             // get arrays
-            !empty($borrowed) ? $borrowed = explode(',', $borrowed): $borrowed = array();
-            !empty($reserved) ? $reserved = explode(',', $reserved): $reserved = array();
-            !empty($borrowedHistory) ? $borrowedHistory = explode(',', $borrowedHistory): $borrowedHistory = array();
+            !empty($borrowed) ? $borrowed = explode(',', $borrowed): $borrowed = [];
+            !empty($reserved) ? $reserved = explode(',', $reserved): $reserved = [];
+            !empty($borrowedHistory) ? $borrowedHistory = explode(',', $borrowedHistory): $borrowedHistory = [];
 
 
-            if (empty($oldLentTo) && !empty($lentTo) && !in_array($bookId, $borrowed)) { // bookId is not in borrowed - borrow book
-                // borrowed
-                array_push($borrowed, $bookId); // add new book id
+            // bookId is not in borrowed - borrow book
+            if ((empty($oldLentTo) && !empty($lentTo) && !in_array($bookId, $borrowed) && !$editAll) || ($editAll && !empty($lentTo))) {
+                if (!$editAll) {
+                    // borrowed
+                    array_push($borrowed, $bookId); // add new book id
 
-                // borrowed history
-                array_push($borrowedHistory, $bookId);
+                    // borrowed history
+                    array_push($borrowedHistory, $bookId);
+                }
+                
+                else {
+                    returnMultipleBooks($conn,$bookIdList, 'borrowed');
+
+                    foreach ($bookIdList as $bookId) {
+                        //borrowed
+                        array_push($borrowed, $bookId); // add new book id
+
+                        // borrowed history
+                        array_push($borrowedHistory, $bookId);
+                    }
+                }
+
 
 
                 // array to string
@@ -282,17 +412,72 @@
             }
 
 
-            else if (!empty($oldLentTo) && empty($lentTo)) {// book is in users - return book
-                $borrowed = array_diff($borrowed, array($bookId));
+            // book is in users - return book
+            else if ((!empty($oldLentTo) && empty($lentTo) && !$editAll) || ($editAll && empty($lentTo))) {
+                if (!$editAll) {
+                    $borrowed = array_diff($borrowed, array($bookId));
 
-                // array to string
-                $borrowed = implode(',', $borrowed);
+                    // array to string
+                    $borrowed = implode(',', $borrowed);
+
+                    $dataCount = 1;
+                }
+
+
+
+                else { // edit all 
+
+                    returnMultipleBooks($conn, $bookIdList, 'borrowed');
+                    $dataCount = 1; // test
+
+                    /*
+                    foreach ($bookIdList as $bookId) {
+                        if (is_string($bookId)) { // ecape if string
+                            $bookId = mysqli_real_escape_string($conn, $bookId);
+                        }
+
+
+                        $sql = "SELECT login, borrowed FROM users WHERE borrowed LIKE CONCAT('$bookId', ',', '%') OR borrowed LIKE CONCAT('%', ',', '$bookId') OR borrowed LIKE CONCAT('%', ',$bookId,', '%') OR borrowed = '$bookId'";
+                        $result = mysqli_query($conn, $sql);
+                        
+                        if ($result === false) {
+                            showError('Chyba databáze', 'Nastala chyba čtení dat z databáze, zkuste to prosím později.');
+                        }
+                    
+                        $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+
+                        $dataCount = count($data); // should be 1
+
+                        $login = $data[0]['login'];
+
+                        $borrowed = $data[0]['borrowed'];
+                        $borrowed = !empty($borrowed) ? explode(',', $borrowed) : [];
+
+                        
+                        $borrowed = array_diff($borrowed, [$bookId]);
+                        $borrowed = implode(',', $borrowed);
+                    }
+
+                    */
+                }
+
+
+                if ($dataCount < 1) {
+                    showError('Chyba', 'Nepodařilo se najít uživatele, který má tuto knihu půjčenou.', '/admin');
+                }
+                
 
                 // update users
                 $stmt = mysqli_prepare($conn, "UPDATE users SET borrowed = ? WHERE login=?");
                 mysqli_stmt_bind_param($stmt, "ss", $borrowed,  $login);
                 mysqli_stmt_execute($stmt);
                 mysqli_stmt_close($stmt);
+
+
+                if ($dataCount > 1) { 
+                    showError('Varování', 'V databázi uživatelů má tuto knihu půjčenou i jiný uživatel. Opakujte prosím tuto akci', '/admin', true);
+                }
             }
 
 
@@ -304,13 +489,18 @@
 
 
 
-        // reservation
-        $reservation = $allData[13];
+        //TODO: reservation
+        if (($oldReservation != $reservation) || ($editAll && $editReservation)) {
 
-        if ($oldReservation != $reservation) {
-            empty($oldReservation) ? $login = $reservation : $login = $oldReservation; // get right login
+            if (!$editAll) {
+                $login = empty($oldReservation) ? $reservation : $oldReservation; // get right login
+                mysqli_real_escape_string($conn, $login);
+            }
 
-            mysqli_real_escape_string($conn, $login);
+            else {
+                $login = $reservation;
+            }
+            
 
             $sql = "SELECT reserved FROM users WHERE login = '$login'";
             $result = mysqli_query($conn, $sql);
@@ -322,7 +512,7 @@
             $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 
-            $bookId = $allData[0];
+            $bookId = $id;
 
             $reserved = $data[0]['reserved'];
 
@@ -330,14 +520,27 @@
             !empty($reserved) ? $reserved = explode(',', $reserved): $reserved = [];
 
 
-            // reserved
-            if (empty($oldReservation) && !empty($reservation) && !in_array($bookId, $reserved)) { // bookId is not in reserved - borrow book
+            // bookId is not in reserved - reserve book
+            if ((empty($oldReservation) && !empty($reservation) && !in_array($bookId, $reserved) && !$editAll) || ($editAll && !empty($reservation))) { 
+                if (!$editAll) {
+                    // reserved
+                    array_push($reserved, $bookId); // add new book id
+                }
 
-                // reserved
-                array_push($reserved, $bookId); // add new book id
+
+                else {
+                    returnMultipleBooks($conn, $bookIdList, 'reserved'); // return book if reserved
+
+                    foreach ($bookIdList as $bookId) {
+                        //reserved
+                        array_push($reserved, $bookId); // add new book id
+                    }
+                }
+
 
                 // array to string
-                $reserved = implode(',', $reserved);
+                $reserved = implode(',', $reserved); 
+                
 
                 // update users
                 $stmt = mysqli_prepare($conn, "UPDATE users SET reserved = ? WHERE login=?");
@@ -347,12 +550,23 @@
             }
 
 
-            else if (!empty($oldReservation) && empty($reservation)) {// book is in users - return book
+            else if ((!empty($oldReservation) && empty($reservation) && !$editAll) || ($editAll && empty($reservation))) {// book is in users - return book
+                if (!$editAll) {
+                    $reserved = array_diff($reserved, array($bookId));
 
-                $reserved = array_diff($reserved, array($bookId));
+                    // array to string
+                    $reserved = implode(',', $reserved);
 
-                // array to string
-                $reserved = implode(',', $reserved);
+                    $dataCount = 1;
+                }
+
+
+                else { // edit all 
+                    returnMultipleBooks($conn, $bookIdList, 'reserved');
+                }
+
+
+                
 
                 // update users
                 $stmt = mysqli_prepare($conn, "UPDATE users SET reserved = ? WHERE login=?");
@@ -373,15 +587,60 @@
 
 
         //UPDATE BOOKS - moved
-        $stmt = mysqli_prepare($conn, "UPDATE books SET registration = ?, isbn = ?, subject = ?, class = ?, publisher = ?, author = ?, name = ?, price = ?, dateAdded = ?, lentTo = ?, lendDate = ?, returnDate = ?, history = ?, reservation = ?, reservationExpiration = ?, note = ?, discarded = ? WHERE id=?");
-        mysqli_stmt_bind_param($stmt, "ssssssssssssssssii", $allData[0], $allData[1], $allData[2], $allData[3], $allData[4], $allData[5], $allData[6], $allData[7], $allData[8], $allData[9], $allData[10], $allData[11], $allData[12], $allData[13], $allData[14], $allData[15], $allData[16], $allData[17]);
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_close($stmt);
+
+        if (!$editAll) {
+            $stmt = mysqli_prepare($conn, "UPDATE books SET registration = ?, isbn = ?, subject = ?, class = ?, publisher = ?, author = ?, name = ?, price = ?, dateAdded = ?, lentTo = ?, lendDate = ?, returnDate = ?, history = ?, reservation = ?, reservationExpiration = ?, note = ?, discarded = ? WHERE id=?");
+            mysqli_stmt_bind_param($stmt, "ssssssssssssssssii", $registration, $isbn, $subject, $class, $publisher, $author, $name, $price, $dateAdded, $lentTo, $lendDate, $returnDate, $history, $reservation, $reservationExpiration, $note, $discarded, $id);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
+        }
 
 
-        
+        else {
+            echo '<br> editAll';
 
 
+            if (!mysqli_query($conn, $booksSql)) {
+                showError('Chyba databáze', 'Nepodařilo se aktualizovat tabulku books.', '/admin');
+            }
+
+
+            //history
+            if ($editLentTo && !empty($lentTo)) {
+                foreach ($bookIdList as $bookId) {
+                    $query = "SELECT history FROM books WHERE id = $bookId";
+                    $result = mysqli_query($conn, $query);
+                    $row = mysqli_fetch_assoc($result);
+                    $history = $row['history'];
+
+
+                    if ($history != '') {
+                        $history = $history . ', ' . $lentTo;
+                    }
+
+                    else {
+                        $history = $lentTo;
+                    }
+
+
+                    // update
+                    $sql = "UPDATE books SET history='$history' WHERE id=$bookId";
+                    $result = mysqli_query($conn, $sql);
+
+                    
+                    if ($result === false) {
+                        showError('Chyba databáze', 'Nastala nahrání historie do books databáze, zkuste to prosím později.');
+                    }
+                }
+            }
+            
+        }
+
+
+    
+
+        $conn->close();
+    
         // send form only once
         header('Location: index.php');
         exit;
@@ -412,9 +671,67 @@
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
 
+        $conn->close();
+
         // send form only once
         header('Location: index.php');
         exit;
+    }
+
+
+
+
+    function returnMultipleBooks($conn, $bookIdList, $type) {
+        $maxDataCount = 0;
+
+        foreach ($bookIdList as $bookId) {
+            if (is_string($bookId)) { // ecape if string
+                $bookId = mysqli_real_escape_string($conn, $bookId);
+            }
+
+
+            $sql = "SELECT login, $type FROM users WHERE ($type LIKE '$bookId,%') OR ($type LIKE '%,$bookId') OR ($type LIKE '%,$bookId,%') OR ($type = '$bookId')";
+            echo "<br> sql: $sql <br>";
+            $result = mysqli_query($conn, $sql);
+
+            
+            
+            if ($result === false) {
+                showError('Chyba databáze', 'Nastala chyba čtení dat z databáze, zkuste to prosím později.');
+            }
+        
+            $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+            print_r($data);
+
+            $dataCount = count($data); // should be 1
+
+            $maxDataCount = $dataCount > $maxDataCount ? $dataCount : $maxDataCount;
+
+
+            if ($dataCount != 0) {
+                $login = $data[0]['login'];
+
+                $reserved = $data[0][$type];
+                $reserved = !empty($reserved) ? explode(',', $reserved) : [];
+
+                
+                $reserved = array_diff($reserved, [$bookId]);
+                $reserved = !empty($reserved) ? implode(',', $reserved) : null;
+
+                echo "return $bookId, login $login <br>";
+
+
+
+                // update users
+                $stmt = mysqli_prepare($conn, "UPDATE users SET $type = ? WHERE login=?");
+                mysqli_stmt_bind_param($stmt, "ss", $reserved,  $login);
+                mysqli_stmt_execute($stmt);
+                mysqli_stmt_close($stmt);
+            }
+        }
+
+        return $maxDataCount;
     }
 ?>
 
@@ -520,7 +837,12 @@
         <table class='dataTable'>
             <thead>
                 <tr class='headerRow'>
-                    <th></th>
+                    <th class='firstTd'>
+                        <form action='editBook.php' method='post'>
+                            <input type='hidden' name='id' value='all'>
+                            <button class='editBtn' type='submit'>Upravit vše</button>
+                        </form>
+                    </th>
                     <th id='registration'>Evidenční číslo</th>
                     <th id='subject'>Okruh</th>
                     <th id='author'>Autor</th>
