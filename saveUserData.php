@@ -161,6 +161,13 @@
                     mysqli_stmt_bind_param($stmt, "ss", $class, $login);
                     mysqli_stmt_execute($stmt);
                     mysqli_stmt_close($stmt);
+
+
+                    // update class in books
+                    $stmt = mysqli_prepare($conn, "UPDATE books SET class = ? WHERE lentTo = ?");
+                    mysqli_stmt_bind_param($stmt, "ss", $class, $login);
+                    mysqli_stmt_execute($stmt);
+                    mysqli_stmt_close($stmt);
                 }
 
 

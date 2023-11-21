@@ -15,6 +15,8 @@
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
 
+    include_once('sendMail.php');
+
 
 
     $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
@@ -25,7 +27,7 @@
 
 
     // CANCEL OLD RESERVATIONS
-    $sql = "SELECT id, reservation, reservationExpiration FROM books";
+    $sql = "SELECT id, reservation, reservationExpiration, name FROM books";
     $result = mysqli_query($conn, $sql);
 
     if ($result === false) {
@@ -40,6 +42,7 @@
         $today->setTime(0, 0, 0);
 
         $reservationExpiration = $data[$i]['reservationExpiration'];
+        $bookName = $data[$i]['name'];
 
 
         if ($reservationExpiration != '0' && $reservationExpiration != '') { // book is reserved
@@ -83,6 +86,22 @@
                 if ($result === false) {
                     echo 'Error: '.mysqli_error($conn);
                 }
+
+
+                // mail
+                $mail = new SendMail($userLogin);
+                $mail->reservationCanceled($bookName);
+            }
+
+            
+
+            // REMIND
+
+            else if ($reservationExpirationDate->modify('-1 day') == $today) {
+                $mailReservationExpiration = date_format($reservationExpirationDate, "j. n.");
+
+                $mail = new SendMail($userLogin);
+                $mail->reservationReminder($bookName, $mailReservationExpiration);
             }
         }
     }

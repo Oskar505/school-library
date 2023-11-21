@@ -7,6 +7,7 @@
 
 
     include 'functions.php';
+    include 'sendMail.php';
 
     session_start();
 
@@ -166,7 +167,7 @@
                         $result = mysqli_query($conn, $sql);
 
                         if ($result === false) {
-                                echo 'Error: '.mysqli_error($conn);
+                            echo 'Error: '.mysqli_error($conn);
                         }
 
                         else {
@@ -175,6 +176,16 @@
                             //TODO: nejaky lepsi upozorneni
                             echo '<h1>Kniha byla zarezervována</h1>
                             <a href="index.php">Domů</a>';
+
+
+
+                            // send mail
+                            $mailReservationExpiration = date_create($reservationExpiration);
+                            $mailReservationExpiration = date_format($mailReservationExpiration, "j. n.");
+
+                            $mail = new SendMail($userLogin);
+                            $mail->bookReserved($name, $mailReservationExpiration);
+
                             exit;
                         }
                     }

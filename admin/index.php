@@ -23,6 +23,10 @@
     $database = $secrets['sql-database'];
 
 
+    // mail
+    require_once('../sendMail.php');
+
+
     if (isset($_POST['add'])) {
         $registration = $_POST['registration'];
         $isbn = $_POST['isbn'];
@@ -287,7 +291,6 @@
             }
             
 
-
             foreach ($lines as $line) {
                 $column = $columns[$line];
                 $dataToUpdate = $dataList[$line];
@@ -409,6 +412,15 @@
                 mysqli_stmt_bind_param($stmt, "sss", $borrowed, $borrowedHistory, $login);
                 mysqli_stmt_execute($stmt);
                 mysqli_stmt_close($stmt);
+
+
+                // send mail
+
+                $mailReturnDate = date_create($returnDate);
+                $mailReturnDate = date_format($mailReturnDate, "j. n.");
+
+                $mail = new SendMail($login);
+                $mail->bookLent($name, $mailReturnDate);
             }
 
 

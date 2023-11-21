@@ -100,11 +100,11 @@ function updateSuggestions(inputId, suggestionsListId, warningIconId) {
     data: { query: input },
     success: function (response) {
       var suggestions = JSON.parse(response);
-      console.log(suggestions);
+      //console.log(suggestions);
 
       // Přidání nových hodnot do datalistu
       if (suggestions[0] != 'Tento uživatel neexistuje') {
-        console.log('hide');
+        //console.log('hide');
         let usernameWarning = document.getElementById(warningIconId);
         usernameWarning.style.display = 'none';
         
@@ -112,13 +112,15 @@ function updateSuggestions(inputId, suggestionsListId, warningIconId) {
         suggestions.forEach(function (value) {
           var option = document.createElement('option');
           option.value = value['login'];
-          console.log(value['login']);
+          //console.log(value['login']);
           datalist.append(option);
         });
 
         
         //class
         if (inputId == 'lentTo') {
+          console.log('class fill');
+
           let lentToEl = document.getElementById('lentTo');
           let classEl = document.getElementById('class');
 
@@ -134,12 +136,15 @@ function updateSuggestions(inputId, suggestionsListId, warningIconId) {
       }
       
       else {
-        console.log('show');
+        console.log('showw');
         let usernameWarning = document.getElementById(warningIconId);
         usernameWarning.style.display = 'inline-block';
 
-        let classEl = document.getElementById('class');
-        classEl.value = '';
+        if (inputId == 'lentTo' && inputId != 'reservation') {
+          console.log('delete class');
+          let classEl = document.getElementById('class');
+          classEl.value = '';
+        }
       }
     },
     error: function () {
@@ -192,6 +197,8 @@ let selectedInputsEl = document.getElementById('selectedInputs');
 
 
 if (selectedInputsEl.value != 'editOne') {
+  console.log('test');
+
   tableRows.forEach(function(row) {
     row.classList.add('deactivateLine'); // deactivate all
   
@@ -201,6 +208,8 @@ if (selectedInputsEl.value != 'editOne') {
   
       if (disabled && id != 15 && id != 17) { // activate
         row.classList.remove('deactivateLine');
+
+        console.log('id ' + id);
   
   
         // add to list

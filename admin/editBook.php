@@ -146,8 +146,8 @@
             
                 echo "
                 <table class='editBookTable'>
-                    <tr class='column' id='0'>
-                        <td class='label'>
+                    <tr class='column'>
+                        <td class='label' id='0'>
                             <label for='lentTo'>Půjčeno</label>
                         </td>
 
@@ -161,8 +161,8 @@
                         </td>
                     </tr>
 
-                    <tr class='column' id='1'>
-                        <td class='label'>
+                    <tr class='column'>
+                        <td class='label' id='1'>
                             <label for='class'>Třída</label>
                         </td>
 
@@ -173,8 +173,8 @@
                         </td>
                     </tr>
 
-                    <tr class='column' id='2'>
-                        <td class='label'>
+                    <tr class='column'>
+                        <td class='label' id='2'>
                             <label for='lendDate'>Datum půjčení</label>
                         </td>
 
@@ -185,8 +185,8 @@
                         </td>
                     </tr>
 
-                    <tr class='column' id='3'>
-                        <td class='label'>
+                    <tr class='column'>
+                        <td class='label' id='3'>
                             <label for='returnDate'>Datum vrácení</label>
                         </td>
 
@@ -198,8 +198,8 @@
                         </td>
                     </tr>
 
-                    <tr class='column' id='4'>
-                        <td class='label'>
+                    <tr class='column'>
+                        <td class='label' id='4'>
                             <label for='reservation'>Rezervace</label>
                         </td>
 
@@ -213,8 +213,8 @@
                         </td>
                     </tr>
 
-                    <tr class='column' id='5'>
-                        <td class='label'>
+                    <tr class='column'>
+                        <td class='label' id='5'>
                             <label for='reservation'>Konec rezervace</label>
                         </td>
 
@@ -231,8 +231,8 @@
 
 
 
-                    <tr class='column' id='6'>
-                        <td class='label'>
+                    <tr class='column'>
+                        <td class='label' id='6'>
                             <label for='registration'>Registrační číslo</label>
                         </td>
 
@@ -243,8 +243,8 @@
                         </td>
                     </tr>
 
-                    <tr class='column' id='7'>
-                        <td class='label'>
+                    <tr class='column'>
+                        <td class='label' id='7'>
                             <label for='isbn'>Isbn</label>
                         </td>
 
@@ -255,8 +255,8 @@
                         </td>
                     </tr>
 
-                    <tr class='column' id='8'>
-                        <td class='label'>
+                    <tr class='column'>
+                        <td class='label' id='8'>
                             <label for='subject'>Okruh</label>
                         </td>
 
@@ -267,8 +267,8 @@
                         </td>
                     </tr>
 
-                    <tr class='column' id='9'>
-                        <td class='label'>
+                    <tr class='column'>
+                        <td class='label' id='9'>
                             <label for='publisher'>Vydavatel</label>
                         </td>
 
@@ -279,8 +279,8 @@
                         </td>
                     </tr>
 
-                    <tr class='column' id='10'>
-                        <td class='label'>
+                    <tr class='column'>
+                        <td class='label' id='10'>
                             <label for='author'>Autor</label>
                         </td>
 
@@ -291,8 +291,8 @@
                         </td>
                     </tr>
 
-                    <tr class='column' id='11'>
-                        <td class='label'>
+                    <tr class='column'>
+                        <td class='label' id='11'>
                             <label for='name'>Název</label>
                         </td>
 
@@ -303,8 +303,8 @@
                         </td>
                     </tr>
 
-                    <tr class='column' id='12'>
-                        <td class='label'>
+                    <tr class='column'>
+                        <td class='label' id='12'>
                             <label for='price'>Cena</label>
                         </td>
 
@@ -315,8 +315,8 @@
                         </td>
                     </tr>
 
-                    <tr class='column' id='13'>
-                        <td class='label'>
+                    <tr class='column'>
+                        <td class='label' id='13'
                             <label for='dateAdded'>Zaevidování</label>
                         </td>
 
@@ -327,8 +327,8 @@
                         </td>
                     </tr>
 
-                    <tr class='column' id='14'>
-                        <td class='label'>
+                    <tr class='column'>
+                        <td class='label' id='14'>
                             <label for='note'>Poznámka</label>
                         </td>
 
@@ -339,8 +339,8 @@
                         </td>
                     </tr>
 
-                    <tr class='column' id='15'>
-                        <td class='label'>
+                    <tr class='column'>
+                        <td class='label' id='15'>
                             <label for='history'>Historie</label>
                         </td>
 
@@ -351,8 +351,8 @@
                         </td>
                     </tr>
 
-                    <tr class='column' id='16'>
-                        <td class='label'>
+                    <tr class='column'>
+                        <td class='label' id='16'>
                             <label for='discarded'>Vyřazeno</label>
                         </td>
 
