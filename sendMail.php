@@ -35,6 +35,7 @@
         public $gmailAddress;
         public $firstName;
         public $debug;
+        public $login;
 
 
 
@@ -66,11 +67,12 @@
                 echo 'Error: '.mysqli_error($conn);
             }
         
-            $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+            $data = mysqli_fetch_all($result, MYSQLI_ASSOC)[0];
 
             print_r($data);
 
             $this->firstName = $data['firstName'];
+            $this->login = $login;
 
 
             $this->gmailAddress = $login . '@gykovy.cz';
@@ -102,8 +104,7 @@
                 $mail->Port = 587;
     
                 $mail->Username = 'knihovna@gykovy.cz'; // library mail
-                //$mail->Password = $gmailPassword; // password
-                $mail->Password = 'Kniho789gykovy'; // password
+                $mail->Password = $gmailPassword; // password
     
                 // Sender and recipient settings
                 $mail->setFrom('knihovna@gykovy.cz', 'Knihovna GYKOVY'); // from
@@ -196,6 +197,73 @@
 
 
             $this->send();
+
+
+            // mail for admin
+            $this->mail = new PHPMailer(true);
+
+            $this->subject = "Kniha půjčena";
+            $this->message = "
+            <!DOCTYPE html>
+            <html lang='cs'>
+            <head>
+                <meta charset='UTF-8'>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                <title>Oznámení o půjčce knihy</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        background-color: #EDEDE3;
+                        text-align: left;
+                    }
+                    .container {
+                        background-color: #EDEDE3;
+                        color: #294a70;
+                        padding: 20px;
+                        border-radius: 10px;
+                        width: 80%;
+                        margin: 0 auto;
+                    }
+                    h1 {
+                        color: #f4a024;
+                        font-size: 28px;
+                    }
+                    p {
+                        margin: 10px 0;
+                        font-size: 20px;
+                        line-height: 1.5;
+                        color: #294a70;
+                    }
+                    .highlight {
+                        color: #f4a024;
+                        font-weight: bold;
+                    }
+            
+                    .small {
+                        color: gray;
+                        font-size: 15px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class=container>
+                    <h1>Uživatel $this->login si půjčil knihu $bookName.</h1>
+                    <p>
+                        Má ji vrátit do $returnDate
+                    </p>
+                </div>
+            </body> 
+            </html>
+            ";
+
+            $this->altMessage = "Uživatel $this->login si půjčil knihu $bookName. Má ji vrátit do $returnDate";
+
+            $this->gmailAddress = 'knihovna@gykovy.cz';
+            $this->firstName = 'Admin';
+
+
+
+            $this->send();
         }
 
 
@@ -280,6 +348,69 @@
             $this->altMessage = "Oznámení o úspěšném rezervování knihy. Dobrý den, Úspěšně jste si zarezervovali knihu $bookName ve školní knihovně. Knihu si můžete vyzvednout do $reservationExpiration. Pokud máte nějaké otázky, nebo jste si tuto knihu nepůjčili, kontaktujte nás.";
 
             $this->send();
+
+
+
+            // mail for admin
+            $this->mail = new PHPMailer(true);
+
+            $this->subject = "Kniha rezervována";
+            $this->message = "
+            <!DOCTYPE html>
+            <html lang='cs'>
+            <head>
+                <meta charset='UTF-8'>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                <title>Kniha rezervována</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        background-color: #EDEDE3;
+                        text-align: left;
+                    }
+                    .container {
+                        background-color: #EDEDE3;
+                        color: #294a70;
+                        padding: 20px;
+                        border-radius: 10px;
+                        width: 80%;
+                        margin: 0 auto;
+                    }
+                    h1 {
+                        color: #f4a024;
+                        font-size: 28px;
+                    }
+                    p {
+                        margin: 10px 0;
+                        font-size: 20px;
+                        line-height: 1.5;
+                        color: #294a70;
+                    }
+                    .highlight {
+                        color: #f4a024;
+                        font-weight: bold;
+                    }
+            
+                    .small {
+                        color: gray;
+                        font-size: 15px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class=container>
+                    <h1>Uživatel $this->login si rezervoval knihu $bookName.</h1>
+                    <p>
+                    </p>
+                </div>
+            </body> 
+            </html>
+            ";
+
+            $this->altMessage = "Uživatel $this->login si půjčil knihu $bookName.";
+
+            $this->gmailAddress = 'knihovna@gykovy.cz';
+            $this->firstName = 'Admin';
         }
 
 
@@ -363,6 +494,77 @@
             $this->altMessage = "Dobrý den, upozorňujeme vás, že knihu $bookName je potřeba vrátit do $returnDate Pokud jste ještě nedočetli, není problém si knihu prodloužit. Pokud máte nějaké otázky, nebo tuto knihu nemáte půjčenou, kontaktujte nás.";
 
             $this->send();
+
+
+
+
+            // mail for admin, ONLY IF LATE
+            if ($late) {
+                $this->mail = new PHPMailer(true);
+
+                $this->subject = "Kniha nebyla vrácena";
+                $this->message = "
+                <!DOCTYPE html>
+                <html lang='cs'>
+                <head>
+                    <meta charset='UTF-8'>
+                    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                    <title>Oznámení o půjčce knihy</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            background-color: #EDEDE3;
+                            text-align: left;
+                        }
+                        .container {
+                            background-color: #EDEDE3;
+                            color: #294a70;
+                            padding: 20px;
+                            border-radius: 10px;
+                            width: 80%;
+                            margin: 0 auto;
+                        }
+                        h1 {
+                            color: #f4a024;
+                            font-size: 28px;
+                        }
+                        p {
+                            margin: 10px 0;
+                            font-size: 20px;
+                            line-height: 1.5;
+                            color: #294a70;
+                        }
+                        .highlight {
+                            color: #f4a024;
+                            font-weight: bold;
+                        }
+                
+                        .small {
+                            color: gray;
+                            font-size: 15px;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class=container>
+                        <h1>Uživatel $this->login nevrátil knihu $bookName.</h1>
+                        <p>
+                            Měl ji vrátit do $returnDate
+                        </p>
+                    </div>
+                </body> 
+                </html>
+                ";
+    
+                $this->altMessage = "Uživatel $this->login nevrátil knihu $bookName. Měl ji vrátit do $returnDate";
+    
+                $this->gmailAddress = 'knihovna@gykovy.cz';
+                $this->firstName = 'Admin';
+    
+    
+                $this->send();
+            }
+            
         }
 
 
@@ -522,6 +724,155 @@
             </html>
             ";
             $this->altMessage = "Rezervace knihy $bookName byla zrušena. Pokud máte nějaké otázky, kontaktujte nás.";
+
+            $this->send();
+
+
+
+            $this->mail = new PHPMailer(true);
+
+            $this->subject = "Rezervace zrušena";
+            $this->message = "
+            <!DOCTYPE html>
+            <html lang='cs'>
+            <head>
+                <meta charset='UTF-8'>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                <title>Zrušení rezervace</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        background-color: #EDEDE3;
+                        text-align: left;
+                    }
+                    .container {
+                        background-color: #EDEDE3;
+                        color: #294a70;
+                        padding: 20px;
+                        border-radius: 10px;
+                        width: 80%;
+                        margin: 0 auto;
+                    }
+                    h1 {
+                        color: #f4a024;
+                        font-size: 28px;
+                    }
+                    p {
+                        margin: 10px 0;
+                        font-size: 20px;
+                        line-height: 1.5;
+                        color: #294a70;
+                    }
+                    .highlight {
+                        color: #f4a024;
+                        font-weight: bold;
+                    }
+            
+                    .small {
+                        color: gray;
+                        font-size: 15px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class=container>
+                    <h1>Uživatel $this->login zrušil rezervaci knihy $bookName.</h1>
+                    <p>
+                    </p>
+                </div>
+            </body> 
+            </html>
+            ";
+
+            $this->altMessage = "Uživatel $this->login zrušil rezervaci knihy $bookName.";
+
+            $this->gmailAddress = 'knihovna@gykovy.cz';
+            $this->firstName = 'Admin';
+
+
+
+            $this->send();
+        }
+
+
+        // CRON JOB OUTPUT
+
+        function cronJobOutput($script, $output=['Vše proběhlo vpořádku.']) {
+            // process output
+            $outputMsg = '';
+
+            if (empty($output)) {
+                $outputMsg = 'Vše proběhlo vpořádku.';
+            }
+
+            else {
+                foreach ($output as $error) {
+                    $outputMsg = $error . '<br>';
+                }
+            }
+            
+
+
+            $this->subject = "Skript $script spuštěn.";
+            $this->message = "
+            <!DOCTYPE html>
+            <html lang='cs'>
+            <head>
+                <meta charset='UTF-8'>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                <title>Skript $script byl spuštěn.</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        background-color: #EDEDE3;
+                        text-align: left;
+                    }
+                    .container {
+                        background-color: #EDEDE3;
+                        color: #294a70;
+                        padding: 20px;
+                        border-radius: 10px;
+                        width: 80%;
+                        margin: 0 auto;
+                    }
+                    h1 {
+                        color: #f4a024;
+                        font-size: 28px;
+                    }
+                    p {
+                        margin: 10px 0;
+                        font-size: 20px;
+                        line-height: 1.5;
+                        color: #294a70;
+                    }
+                    .highlight {
+                        color: #f4a024;
+                        font-weight: bold;
+                    }
+            
+                    .small {
+                        color: gray;
+                        font-size: 15px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class=container>
+                    <h1>Spuštění skriptu $script</h1>
+                    <p>
+                        Dobrý den, <br>
+                        právě se spustil skript $script. <br>
+                        <strong>Output:</strong> <br>
+                        $outputMsg
+                    </p>
+                </div>
+            </body> 
+            </html>
+            ";
+
+            $this->altMessage = "Script $script byl spuštěn. Output: $outputMsg";
+
+
 
             $this->send();
         }

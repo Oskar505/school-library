@@ -1,12 +1,24 @@
 <?php
+    session_start();
+
+    if (!isset($_SESSION['loggedin'])) {
+        header('Location: /userLogin.php');
+        exit;
+    }
+
+    
+
 
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
 
 
+    include_once('sendMail.php');
 
 
+    // output of this script, this will be sent in mail
+    $output = [];
 
 
 
@@ -17,12 +29,25 @@
 
     $dnList = ["OU=NG,OU=GYM,OU=Zaci,OU=Uzivatele,DC=GYKOVY,DC=LOCAL", "OU=VG,OU=GYM,OU=Zaci,OU=Uzivatele,DC=GYKOVY,DC=LOCAL", "OU=SOS,OU=Zaci,OU=Uzivatele,DC=GYKOVY,DC=LOCAL", "OU=Zamestnanci,OU=Uzivatele,DC=GYKOVY,DC=LOCAL"];
 
+    // MAIN CODE
     // get data from all dns in dnList
     for ($i = 0; $i < count($dnList); $i++) {
         $data = getUsers($dnList[$i]);
         updateDb($data);
     }
+
+
+    print_r($output);
+
+    // SEND MAIL
+    $mail = new SendMail('knihovna');
+    $mail->cronJobOutput('saveUserData', $output);
     
+
+
+
+
+
 
     function getUsers($dn) {
         // get secrets
@@ -71,17 +96,12 @@
 
                 $count ++;
 
-                /*
-                echo $count;
-                echo'<br>';
-                echo "Uživatel: $lastName $firstName, Uživatelské jméno: $login, třída: $class<br />";*/
-
-                array_push($data, ['firstName'=>$firstName, 'lastName'=>$lastName, 'login'=>$login, 'class'=>$class[0], 'graduate'=>$class[1]]);
+                array_push($data, ['firstName'=>$firstName, 'lastName'=>$lastName, 'login'=>$login, 'class'=>$class[0], 'gr uate'=>$class[1]]);
             }
         } 
         
         else {
-            echo "Hledání v AD selhalo.";
+            $output[] = "Hledání v AD selhalo.";
         }
 
 
@@ -105,7 +125,7 @@
         $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, 'knihovna');
 
         if (!$conn) {
-            echo 'chyba pripojeni'.mysqli_connect_error();
+            $output[] = 'chyba pripojeni'.mysqli_connect_error();
         }
 
 
@@ -123,12 +143,12 @@
             $result = mysqli_query($conn, $sql);
 
             if ($result === false) {
-                echo 'Error: '.mysqli_error($conn);
+                $output[] = 'Error: '.mysqli_error($conn);
             }
 
             $count = mysqli_fetch_assoc($result)['count'];
 
-            echo "$firstName $lastName, login: $login,  class: $class,   graduate: $graduate <br>";
+            $output[] = "$firstName $lastName, login: $login,  class: $class,   graduate: $graduate";
 
 
             if ($count == 0) { // if user is not in db
@@ -143,17 +163,11 @@
                 $result = mysqli_query($conn, $sql);
 
                 if ($result === false) {
-                    echo 'Error: '.mysqli_error($conn);
+                    $output[] = 'Error: '.mysqli_error($conn);
                 }
 
                 $dbClass = mysqli_fetch_assoc($result);
 
-                /*
-                echo $login;
-                echo '<br>';
-                print_r($dbClass);
-                echo '<br>';
-                */
 
                 
                 if ($class != $dbClass && $graduate == false) { // next grade
@@ -272,12 +286,14 @@
         
                 else {
                     $class = 'Get class error';
+                    $output[] = $class;
                 }
             }
 
 
             else {
                 $class = 'Get class error: there should not be graduate.';
+                $output[] = $class;
             }
         }
 

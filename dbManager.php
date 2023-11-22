@@ -3,6 +3,15 @@
     // TODO: udelat funkci ktera napise poznamku uzivateli kdyz nevrati knihu vcas
     // TODO: domluvit maily
 
+
+    session_start();
+
+    if (!isset($_SESSION['loggedin'])) {
+        header('Location: /userLogin.php');
+        exit;
+    }
+
+
     // get secrets
     require('/var/secrets.php');
 
@@ -18,11 +27,15 @@
     include_once('sendMail.php');
 
 
+    // output of this script, this will be sent in mail
+    $output = [];
+
+
 
     $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
 
     if (!$conn) {
-        echo 'chyba pripojeni'.mysqli_connect_error();
+        $output[] = 'chyba pripojeni'.mysqli_connect_error();
     }
 
 
@@ -31,7 +44,7 @@
     $result = mysqli_query($conn, $sql);
 
     if ($result === false) {
-            echo 'Error: '.mysqli_error($conn);
+            $output[] = 'Error: '.mysqli_error($conn);
     }
 
     $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -59,7 +72,7 @@
                 $result = mysqli_query($conn, $sql);
 
                 if ($result === false) {
-                        echo 'Error: '.mysqli_error($conn);
+                    $output[] = 'Error: '.mysqli_error($conn);
                 }
 
 
@@ -68,7 +81,7 @@
                 $result = mysqli_query($conn, $sql);
 
                 if ($result === false) {
-                        echo 'Error: '.mysqli_error($conn);
+                    $output[] = 'Error: '.mysqli_error($conn);
                 }
 
                 $reservedBooks = mysqli_fetch_all($result, MYSQLI_ASSOC)[0]['reserved'];
@@ -84,7 +97,7 @@
                 $result = mysqli_query($conn, $sql);
 
                 if ($result === false) {
-                    echo 'Error: '.mysqli_error($conn);
+                    $output[] = 'Error: '.mysqli_error($conn);
                 }
 
 
@@ -115,7 +128,7 @@
     $result = mysqli_query($conn, $sql);
 
     if ($result === false) {
-            echo 'Error: '.mysqli_error($conn);
+        $output[] = 'Error: '.mysqli_error($conn);
     }
 
     $booksData = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -131,17 +144,15 @@
         $reservation = $row['reservation'];
         $reservationExpiration = $row['reservationExpiration'];
 
-        //echo "lendDate $lendDate <br>";
-
 
         /// borrowed
         if ($lentTo != '' && $lentTo != null) { // lentTo is not empty
             if ($lendDate == '' || $lendDate == null) { // lendDate is empty
-                echo "Books table error: LendDate is empty, ID: $id <br>";
+                $output[] = "Books table error: LendDate is empty, ID: $id <br>";
             }
 
             if ($returnDate == '' || $returnDate == null) {
-                echo "Books table error: ReturnDate is empty, ID: $id <br>";
+                $output[] = "Books table error: ReturnDate is empty, ID: $id <br>";
             }
 
 
@@ -153,17 +164,17 @@
             }
 
             if (!in_array($lentTo, $historyList)) {
-                echo "Books table error: User is not in history, ID: $id <br>";
+                $output[] = "Books table error: User is not in history, ID: $id <br>";
             }
         }
 
 
         elseif ($lendDate != '' && $lendDate != null) { // lendDate is not empty but lentTo is
-            echo "Books table error: LentTo is empty, ID: $id <br>";
+            $output[] = "Books table error: LentTo is empty, ID: $id <br>";
         }
 
         elseif ($returnDate != '' && $returnDate != null) { // returnDate is not empty but lentTo is
-            echo "Books table error: LentTo is empty, ID: $id <br>";
+            $output[] = "Books table error: LentTo is empty, ID: $id <br>";
         }
 
 
@@ -172,7 +183,7 @@
             $returnDateTest = strtotime($returnDate);
 
             if ($returnDateTest === false) { // invalid date
-                echo "Books table error: return date is not valid date, ID: $id <br>";
+                $output[] = "Books table error: return date is not valid date, ID: $id <br>";
             }
 
             else { // valid date
@@ -187,7 +198,7 @@
                     $result = mysqli_query($conn, $sql);
 
                     if ($result === false) {
-                        echo 'Error: '.mysqli_error($conn);
+                        $output[] = 'Error: '.mysqli_error($conn);
                     }
 
                     $note = mysqli_fetch_all($result, MYSQLI_ASSOC)[0]['note'];
@@ -198,7 +209,7 @@
                         $result = mysqli_query($conn, $sql);
 
                         if ($result === false) {
-                            echo 'Error: '.mysqli_error($conn);
+                            $output[] = 'Error: '.mysqli_error($conn);
                         }
                     }
                 }
@@ -210,12 +221,12 @@
 
         if ($reservation != '' && $reservation != null) { // reservation is not empty
             if ($reservationExpiration == '' || $reservationExpiration == null) { // reservationExpiration is empty
-                echo "Books table error: reservationExpiration is empty, ID: $id <br>";
+                $output[] = "Books table error: reservationExpiration is empty, ID: $id <br>";
             }
         }
 
         elseif ($reservationExpiration != '' && $reservationExpiration != null) {
-            echo "Books table error: reservation is empty, ID: $id <br>";
+            $output[] = "Books table error: reservation is empty, ID: $id <br>";
         }
     }
 
@@ -226,7 +237,7 @@
     $result = mysqli_query($conn, $sql);
 
     if ($result === false) {
-            echo 'Error: '.mysqli_error($conn);
+        $output[] = 'Error: '.mysqli_error($conn);
     }
 
     $usersData = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -242,10 +253,15 @@
 
         if ($borrowed != '' && $borrowed != null) { // borrowed is not empty
             $historyList = explode(',', $borrowedHistory);
+            $borrowedList = explode(',', $borrowed);
 
-            if (!in_array($borrowed, $historyList)) {
-                echo "Users table error: Book is not in borrowedHistory, ID: $id <br>";
+            foreach ($borrowedList as $borrowedBook) {
+                if (!in_array($borrowedBook, $historyList)) {
+                    $output[] = "Users table error: Borrowed book is not saved in borrowedHistory, user ID: $id, book ID: $borrowedBook <br>";
+                }
             }
+
+            
         }
     }
     
@@ -271,7 +287,7 @@
             $result = mysqli_query($conn, $sql);
 
             if ($result === false) {
-                echo 'Error: '.mysqli_error($conn);
+                $output[] = 'Error: '.mysqli_error($conn);
             }
 
             $user = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -279,7 +295,7 @@
 
             // check if user exists in db
             if (empty($user)) {
-                echo "Books table error: user $lentTo does not exist in users table (lentTo), book ID: $id <br>";
+                $output[] = "Books table error: user $lentTo does not exist in users table (lentTo), book ID: $id <br>";
                 continue; // skip
             }
             
@@ -302,7 +318,7 @@
             
 
             if (!in_array($id, $borrowed)) {
-                echo "Mismatched tables error: book is borrowed in books but not in users. User login = $lentTo, book ID: $id <br>";
+                $output[] = "Mismatched tables error: book is borrowed in books but not in users. User login = $lentTo, book ID: $id <br>";
             }
         }
 
@@ -312,7 +328,7 @@
             $result = mysqli_query($conn, $sql);
 
             if ($result === false) {
-                echo 'Error: '.mysqli_error($conn);
+                $output[] = 'Error: '.mysqli_error($conn);
             }
 
             $user = mysqli_fetch_all($result, MYSQLI_ASSOC)[0];
@@ -321,7 +337,7 @@
             $reserved = explode(',', $reserved);
 
             if (!in_array($id, $reserved)) {
-                echo "Mismatched tables error: book is reserved in books but not in users. User login = $reservation <br>";
+                $output[] = "Mismatched tables error: book is reserved in books but not in users. User login = $reservation <br>";
             }
         }
     }
@@ -344,7 +360,7 @@
                 $result = mysqli_query($conn, $sql);
 
                 if ($result === false) {
-                    echo 'Error: '.mysqli_error($conn);
+                    $output[] = 'Error: '.mysqli_error($conn);
                 }
 
                 $book = mysqli_fetch_all($result, MYSQLI_ASSOC)[0];
@@ -352,7 +368,7 @@
                 $bookIdBooks = $book['id'];
 
                 if ($bookIdUsers != $bookIdBooks) {
-                    echo "Mismatched tables error: book is borrowed in users but not in books. User login = $lentTo, Book id = $bookIdBooks <br>";
+                    $output[] = "Mismatched tables error: book is borrowed in users but not in books. User login = $lentTo, Book id = $bookIdBooks <br>";
                 }
             }
         }
@@ -366,14 +382,14 @@
                 $result = mysqli_query($conn, $sql);
 
                 if ($result === false) {
-                    echo 'Error: '.mysqli_error($conn);
+                    $output[] = 'Error: '.mysqli_error($conn);
                 }
 
                 $book = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
                 // check if book exists in db
                 if (empty($book) || $book == '') {
-                    echo "Users table error: book with id: $bookIdUsers does not exist in books table (reservation), user ID: $id <br>";
+                    $output[] = "Users table error: book with id: $bookIdUsers does not exist in books table (reservation), user ID: $id <br>";
                     continue; // skip
                 }
 
@@ -385,21 +401,11 @@
                 $bookIdBooks = $book['id'];
 
                 if ($bookIdUsers != $bookIdBooks) {
-                    echo "Mismatched tables error: book is reserved in users but not in books. User login = $lentTo, Book id = $bookIdBooks <br>";
+                    $output[] = "Mismatched tables error: book is reserved in users but not in books. User login = $lentTo, Book id = $bookIdBooks <br>";
                 }
             }
         }
     }
-
-    /*
-
-    $sql = "SELECT *
-        FROM users
-        LEFT JOIN books ON users.login = books.lentTo AND knihy.id_knihy = $id_knihy
-        WHERE uzivatele.id_uzivatele = ";
-
-    $result = $conn->query($sql);
-    */
 
 
 
@@ -411,7 +417,7 @@
     $result = mysqli_query($conn, $sql);
 
     if ($result === false) {
-        echo 'Error: '.mysqli_error($conn);
+        $output[] = 'Error: '.mysqli_error($conn);
     }
 
     $books = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -431,11 +437,21 @@
         $result = mysqli_query($conn, $sql);
 
         if ($result === false) {
-            echo 'Error: '.mysqli_error($conn);
+            $output[] = 'Error: '.mysqli_error($conn);
         }
 
-        echo "Extended reservation: book: $id, user: $reservation.";
+        $output[] = "Extended reservation: book: $id, user: $reservation.";
     }
+
+
+
+    print_r($output);
+
+
+    // SEND MAIL
+    $mail = new SendMail('knihovna');
+    $mail->cronJobOutput('dbManager', $output);
+    
 
 
 
