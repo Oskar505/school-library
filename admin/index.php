@@ -160,8 +160,6 @@
         $oldReservation = $_POST['oldReservation'];
 
 
-        // escape string
-
 
         if ($lines != 'editOne') {
             $lines = json_decode($lines);
@@ -257,7 +255,7 @@
             $history = $row['history'];
 
 
-            if ($history != '') {
+            if (!empty($history)) {
                 $history = $history . ', ' . $lentTo;
             }
 
@@ -326,9 +324,6 @@
                 foreach ($data as $book) {
                     array_push($bookIdList, $book['id']);
                 }
-
-
-                
             }
 
 
@@ -390,7 +385,8 @@
                 }
                 
                 else {
-                    returnMultipleBooks($conn,$bookIdList, 'borrowed');
+                    // return if lent to someone else then borrow to new user
+                    returnMultipleBooks($conn, $bookIdList, 'borrowed');
 
                     foreach ($bookIdList as $bookId) {
                         //borrowed
@@ -611,14 +607,14 @@
         else {
             echo '<br> editAll';
 
-
+            // update
             if (!mysqli_query($conn, $booksSql)) {
                 showError('Chyba databáze', 'Nepodařilo se aktualizovat tabulku books.', '/admin');
             }
 
 
             //history
-            if ($editLentTo && !empty($lentTo)) {
+            if ($editLentTo && !empty($lentTo)) { 
                 foreach ($bookIdList as $bookId) {
                     $query = "SELECT history FROM books WHERE id = $bookId";
                     $result = mysqli_query($conn, $query);
@@ -805,7 +801,7 @@
             }
 
             // get count
-            $sql = "SELECT COUNT(*) FROM books";
+            $sql = "SELECT COUNT(*) FROM books WHERE discarded=0";
             $result = mysqli_query($conn, $sql);
 
             if ($result === false) {
@@ -832,7 +828,7 @@
             <div class='info'>
             <div class='info-block'>
                 <h2>Počet výsledků:</h2>
-                <p class='result-count'>$resultCount</p>
+                <p class='result-count' id='result-count'>$resultCount</p>
             </div>
             <div class='info-block' id='notReturned'>
                 <h2>Nevrácené knihy:</h2>
@@ -871,7 +867,7 @@
 
             <tbody id='tableBody'>
                 <?php
-                    $rows = 100;
+                    $rows = 300;
 
                     try {
                         $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
@@ -882,13 +878,12 @@
                     }
 
 
-                    $sql = "SELECT * FROM books WHERE discarded=0 LIMIT $rows";
+                    $sql = "SELECT * FROM books WHERE discarded=0 ORDER BY `books`.`id` DESC LIMIT $rows";
                     $result = mysqli_query($conn, $sql);
 
                     if ($result === false) {
-                            echo 'Error: '.mysqli_error($conn);
+                        echo 'Error: '.mysqli_error($conn);
                     }
-
 
                     $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -978,16 +973,16 @@
             </tbody>
         </table>
 
-        <button class='expandTableBtn btn' onclick="loadMoreRows(100)">Další</button>
+        <button class='expandTableBtn btn' onclick="loadMoreRows(300)">Další</button>
 
     </main>
 
 
     <!-- expandTableAJAX -->
     <script>
-        var rowCount = <?php echo $rows; ?>;
+        var rowsShown = <?php echo $rows; ?>;
         
-        function loadMoreRows(count) {
+        function loadMoreRows(addRows) {
             let searchInput = document.getElementById('searchInput');
             let showDiscarded = document.getElementById('showDiscarded');
 
@@ -1002,8 +997,8 @@
                 url: '/getDataForAjax/expandTable.php',
                 type: 'GET',
                 data: {
-                    count: count,
-                    rowCount: rowCount,
+                    count: addRows,
+                    rowCount: rowsShown,
                     searchInput: searchInput.value,
                     showDiscarded: showDiscarded.checked,
                     columns: columns
@@ -1011,7 +1006,7 @@
                 success: function(response) {
                     var tbody = $('#tableBody');
                     tbody.append(response);
-                    rowCount += count;
+                    rowsShown += addRows;
                 }
             });
         }
@@ -1053,7 +1048,7 @@
 
 
         registrationEl.addEventListener('click', function() {
-            registration = !registration;
+            registration = !registration; // toggle searching by the column
             (searchInput.value != '') ? search() : ''; // change searched column
 
             //style
@@ -1171,6 +1166,8 @@
             searchInput = document.getElementById('searchInput');
             showDiscarded = document.getElementById('showDiscarded');
 
+            
+            // delete search by cookies if search bar is empty
             if (searchInput.value == '') {
                 document.cookie = `searchBy=;`;
                 console.log(getCookie('searchBy'));
@@ -1193,8 +1190,13 @@
                     showNotReturned: showNotReturned
                 },
                 success: function(response) {
-                    var tbody = $('#tableBody');
-                    tbody.html(response);
+                    let tbody = $('#tableBody');
+                    let resultCount = $('#result-count');
+
+                    response = response.split('###datasplit###');
+
+                    resultCount.html(response[0])
+                    tbody.html(response[1]);
                 }
             });
         }

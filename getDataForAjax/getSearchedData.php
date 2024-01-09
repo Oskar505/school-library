@@ -21,7 +21,9 @@
 
 
     // search by
+    //default
     $searchBy = "name LIKE '%$searchInput%' OR author LIKE '%$searchInput%' OR publisher LIKE '%$searchInput%' OR isbn LIKE '%$searchInput%' OR note LIKE '%$searchInput%' OR lentTo LIKE '%$searchInput%' OR class LIKE '%$searchInput%'";
+    
     $columnClauses = ["registration LIKE '%$searchInput%'", "subject LIKE '%$searchInput%'", "author LIKE '%$searchInput%'", "name LIKE '%$searchInput%'", "price LIKE '%$searchInput%'", "dateAdded LIKE '%$searchInput%'", "lentTo LIKE '%$searchInput%'", "class LIKE '%$searchInput%'", "lendDate LIKE '%$searchInput%'", "reservation LIKE '%$searchInput%'", "note LIKE '%$searchInput%'"];
     $someColumnSelected = false;
 
@@ -56,39 +58,36 @@
 
 
     if ($showNotReturned == 'true') {
-        echo 'show';
         $sql = "SELECT * FROM books WHERE returnDate < CURDATE()";
     }
 
     else {
-        echo 'ne';
-
         if ($showDiscarded == 'true') {
             if ($searchInput == '') {
-                $sql = "SELECT * FROM books LIMIT $rows";
+                $sql = "SELECT * FROM books";
             }
     
             else {
-                $sql = "SELECT * FROM books WHERE $searchBy LIMIT $rows";
+                $sql = "SELECT * FROM books WHERE $searchBy";
             }
         }
     
         else {
             if ($searchInput == '') {
-                $sql = "SELECT * FROM books WHERE discarded=0 LIMIT $rows";
+                $sql = "SELECT * FROM books WHERE discarded=0";
             }
     
             else {
-                $sql = "SELECT * FROM books WHERE ($searchBy) AND discarded=0 LIMIT $rows";
+                $sql = "SELECT * FROM books WHERE ($searchBy) AND discarded=0";
             }     
         }
     }
 
 
-    $result = mysqli_query($conn, $sql);
+    $result = mysqli_query($conn, $sql . " LIMIT $rows"); // add limit
 
     if ($result === false) {
-            echo 'Error: '.mysqli_error($conn);
+        echo 'Error: '.mysqli_error($conn);
     }
 
 
@@ -99,6 +98,24 @@
         $rows = count($data);
     }
 
+
+    // count results
+    $wherePart = explode('WHERE', $sql)[1]; // get only where part from sql
+
+    $wherePart = empty($wherePart) ? '' : 'WHERE ' . $wherePart; 
+
+    $countSql = "SELECT COUNT(*) FROM books $wherePart"; // count
+
+    $result = mysqli_query($conn, $countSql);
+
+    if ($result === false) {
+        echo 'Error: '.mysqli_error($conn);
+    }
+
+    $booksCount = mysqli_fetch_all($result, MYSQLI_ASSOC)[0]['COUNT(*)'];
+
+    echo $booksCount;
+    echo '###datasplit###';
 
     for ($i = 0; $i < $rows; $i++) {
         
@@ -131,14 +148,18 @@
         // book wasnt returned in time
         $returnedInTime = true;
         $returnedInTimeClass = '';
-        $returnDateObj = new DateTime($returnDate);
-        $todayDateObj = new DateTime();
+
+        if (!empty($returnDate)) {
+            $returnDateObj = new DateTime($returnDate);
+            $todayDateObj = new DateTime();
 
 
-        if ($returnDateObj < $todayDateObj &&  $returnDate != '') {
-            $returnedInTime = false;
-            $returnedInTimeClass = 'notReturned';
+            if ($returnDateObj < $todayDateObj &&  $returnDate != '') {
+                $returnedInTime = false;
+                $returnedInTimeClass = 'notReturned';
+            }
         }
+        
 
 
         echo "<tr class='dataRow " . ($i % 2 === 1 ? 'evenRow' : '') . ' ' . ($discarded == 1 ? 'discardedRow' : '') . ' ' . $returnedInTimeClass . " '>

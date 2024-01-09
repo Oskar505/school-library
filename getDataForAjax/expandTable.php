@@ -49,21 +49,21 @@
 
     if ($showDiscarded == 'true') {
         if ($searchInput == '') {
-            $sql = "SELECT * FROM books LIMIT $rowCount, $count";
+            $sql = "SELECT * FROM books ORDER BY `books`.`id` DESC LIMIT $rowCount, $count";
         }
 
         else {
-            $sql = "SELECT * FROM books WHERE $searchBy LIMIT $rowCount, $count";
+            $sql = "SELECT * FROM books WHERE $searchBy ORDER BY `books`.`id` DESC LIMIT $rowCount $count";
         }
     }
 
     else {
         if ($searchInput == '') {
-            $sql = "SELECT * FROM books WHERE discarded=0 LIMIT $rowCount, $count";
+            $sql = "SELECT * FROM books WHERE discarded=0 ORDER BY `books`.`id` DESC LIMIT $rowCount, $count";
         }
 
         else {
-            $sql = "SELECT * FROM books WHERE ($searchBy) AND discarded=0 LIMIT $rowCount, $count";
+            $sql = "SELECT * FROM books WHERE ($searchBy) AND discarded=0 ORDER BY `books`.`id` DESC LIMIT $rowCount, $count";
         }     
     }
 
