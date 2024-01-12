@@ -50,7 +50,7 @@
             $this->secrets = $secrets;
 
             //TODO: debug
-            $login = 'x6utvrdoc';
+            $login = 'knihovna';
 
             //GET USER DATA
             //connection
@@ -711,7 +711,7 @@
             </head>
             <body>
                 <div class=container>
-                    <h1>Oznámení o úspěšné rezervaci knihy</h1>
+                    <h1>Oznámení o zrušení rezervace knihy</h1>
                     <p>
                         $message
                     </p>

@@ -85,5 +85,4 @@ function getDataFromSession() {
         });
 }
 
-// Zavolejte tuto funkci kdykoliv budete chtít načíst data z session
 getDataFromSession();

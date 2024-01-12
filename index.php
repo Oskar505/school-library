@@ -197,7 +197,12 @@
         </div>
     </main>
 
-
+    <div class="infoBox">
+        <p>Toto je <span class="infoBoxHighlight">testovací</span> verze stránky. Pokud najdete nějakou chybu, kontaktujte nás na knihovna@gykovy.cz.</p>
+        <div class="infoOkBtn">
+            <p>Ok</p>
+        </div>
+    </div>
 
     <footer>
 
@@ -206,6 +211,15 @@
     <script src="/scripts/accountDropdown.js"></script>
 
     <script>
+        let infoOkBtn = document.getElementsByClassName('infoOkBtn')[0];
+        let infoBox = document.getElementsByClassName('infoBox')[0];
+
+        infoOkBtn.addEventListener('click', function () {
+            infoBox.style.display = 'none';
+        })
+
+
+
         function openMoreInfo(id, name) {
             window.location.href = 'moreInfo.php?id=' + id;
         }
@@ -223,7 +237,7 @@
 
 
             $.ajax({
-                url: 'getSearchedDataUser.php',
+                url: '/getDataForAjax/getSearchedDataUser.php',
                 type: 'GET',
                 data: {
                     searchInput: searchInput.value,

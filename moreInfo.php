@@ -61,7 +61,7 @@
         $result = mysqli_query($conn, $sql);
 
         if ($result === false) {
-                echo 'Error: '.mysqli_error($conn);
+            echo 'Error: '.mysqli_error($conn);
         }
 
 
@@ -106,19 +106,26 @@
                     $reserved = mysqli_fetch_all($result, MYSQLI_ASSOC)[0]['COUNT(*)'];
 
                     // reservation limit (3)
-                    $sql = "SELECT reserved FROM users WHERE login = '$userLogin'";
+                    $sql = "SELECT reserved, class FROM users WHERE login = '$userLogin'";
                     $result = $conn->query($sql);
 
                     if ($result->num_rows > 0) {
                         $row = $result->fetch_assoc();
                         $reservedString = $row['reserved'];
+                        $class = $row['class'];
 
-                        // split
-                        $reservedBooksCount = 0;
+                        if ($class = 'Zaměstnanec') { // infinite for teachers
+                            $reservedBooksCount = 0;
+                        }
 
-                        if ($reservedString != null && $reservedString != '') {
-                            $reservedArray = explode(',', $reservedString);
-                            $reservedBooksCount = count($reservedArray);
+                        else { // students
+                            // split
+                            $reservedBooksCount = 0;
+
+                            if ($reservedString != null && $reservedString != '') {
+                                $reservedArray = explode(',', $reservedString);
+                                $reservedBooksCount = count($reservedArray);
+                            }
                         }
                     }
 
@@ -205,7 +212,7 @@
                     $userLogin = mysqli_real_escape_string($conn, $userLogin);
 
 
-                    // if book is not reserved
+                    // if book is reserved
                     $sql = "SELECT COUNT(*) FROM books WHERE id = $bookId AND (reservation IS NULL OR reservation = '')";
                     $result = mysqli_query($conn, $sql);
 

@@ -20,10 +20,8 @@ isbn.addEventListener('input', function(e) {
 
 
 
-function fill(isbnVal) {
+function fill(isbn) {
     console.log('fill');
-
-    let isbn = isbnVal;
 
     let url = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn;
 

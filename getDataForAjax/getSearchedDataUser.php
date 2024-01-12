@@ -24,7 +24,7 @@
     }
 
     else {
-        $sql = "SELECT id, author, name, returnDate, reservation FROM books WHERE name LIKE '%$searchInput%' OR author LIKE '%$searchInput%' OR isbn LIKE '%$searchInput%' OR note LIKE '%$searchInput%' OR lentTo LIKE '%$searchInput%' OR class LIKE '%$searchInput%' LIMIT $rows";
+        $sql = "SELECT id, author, name, returnDate, reservation FROM books WHERE name LIKE '%$searchInput%' OR author LIKE '%$searchInput%' OR isbn LIKE '%$searchInput%' LIMIT $rows";
     }
     echo 'showDiscarded true';
 

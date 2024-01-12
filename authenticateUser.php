@@ -103,8 +103,8 @@
 
 
     if ( mysqli_connect_errno() ) {
-        // error
-        exit('Nepodařilo se připojit k databázi: ' . mysqli_connect_error());
+      // error
+      exit('Nepodařilo se připojit k databázi: ' . mysqli_connect_error());
     }
 
 
@@ -126,9 +126,9 @@
     $ldap_dn = "DC=gykovy,DC=local";
   
     $ldap = ldap_connect($ldap_server);
-        
-        
-          
+    
+      
+    
     if($r=@ldap_bind($ldap,$ldap_user,$ldap_psw)) { 
       // valid
       return true;
