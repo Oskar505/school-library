@@ -230,6 +230,10 @@
     width: 208px;
 }
 
+#lentToName, #reservationName {
+    font-size: 20px;
+}
+
 .editBookTable {
     max-width: 500px;
     margin-left: auto;

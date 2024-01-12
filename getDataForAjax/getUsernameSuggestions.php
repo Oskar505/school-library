@@ -8,7 +8,6 @@
 
     
 
-    // Připojení k databázi (nahraďte 'your_username', 'your_password' a 'your_database_name' vhodnými údaji)
     $host = 'localhost';
     
     // get secrets
@@ -30,7 +29,7 @@
     $query = $_GET['query'];
 
     // Sestavení SQL dotazu na získání odpovídajících položek z databáze
-    $sql = "SELECT login, class FROM users WHERE login LIKE '%" . $query . "%' LIMIT 10";
+    $sql = "SELECT login, class, firstName, lastName FROM users WHERE login LIKE '%" . $query . "%' LIMIT 10";
 
     $result = mysqli_query($conn, $sql);
     

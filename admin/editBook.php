@@ -7,6 +7,10 @@
         header('Location: /userLogin.php');
         exit;
     }
+
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
 ?>
 
 
@@ -39,6 +43,8 @@
             include 'log.php';
             writeToLog('test');
             */
+
+
 
             // get id
             if (isset($_POST['id'])) {
@@ -111,6 +117,7 @@
 
 
                 else { // hromadna uprava
+                    // set default values
                     $id = '';
                     $registration = '';
                     $isbn = '';
@@ -130,6 +137,10 @@
                     $note = '';
                     $discarded = '';
                 }
+
+
+
+                
                 
 
                 
@@ -160,6 +171,17 @@
                             <span class='usernameWarning' id='lentToUsernameWarning' title='Uživatelské jméno neexistuje'>warning</span>
                         </td>
                     </tr>
+
+                    <tr class='column'>
+                        <td class='nameRow'></td>
+
+                        <td class='middleColumn'></td>
+
+                        <td>
+                            <p id='lentToName'></p>
+                        </td>
+                    </tr>
+
 
                     <tr class='column'>
                         <td class='label' id='1'>
@@ -212,6 +234,17 @@
                             <span class='usernameWarning' id='reservationUsernameWarning'>warning</span>
                         </td>
                     </tr>
+
+                    <tr class='column'>
+                        <td class='nameRow'></td>
+
+                        <td class='middleColumn'></td>
+
+                        <td>
+                            <p id='reservationName'></p>
+                        </td>
+                    </tr>
+
 
                     <tr class='column'>
                         <td class='label' id='5'>

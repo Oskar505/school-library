@@ -82,11 +82,14 @@ reservationElement.addEventListener('input', function(event) {
 // Username autofill
 
 // Funkce pro aktualizaci našeptávacího seznamu
-function updateSuggestions(inputId, suggestionsListId, warningIconId) {
+function updateUsernameSuggestions(inputId, suggestionsListId, warningIconId, onlyName=false) {
   console.log(inputId);
 
   var input = document.getElementById(inputId).value;
   var datalist = document.getElementById(suggestionsListId);
+
+  let nameEl = document.getElementById(`${inputId}Name`);
+  console.log(nameEl);
 
   // Vymazání stávajících hodnot v datalistu
   while (datalist.firstChild) {
@@ -109,12 +112,19 @@ function updateSuggestions(inputId, suggestionsListId, warningIconId) {
         usernameWarning.style.display = 'none';
         
         // logins
-        suggestions.forEach(function (value) {
-          var option = document.createElement('option');
-          option.value = value['login'];
-          //console.log(value['login']);
-          datalist.append(option);
-        });
+        if (!onlyName) {
+          suggestions.forEach(function (value) {
+            var option = document.createElement('option');
+            option.value = value['login'];
+            //console.log(value['login']);
+            datalist.append(option);
+          });
+        }
+        
+
+        nameEl.textContent = `${suggestions[0]['firstName']} ${suggestions[0]['lastName']}`;
+        
+        console.log('name ' + nameEl.value)
 
         
         //class
@@ -129,14 +139,13 @@ function updateSuggestions(inputId, suggestionsListId, warningIconId) {
           }
 
           else {
-            classEl.value = '';
+            classEl.textContent = '';
           }
         }
         
       }
       
       else {
-        console.log('showw');
         let usernameWarning = document.getElementById(warningIconId);
         usernameWarning.style.display = 'inline-block';
 
@@ -145,6 +154,15 @@ function updateSuggestions(inputId, suggestionsListId, warningIconId) {
           let classEl = document.getElementById('class');
           classEl.value = '';
         }
+
+        nameEl.textContent = '';
+      }
+
+
+
+      // hide name
+      if (input == '') {
+        nameEl.textContent = '';
       }
     },
     error: function () {
@@ -155,13 +173,15 @@ function updateSuggestions(inputId, suggestionsListId, warningIconId) {
 
 // Nastavení události input pro aktualizaci našeptávání
 document.getElementById('lentTo').addEventListener('input', function() {
-  updateSuggestions('lentTo', 'suggestionsList', 'lentToUsernameWarning');
+  updateUsernameSuggestions('lentTo', 'suggestionsList', 'lentToUsernameWarning');
 })
 
 document.getElementById('reservation').addEventListener('input', function() {
-  updateSuggestions('reservation', 'reservationSuggestionsList', 'reservationUsernameWarning');
+  updateUsernameSuggestions('reservation', 'reservationSuggestionsList', 'reservationUsernameWarning');
 })
 
+updateUsernameSuggestions('lentTo', 'suggestionsList', 'lentToUsernameWarning', true);
+updateUsernameSuggestions('reservation', 'reservationSuggestionsList', 'reservationUsernameWarning', true);
 
 
 
@@ -176,7 +196,7 @@ infiniteBtn.addEventListener('click', function() {
 
 function setInfiniteDate() {
   console.log('infinite');
-  returnDateEl.value = '2969-06-20';
+  returnDateEl.value = '9999-11-11';
 
   let today = new Date();
   let year = today.getFullYear();
