@@ -50,7 +50,7 @@
             $this->secrets = $secrets;
 
             //TODO: debug
-            $login = 'knihovna';
+            //$login = 'knihovna';
 
             //GET USER DATA
             //connection
@@ -728,7 +728,7 @@
             $this->send();
 
 
-
+            // send mail to admin
             $this->mail = new PHPMailer(true);
 
             $this->subject = "Rezervace zrušena";
@@ -807,7 +807,7 @@
 
             else {
                 foreach ($output as $error) {
-                    $outputMsg = $error . '<br>';
+                    $outputMsg = $outputMsg . '<br>' . $error;
                 }
             }
             

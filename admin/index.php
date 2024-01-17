@@ -413,7 +413,7 @@
                 // send mail
 
                 $mailReturnDate = date_create($returnDate);
-                $mailReturnDate = date_format($mailReturnDate, "j. n.");
+                $mailReturnDate = date_format($mailReturnDate, "j. n. Y");
 
                 $mail = new SendMail($login);
                 $mail->bookLent($name, $mailReturnDate);

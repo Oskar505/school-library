@@ -147,13 +147,14 @@
 
         /// borrowed
         if ($lentTo != '' && $lentTo != null) { // lentTo is not empty
-            if ($lendDate == '' || $lendDate == null) { // lendDate is empty
-                $output[] = "Books table error: LendDate is empty, ID: $id <br>";
-            }
+            // nejsou to nijak dulezity chyby
+            // if ($lendDate == '' || $lendDate == null) { // lendDate is empty
+            //     $output[] = "Books table error: LendDate is empty, ID: $id <br>";
+            // }
 
-            if ($returnDate == '' || $returnDate == null) {
-                $output[] = "Books table error: ReturnDate is empty, ID: $id <br>";
-            }
+            // if ($returnDate == '' || $returnDate == null) {
+            //     $output[] = "Books table error: ReturnDate is empty, ID: $id <br>";
+            // }
 
 
             // history
@@ -319,25 +320,61 @@
 
             if (!in_array($id, $borrowed)) {
                 $output[] = "Mismatched tables error: book is borrowed in books but not in users. User login = $lentTo, book ID: $id <br>";
-            }
-        }
+                // correct
+            //     $login = $lentTo;
+            //     mysqli_real_escape_string($conn, $login);
+                
+
+            //     // get data to update
+            //     $sql = "SELECT borrowed, reserved, borrowedHistory FROM users WHERE login = '$login'";
+            //     $result = mysqli_query($conn, $sql);
+                
+            //     if ($result === false) {
+            //         showError('Chyba databáze', 'Nastala chyba čtení dat z databáze, zkuste to prosím později.');
+            //     }
+            
+            //     $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 
-        if ($reservation != '' && $reservation != null) { // reserved
-            $sql = "SELECT login, reserved FROM users WHERE login='$reservation'";
-            $result = mysqli_query($conn, $sql);
+            //     $bookId = $id;
 
-            if ($result === false) {
-                $output[] = 'Error: '.mysqli_error($conn);
-            }
+            //     $borrowed = $data[0]['borrowed'];
+            //     $borrowedHistory = $data[0]['borrowedHistory'];
 
-            $user = mysqli_fetch_all($result, MYSQLI_ASSOC)[0];
+            //     // get arrays
+            //     !empty($borrowed) ? $borrowed = explode(',', $borrowed): $borrowed = [];
+            //     !empty($borrowedHistory) ? $borrowedHistory = explode(',', $borrowedHistory): $borrowedHistory = [];
 
-            $reserved = $user['reserved'];
-            $reserved = explode(',', $reserved);
 
-            if (!in_array($id, $reserved)) {
-                $output[] = "Mismatched tables error: book is reserved in books but not in users. User login = $reservation <br>";
+            //     // bookId is not in borrowed - borrow book
+            //     // borrowed
+            //     array_push($borrowed, $bookId); // add new book id
+
+            //     // borrowed history
+            //     array_push($borrowedHistory, $bookId);
+        
+
+
+            //     // array to string
+            //     $borrowed = implode(',', $borrowed);
+            //     $borrowedHistory = implode(',', $borrowedHistory);
+
+            //     // update users
+            //     $stmt = mysqli_prepare($conn, "UPDATE users SET borrowed = ?, borrowedHistory = ? WHERE login=?");
+            //     mysqli_stmt_bind_param($stmt, "sss", $borrowed, $borrowedHistory, $login);
+            //     mysqli_stmt_execute($stmt);
+            //     mysqli_stmt_close($stmt);
+
+
+            //     // send mail
+
+            //     $mailReturnDate = date_create($returnDate);
+            //     $mailReturnDate = date_format($mailReturnDate, "j. n. Y");
+
+            //     if ($login == 'x6utvrdoc') {
+            //         $mail = new SendMail($login);
+            //         $mail->bookLent($name, $mailReturnDate);
+            //     }
             }
         }
     }

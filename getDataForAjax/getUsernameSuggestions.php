@@ -6,6 +6,11 @@
         exit;
     }
 
+
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+
     
 
     $host = 'localhost';
@@ -29,7 +34,14 @@
     $query = $_GET['query'];
 
     // Sestavení SQL dotazu na získání odpovídajících položek z databáze
-    $sql = "SELECT login, class, firstName, lastName FROM users WHERE login LIKE '%" . $query . "%' LIMIT 10";
+    $sql = "SELECT login, class, firstName, lastName FROM users WHERE login LIKE '%" . $query . "%'
+    ORDER BY CASE
+        WHEN login = '" . $query . "' THEN 0
+        WHEN login = '" . $query . "%' THEN 1
+        ELSE 2
+        END
+        LIMIT 10
+    ";
 
     $result = mysqli_query($conn, $sql);
     

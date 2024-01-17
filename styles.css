@@ -229,12 +229,14 @@ main {
     margin-right: auto;
     width: 700px;
     border: 2px solid black;
+    user-select: none;
 }
 
 tbody tr {
     height: 40px;
     background-color: white;
     color: #294a70;
+    cursor: pointer;
 }
 
 .dataTable th, .dataTable td {

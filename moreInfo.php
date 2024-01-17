@@ -11,9 +11,9 @@
 
     session_start();
 
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
+    // ini_set('display_errors', 1);
+    // ini_set('display_startup_errors', 1);
+    // error_reporting(E_ALL);
 
 
     // update reserved books in session
@@ -82,7 +82,15 @@
 
 
                 $reservedBooks = $_SESSION['reserved'];
-                $reservedBooks = explode(',', $reservedBooks);
+
+                if (!empty($reservedBooks)) {
+                    $reservedBooks = explode(',', $reservedBooks);
+                }
+
+                else {
+                    $reservedBooks = [];
+                }
+                
 
                 if (!in_array($bookId, $reservedBooks)) { // reserve
 

@@ -122,6 +122,7 @@ function updateUsernameSuggestions(inputId, suggestionsListId, warningIconId, on
         }
         
 
+        // set name
         nameEl.textContent = `${suggestions[0]['firstName']} ${suggestions[0]['lastName']}`;
         
         console.log('name ' + nameEl.value)
