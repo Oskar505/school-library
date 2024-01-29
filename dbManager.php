@@ -124,7 +124,7 @@
 
     // CONTROL DATA BETWEEN TABLES
     // Book data
-    $sql = "SELECT id, lentTo, lendDate, returnDate, history, reservation, reservationExpiration FROM books";
+    $sql = "SELECT id, name, lentTo, lendDate, returnDate, history, reservation, reservationExpiration FROM books";
     $result = mysqli_query($conn, $sql);
 
     if ($result === false) {
@@ -137,6 +137,7 @@
 
     foreach ($booksData as $row) {
         $id = $row['id'];
+        $bookName = $row['name'];
         $lentTo = $row['lentTo'];
         $lendDate = $row['lendDate'];
         $returnDate = $row['returnDate'];
@@ -201,6 +202,14 @@
                     if ($result === false) {
                         $output[] = 'Error: '.mysqli_error($conn);
                     }
+
+
+                    // SEND MAIL
+                    //TODO: fix mails
+                    // $mail = new SendMail($lentTo);
+                    // $mail->returnReminder($bookName, date_format($returnDateObj, "j. n. Y"), true);
+                    $output[] = "Nevracena kniha id knihy: $id, $bookName, uzivatel: $lentTo";
+
 
                     $note = mysqli_fetch_all($result, MYSQLI_ASSOC)[0]['note'];
 

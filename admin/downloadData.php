@@ -6,7 +6,12 @@
         exit;
     }
 
-    require_once '/functions.php';
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+
+
+    require_once '/var/www/html/functions.php';
 
     require('/var/secrets.php');
     $sqlUser = $secrets['sql-user'];
@@ -81,7 +86,6 @@
     
     // Smazání CSV souboru po odeslání
     unlink($file);
-
 
     exit;
 ?>

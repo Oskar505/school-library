@@ -422,7 +422,7 @@
                 $message = "
                     Dobrý den, <br>
                     upozorňujeme vás, že knihu <span class='highlight'>$bookName</span> je potřeba vrátit do <span class='highlight'>$returnDate</span><br>
-                    Pokud jste ještě nedočetli, můžete si knihu prodloužit.
+                    Pokud jste ještě nedočetli, můžete ji prodloužit v knihovně.
                 ";
             }
 
