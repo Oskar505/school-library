@@ -69,8 +69,6 @@
         
             $data = mysqli_fetch_all($result, MYSQLI_ASSOC)[0];
 
-            print_r($data);
-
             $this->firstName = $data['firstName'];
             $this->login = $login;
 
@@ -89,13 +87,12 @@
 
             $gmailPassword = $this->secrets['gmail-password'];
 
-            echo $gmailPassword;
-
 
 
             try {
                 // Server settings
-                $mail->SMTPDebug = SMTP::DEBUG_SERVER; // for detailed debug output
+                // $mail->SMTPDebug = SMTP::DEBUG_SERVER; // for detailed debug output
+                $mail->SMTPDebug = SMTP::DEBUG_OFF;
                 $mail->CharSet = 'UTF-8';
                 $mail->isSMTP();
                 $mail->Host = 'smtp.gmail.com';
@@ -117,8 +114,6 @@
                 $mail->Body = $this->message;
                 $mail->AltBody = $this->altMessage;
                 $mail->send();
-
-                echo "Email message sent.";
             }
             
             catch (Exception $e) {

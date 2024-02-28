@@ -20,13 +20,12 @@
 
 
     if ($searchInput == '') {
-        $sql = "SELECT id, author, name, returnDate, reservation FROM books LIMIT $rows";
+        $sql = "SELECT id, author, name, returnDate, reservation, reservationExpiration FROM books WHERE discarded=0 LIMIT $rows";
     }
 
     else {
-        $sql = "SELECT id, author, name, returnDate, reservation FROM books WHERE name LIKE '%$searchInput%' OR author LIKE '%$searchInput%' OR isbn LIKE '%$searchInput%' LIMIT $rows";
+        $sql = "SELECT id, author, name, returnDate, reservation, reservationExpiration FROM books WHERE (name LIKE '%$searchInput%' OR author LIKE '%$searchInput%' OR isbn LIKE '%$searchInput%') AND discarded=0 LIMIT $rows";
     }
-    echo 'showDiscarded true';
 
 
     $result = mysqli_query($conn, $sql);
@@ -50,12 +49,13 @@
         $name = $data[$i]['name'];
         $returnDate = $data[$i]['returnDate'];
         $reservation = $data[$i]['reservation'];
+        $reservationExpiration = date('j. n.', strtotime($data[$i]['reservationExpiration']));
 
-        $state = '';
+        $state = 'V knihovně';
 
         if ($returnDate != '') {
             if ($reservation != '') {
-                $availableDate = date('Y-m-d', strtotime($returnDate . ' +7 days'));
+                $availableDate = date('Y-m-d', strtotime($returnDate . ' +3 days'));
 
                 $state = "Zarezervováno do $availableDate";
             }
@@ -67,7 +67,7 @@
 
         else {
             if ($reservation != '') {
-                $state = "Zarezervováno do +7 dní";
+                $state = "Zarezervováno do $reservationExpiration";
             }
         }
 

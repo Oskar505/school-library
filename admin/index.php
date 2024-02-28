@@ -27,6 +27,8 @@
     require_once('../sendMail.php');
 
 
+    // ADD
+
     if (isset($_POST['add'])) {
         $registration = $_POST['registration'];
         $isbn = $_POST['isbn'];

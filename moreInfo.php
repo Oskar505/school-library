@@ -122,7 +122,7 @@
                         $reservedString = $row['reserved'];
                         $class = $row['class'];
 
-                        if ($class = 'Zaměstnanec') { // infinite for teachers
+                        if ($class == 'Zaměstnanec') { // infinite for teachers
                             $reservedBooksCount = 0;
                         }
 
@@ -136,8 +136,6 @@
                             }
                         }
                     }
-
-
 
                     
                     if ($reserved != 0 && $reservedBooksCount < 3) {
@@ -192,7 +190,7 @@
                             echo '<h1>Kniha byla zarezervována</h1>
                             <a href="index.php">Domů</a>';
 
-
+                            
 
                             // send mail
                             $mailReservationExpiration = date_create($reservationExpiration);
@@ -423,11 +421,11 @@
         <h2 class="author"><?php echo $author?></h2>
 
         <nav>
-            <a href="">lorem</a>
+            <!-- <a href="">lorem</a>
             <a href="">ipsum</a>
             <a href="">dolor</a>
             <a href="">sit</a>
-            <a href="">amet</a>
+            <a href="">amet</a> -->
         </nav>
     </header>
     

@@ -79,11 +79,11 @@
         </div>
 
         <nav>
-            <a href="">lorem</a>
+            <!-- <a href="">lorem</a>
             <a href="">ipsum</a>
             <a href="">dolor</a>
             <a href="">sit</a>
-            <a href="">amet</a>
+            <a href="">amet</a> -->
         </nav>
     </header>
 
