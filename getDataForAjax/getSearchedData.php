@@ -58,7 +58,7 @@
 
 
     if ($showNotReturned == 'true') {
-        $sql = "SELECT * FROM books WHERE returnDate < CURDATE()";
+        $sql = "SELECT * FROM books WHERE returnDate < CURDATE() AND returnDate != ''";
     }
 
     else {

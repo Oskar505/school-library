@@ -814,7 +814,7 @@
 
 
             // not returned
-            $sql = "SELECT COUNT(*) AS count FROM books WHERE returnDate < CURDATE()";
+            $sql = "SELECT COUNT(*) AS count FROM books WHERE returnDate < CURDATE() AND returnDate != ''";
             $result = mysqli_query($conn, $sql);
 
             if ($result === false) {
@@ -825,6 +825,8 @@
                 $row = mysqli_fetch_assoc($result);
                 $notReturnedCount = $row['count'];
             }
+
+
 
             echo "
             <div class='info'>
