@@ -47,8 +47,8 @@
 
 
             // get id
-            if (isset($_POST['id'])) {
-                $id = $_POST['id'];
+            if (isset($_GET['id'])) {
+                $id = $_GET['id'];
 
                 require('/var/secrets.php');
                 $sqlUser = $secrets['sql-user'];

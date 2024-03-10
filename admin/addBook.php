@@ -11,6 +11,47 @@
         header('Location: index.php');
         exit;
     }
+
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+
+
+    // get secrets
+    require('/var/secrets.php');
+
+    $sqlUser = $secrets['sql-user'];
+    $sqlPassword = $secrets['sql-password'];
+    $database = $secrets['sql-database'];
+
+
+
+
+    try {
+        $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
+    }
+    
+    catch (mysqli_sql_exception $e) {
+        showError('Chyba připojení', "Nastala chyba připojení k databázi, zkuste to prosím později.");
+    }
+
+
+    $sql = "SELECT registration FROM books ORDER BY `books`.`id` DESC LIMIT 1";
+    $result = mysqli_query($conn, $sql);
+
+    if ($result === false) {
+        echo 'Error: '.mysqli_error($conn);
+    }
+
+    $lastRegistration = intval(mysqli_fetch_all($result, MYSQLI_ASSOC)[0]['registration']);
+
+    if ($lastRegistration == 0) {
+        $newRegistration = '';
+    }
+
+    else {
+        $newRegistration = $lastRegistration + 1;
+    }
 ?>
 
 <!DOCTYPE html>
@@ -44,7 +85,7 @@
             <td class='middleColumn'></td>
 
             <td>
-                <input class='input' type='text' id='registration' name='registration' placeholder='Evidenční číslo'>
+                <input class='input' type='text' id='registration' name='registration' placeholder='Evidenční číslo' value="<?php echo $newRegistration ?>">
             </td>
         </tr>
 

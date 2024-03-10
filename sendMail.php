@@ -126,6 +126,8 @@
         // LENT
 
         function bookLent($bookName, $returnDate) {
+            $today = date('j.n. Y');
+
             $this->subject = "Kniha půjčena";
             $this->message = "
             <!DOCTYPE html>
@@ -174,7 +176,7 @@
                     <h1>Oznámení o úspěšném půjčení knihy</h1>
                     <p>
                         Dobrý den, <br>
-                        úspěšně jste si vypůjčili knihu <span class='highlight'>$bookName</span> ze školní knihovny.<br>
+                        dne $today jste si vypůjčili knihu <span class='highlight'>$bookName</span> ze školní knihovny.<br>
                         Knihu je potřeba vrátit do <span class='highlight'>$returnDate</span> Budeme vás o tom informovat.<br>
                         Děkujeme za vypůjčení!
                     </p>

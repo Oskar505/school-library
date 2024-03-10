@@ -772,9 +772,11 @@
 
     <main class="container">
         <div class="adminButtons">
-            <form class="addBtnForm" action="addBook.php" method="post">
+            <!-- <form class="addBtnForm" action="addBook.php" method="post">
                 <input class='addBtn btn' type="submit" value="Přidat knihu">
-            </form>
+            </form> -->
+
+            <a href="addBook.php" class="addBtn btn">Přidat knihu</a>
 
             <a href="downloadData.php" class="material-symbols-outlined downloadBtn" title="Stáhnout">
                 <img class="downloadImg" src="/img/download.svg" alt="Stáhnout">
@@ -850,7 +852,7 @@
             <thead>
                 <tr class='headerRow'>
                     <th class='firstTd'>
-                        <form action='editBook.php' method='post'>
+                        <form action='editBook.php' method='get'>
                             <input type='hidden' name='id' value='all'>
                             <button class='editBtn' type='submit'>Upravit vše</button>
                         </form>
@@ -947,10 +949,9 @@
                         
 
 
-
                         echo "<tr class='dataRow " . ($i % 2 === 1 ? 'evenRow' : '') . ' ' . ($discarded == 1 ? 'discardedRow' : '') . ' ' . $returnedInTimeClass . " '>
                             <td class='firstTd'>
-                                <form action='editBook.php' method='post'>
+                                <form action='editBook.php' method='get'>
                                     <input type='hidden' name='id' value='$id'>
                                     <button class='editBtn' type='submit'>Upravit</button>
                                 </form>
@@ -1157,6 +1158,16 @@
 
         document.getElementById('notReturned').addEventListener('click', function() {
             showNotReturned = !showNotReturned;
+
+            if (showNotReturned) {
+                document.getElementById('notReturned').style.fontWeight = 'bold'
+            }
+
+            else {
+                document.getElementById('notReturned').style.fontWeight = '400'
+            }
+            
+
             console.log(showNotReturned);
             search();
         })

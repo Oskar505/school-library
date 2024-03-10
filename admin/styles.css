@@ -2,6 +2,12 @@
     margin: 0;
 }
 
+a {
+    text-decoration: none;
+    color: black;
+}
+
+
 /* ICONS */
 
 .material-symbols-outlined {
@@ -54,17 +60,23 @@
 }
 
 
+.adminButtons {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 40px;
+}
 
 
 .addBtn {
-    margin-bottom: 39px;
     margin-left: 1px;
+    margin-bottom: 0;
     background-color: #2693ff;
     border: 2px solid black;
     padding: 5px 10px;
     font-family: 'Merriweather', serif;
     font-size: 18px;
-    height: 40px;
+    height: 23px;
+    display: inline-block;
 }
 
 .addBtnForm {
@@ -76,10 +88,6 @@
     width: 40px;
     height: 40px;
     color: black;
-    float: left;
-    position: absolute;
-    top: 196px;
-    left: 11%;
 }
 
 .downloadImg {
@@ -100,7 +108,7 @@
 
 .showDiscarded {
     margin-left: 10px;
-    
+    cursor: pointer;
 }
 
 /*
@@ -135,15 +143,22 @@
 .info-block {
     display: inline-block;
     margin: 0 20px 20px 0;
+    font-weight: 400;
+    user-select: none;
+}
+
+#notReturned {
+    cursor: pointer;
 }
 
 .info-block h2 {
     margin: 0;
-    font-weight: 400;
+    font-weight: inherit;
 }
 
 .info-block p {
     text-align: center;
+    font-weight: inherit;
 }
 
 .result-count,
@@ -179,6 +194,8 @@
     background-color: #2693ff;
     font-size: 21px;
     padding: 12px 6px;
+    cursor: pointer;
+    user-select: none;
 }
 
 .editBtn {
@@ -195,6 +212,12 @@
     width: 132px;
     background-color: #2693ff;
     height: 40px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.firstTd form button{
+    cursor: inherit;
 }
 
 .evenRow {

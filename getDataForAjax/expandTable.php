@@ -110,7 +110,7 @@
 
         echo "<tr class='dataRow " . ($i % 2 === 1 ? 'evenRow' : '') . ' ' . ($discarded == 1 ? 'discardedRow' : '') . " '>
             <td class='firstTd'>
-                <form action='editBook.php' method='post'>
+                <form action='editBook.php' method='get'>
                     <input type='hidden' name='id' value='$id'>
                     <button class='editBtn' type='submit'>Upravit</button>
                 </form>
