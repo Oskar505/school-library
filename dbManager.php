@@ -497,6 +497,7 @@
     // SEND MAIL
     $mail = new SendMail('knihovna');
     $mail->cronJobOutput('dbManager', $output);
+    $mail->sendBackup();
     
 
 

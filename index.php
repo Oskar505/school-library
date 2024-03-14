@@ -37,16 +37,16 @@
             <h1 class="mainH1">Školní knihovna GYKOVY</h1>
             
             <div class="userBar">
-                <a href="/settings.php">
+                <!-- <a href="/settings.php">
                     <div class="material-symbols-outlined settingsIcon" id="settingsIcon">settings</div>
-                </a>
+                </a> -->
                 
                 <a href="/myBooks.php">
-                    <div class="material-symbols-outlined myBooksIcon" id="myBooksIcon">book</div>
+                    <div class="material-symbols-outlined myBooksIcon" id="myBooksIcon" title="Moje knihy">book</div>
                 </a>
                 
 
-                <div class="account">
+                <div class="account" title="Účet">
                     <div class="material-symbols-outlined accountCircle" id="accountCircle">account_circle</div>
                     
                     <?php

@@ -47,9 +47,9 @@
 
 
 
-
-
     function getUsers($dn) {
+        global $output;
+
         // get secrets
         require('/var/secrets.php');
 
@@ -59,7 +59,7 @@
         
         $data = [];
 
-        $attributes = array("givenName", "sn", "sAMAccountName");       
+        $attributes = ["givenName", "sn", "sAMAccountName", "mail"];   
 
         $ad = ldap_connect("192.168.100.20") or die("Couldn't connect to AD!");
     
@@ -80,9 +80,14 @@
                     continue; // key is missing, skip
                 }
 
+                print_r($users[$i]['mail'][0]);
+                echo '<br>';
+
+
                 $firstName = $users[$i]['givenname'][0];
                 $lastName = $users[$i]['sn'][0];
                 $login = $users[$i]['samaccountname'][0];
+                $userMail = $users[$i]['mail'][0];
             
                 if (empty($firstName) || empty($lastName) || empty($login)) {
                     continue; // values are empty, skip
@@ -96,7 +101,7 @@
 
                 $count ++;
 
-                array_push($data, ['firstName'=>$firstName, 'lastName'=>$lastName, 'login'=>$login, 'class'=>$class[0], 'gr uate'=>$class[1]]);
+                array_push($data, ['firstName'=>$firstName, 'lastName'=>$lastName, 'login'=>$login, 'mail'=>$userMail, 'class'=>$class[0], 'graduate'=>$class[1]]);
             }
         } 
         
@@ -113,6 +118,8 @@
 
 
     function updateDb($data) {
+        global $output;
+
         // get secrets
         require('/var/secrets.php');
 
@@ -134,6 +141,7 @@
             $firstName = $data[$i]['firstName'];
             $lastName = $data[$i]['lastName'];
             $login = $data[$i]['login'];
+            $userMail = $data[$i]['mail'];
             $class = $data[$i]['class'];
             $graduate = $data[$i]['graduate'];
 
@@ -148,12 +156,14 @@
 
             $count = mysqli_fetch_assoc($result)['count'];
 
-            $output[] = "$firstName $lastName, login: $login,  class: $class,   graduate: $graduate";
-
+            echo "$firstName $lastName, login: $login,  class: $class, mail: $userMail, graduate: $graduate";
+            echo '<br>';
 
             if ($count == 0) { // if user is not in db
-                $stmt = mysqli_prepare($conn, "INSERT INTO users (firstName, lastName, login, class) VALUES (?, ?, ?, ?)");
-                mysqli_stmt_bind_param($stmt, "ssss", $firstName, $lastName, $login, $class);
+                $output[] = "$firstName $lastName, login: $login,  class: $class, mail: $userMail, graduate: $graduate";
+
+                $stmt = mysqli_prepare($conn, "INSERT INTO users (firstName, lastName, login, email, class) VALUES (?, ?, ?, ?, ?)");
+                mysqli_stmt_bind_param($stmt, "sssss", $firstName, $lastName, $login, $userMail, $class);
                 mysqli_stmt_execute($stmt);
                 mysqli_stmt_close($stmt);
             }
@@ -170,7 +180,7 @@
 
 
                 
-                if ($class != $dbClass && $graduate == false) { // next grade
+                if ($class != $dbClass && $graduate == false && $class != 'Zaměstnanec') { // next grade
                     $stmt = mysqli_prepare($conn, "UPDATE users SET class = ? WHERE login = ?");
                     mysqli_stmt_bind_param($stmt, "ss", $class, $login);
                     mysqli_stmt_execute($stmt);
@@ -197,7 +207,52 @@
 
 
 
+    function updateMail($data) {
+        global $output;
+
+        // get secrets
+        require('/var/secrets.php');
+
+        $sqlUser = $secrets['sql-user'];
+        $sqlPassword = $secrets['sql-password'];
+        $adPassword = $secrets['ad-password'];
+
+
+
+        $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, 'knihovna');
+
+        if (!$conn) {
+            $output[] = 'chyba pripojeni'.mysqli_connect_error();
+        }
+
+
+        for($i = 0; $i < count($data); $i ++) {
+            // define
+            $firstName = $data[$i]['firstName'];
+            $lastName = $data[$i]['lastName'];
+            $login = $data[$i]['login'];
+            $userMail = $data[$i]['mail'];
+            $class = $data[$i]['class'];
+            $graduate = $data[$i]['graduate'];
+
+
+            $output[] = "$firstName $lastName, login: $login,  class: $class, mail: $userMail, graduate: $graduate";
+            echo "$firstName $lastName, login: $login,  class: $class, mail: $userMail, graduate: $graduate";
+            echo '<br>';
+
+
+            $stmt = mysqli_prepare($conn, "UPDATE users SET email = ? WHERE login = ?");
+            mysqli_stmt_bind_param($stmt, "ss", $userMail, $login);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
+        }
+    }
+
+
+
     function getClass($login) {
+        global $output;
+
 
         // osmiletej nebo ctyrletej
         $fourYearStudent = true;

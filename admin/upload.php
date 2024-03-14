@@ -24,6 +24,190 @@
     }
 
 
+
+    if (isset($_POST['upload_new'])) {
+        $fileMimes = array(
+            'text/x-comma-separated-values',
+            'text/comma-separated-values',
+            'application/octet-stream',
+            'application/vnd.ms-excel',
+            'application/x-csv',
+            'text/x-csv',
+            'text/csv',
+            'application/csv',
+            'application/excel',
+            'application/vnd.msexcel',
+            'text/plain'
+        );
+
+
+     
+        // Validate selected file is a CSV file or not
+        if (!empty($_FILES['file']['name']) && in_array($_FILES['file']['type'], $fileMimes)) {
+
+            echo 'test';
+     
+            // Open uploaded CSV file with read-only mode
+            $csvFile = fopen($_FILES['file']['tmp_name'], 'r');
+    
+            // Skip the first line
+            fgetcsv($csvFile);
+    
+            // Parse data from CSV file line by line        
+            while (($getData = fgetcsv($csvFile, 20000, ",")) !== FALSE){
+
+                foreach ($getData as &$col) {
+                    if ($col == '0000-00-00' || empty($col)) {
+                        $col = null;
+                    }
+                }
+
+
+                // discarded
+                if ($getData[15] == 'ano') {
+                    $discarded = 1;
+                }
+
+                else {
+                    $discarded = 0;
+                }
+
+
+
+                // delete lend data if there is no login
+                if (empty($getData[9])){
+                    $getData[9] = null;
+                    $getData[10] = null;
+                    $getData[11] = null;
+                    $getData[12] = null;
+                }
+
+                
+
+                // BOOKS TABLE
+
+                if (isset($_POST['deleteDb'])) {
+                    $sql = "TRUNCATE TABLE books";
+                    $result = mysqli_query($conn, $sql);
+                    
+                    if ($result === false) {
+                        showError('Chyba databáze', 'Nastala chyba při mazání dat z databáze, zkuste to prosím později.');
+                    }
+                }
+    
+                $stmt = mysqli_prepare($conn, "INSERT INTO books (registration, isbn, subject, class, publisher, author, name, price, dateAdded, lentTo, lendDate, returnDate, history, reservation, reservationExpiration, note, discarded) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+                mysqli_stmt_bind_param($stmt, "ssssssssssssssssi", $getData[1], $getData[2], $getData[3], $getData[10], $getData[4], $getData[5], $getData[6], $getData[7], $getData[8], $getData[9], $getData[11], $getData[12], $getData[13], $getData[14], $getData[15], $getData[16], $discarded);
+                mysqli_stmt_execute($stmt);
+                mysqli_stmt_close($stmt);
+            }
+    
+            // Close opened CSV file
+            fclose($csvFile);
+    
+
+
+            // send form only once
+            //header('Location: index.php');
+            exit;  
+        }
+
+        else{
+            echo "Please select valid file";
+        }
+    }
+
+
+
+    if (isset($_POST['upload_users'])) {
+        $fileMimes = array(
+            'text/x-comma-separated-values',
+            'text/comma-separated-values',
+            'application/octet-stream',
+            'application/vnd.ms-excel',
+            'application/x-csv',
+            'text/x-csv',
+            'text/csv',
+            'application/csv',
+            'application/excel',
+            'application/vnd.msexcel',
+            'text/plain'
+        );
+
+
+     
+        // Validate selected file is a CSV file or not
+        if (!empty($_FILES['file']['name']) && in_array($_FILES['file']['type'], $fileMimes)) {
+
+            echo 'test';
+     
+            // Open uploaded CSV file with read-only mode
+            $csvFile = fopen($_FILES['file']['tmp_name'], 'r');
+    
+            // Skip the first line
+            fgetcsv($csvFile);
+    
+            // Parse data from CSV file line by line        
+            while (($getData = fgetcsv($csvFile, 20000, ",")) !== FALSE) {
+
+                foreach ($getData as &$col) {
+                    if ($col == '0000-00-00' || empty($col)) {
+                        $col = null;
+                    }
+                }
+
+
+
+                // graduate
+                if ($getData[9] == 'ano') {
+                    $graduate = 1;
+                }
+
+                else {
+                    $graduate = 0;
+                }
+
+                
+
+                // USERS TABLE
+
+                if (isset($_POST['deleteDb'])) {
+                    $sql = "TRUNCATE TABLE users";
+                    $result = mysqli_query($conn, $sql);
+                    
+                    if ($result === false) {
+                        showError('Chyba databáze', 'Nastala chyba při mazání dat z databáze, zkuste to prosím později.');
+                    }
+                }
+
+
+    
+                $stmt = mysqli_prepare($conn, "INSERT INTO users (firstName, lastName, login, class, borrowed, reserved, borrowedHistory, note, graduate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+                mysqli_stmt_bind_param($stmt, "ssssssssi", $getData[1], $getData[2], $getData[3], $getData[4], $getData[5], $getData[6], $getData[7], $getData[8], $graduate);
+                mysqli_stmt_execute($stmt);
+                mysqli_stmt_close($stmt);
+            }
+    
+            // Close opened CSV file
+            fclose($csvFile);
+    
+
+
+            // send form only once
+            //header('Location: index.php');
+            exit;  
+        }
+
+        else{
+            echo "Please select valid file";
+        }
+    }
+
+
+
+
+
     if (isset($_POST['upload_old'])) {
         $fileMimes = array(
             'text/x-comma-separated-values',
@@ -333,6 +517,8 @@
             <div class="input-group">
                 <div class="custom-file">
                     <input type="file" class="custom-file-input" id="customFileInput" name="file">
+                    <label for="deleteDb">Vymazat databázi</label>
+                    <input type="checkbox" name="deleteDb">
                 </div>
                 <br>
                 <div class="input-group-append">
@@ -340,6 +526,27 @@
                 </div>
             </div>
         </form>
+
+        <form action="upload.php" method="post" enctype="multipart/form-data">
+            <h2>Databáze uživatelů</h2>
+            <p>Csv soubor v novém formátu</p>
+            <div class="input-group">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="customFileInput" name="file">
+                    <label for="deleteDb">Vymazat databázi</label>
+                    <input type="checkbox" name="deleteDb">
+                </div>
+                <br>
+                <div class="input-group-append">
+                    <input type="submit" name="upload_users" value="Nahrát" class="btn btn-primary">
+                </div>
+            </div>
+        </form>
+
+
+        <br>
+
+
 
         <form action="upload.php" method="post" enctype="multipart/form-data">
             <h2>Stará databáze</h2>

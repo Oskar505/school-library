@@ -52,7 +52,8 @@ $.ajax({
             // reserved books table
             reserved.forEach(book => {
                 endDate = new Date(book['endDate']);
-                endDate = `${endDate.getDate()}. ${endDate.getMonth() + 1}.`;
+                // endDate = `${endDate.getDate()}. ${endDate.getMonth() + 1}. ${endDate.getYear()}`;
+                endDate = endDate.toLocaleDateString('cs-CZ')
 
                 newLine = reservedTable.insertRow(); // add row
                 newLine.className = 'myBooksTr'; // add class
