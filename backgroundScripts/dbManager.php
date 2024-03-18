@@ -24,7 +24,7 @@
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
 
-    include_once('sendMail.php');
+    include_once('../sendMail.php');
 
 
     // output of this script, this will be sent in mail
@@ -193,7 +193,9 @@
                 $now = new DateTime();
 
 
-                if ($returnDateObj < $now) {
+                // nevraceno 1 den
+                if ($returnDateObj->modify('+1 day') == $now) {
+                    // ($returnDateObj < $now) 
                     // book was not returned in time
 
                     $sql = "SELECT note FROM users WHERE login='$lentTo'";
@@ -205,10 +207,9 @@
 
 
                     // SEND MAIL
-                    //TODO: fix mails
-                    // $mail = new SendMail($lentTo);
-                    // $mail->returnReminder($bookName, date_format($returnDateObj, "j. n. Y"), true);
-                    $output[] = "Nevracena kniha id knihy: $id, $bookName, uzivatel: $lentTo";
+                    $mail = new SendMail($lentTo);
+                    $mail->returnReminder($bookName, date_format($returnDateObj, "j. n. Y"), true);
+                    $output[] = "Nevracena kniha (1 den) id knihy: $id, $bookName, uzivatel: $lentTo";
 
 
                     $note = mysqli_fetch_all($result, MYSQLI_ASSOC)[0]['note'];

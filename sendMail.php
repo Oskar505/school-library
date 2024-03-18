@@ -60,20 +60,34 @@
                 echo 'chyba pripojeni'.mysqli_connect_error();
             }
 
-            $sql = "SELECT * FROM users WHERE login='$login'";
-            $result = mysqli_query($conn, $sql);
-        
-            if ($result === false) {
-                echo 'Error: '.mysqli_error($conn);
+
+            $login = mysqli_real_escape_string($conn, $login);
+
+
+            if ($login != 'knihovna') {
+                $sql = "SELECT * FROM users WHERE login='$login'";
+                $result = mysqli_query($conn, $sql);
+            
+                if ($result === false) {
+                    echo 'Error: '.mysqli_error($conn);
+                }
+            
+                $data = mysqli_fetch_all($result, MYSQLI_ASSOC)[0];
+
+                $this->firstName = $data['firstName'];
+                $this->login = $login;
+
+
+                $this->gmailAddress = $data['email'];
             }
-        
-            $data = mysqli_fetch_all($result, MYSQLI_ASSOC)[0];
-
-            $this->firstName = $data['firstName'];
-            $this->login = $login;
 
 
-            $this->gmailAddress = $login . '@gykovy.cz';
+            else {
+                $this->firstName = 'Knihovna';
+                $this->login = 'knihovna';
+                $this->gmailAddress = 'knihovna@gykovy.cz';
+            }
+            
 
 
             //MAIL
@@ -426,7 +440,7 @@
             else {
                 $message = "
                     Dobrý den, <br>
-                    upozorňujeme vás, že jste měli vrátit knihu <span class='highlight'>$bookName</span> do <span class='highlight'>$returnDate</span> <br>
+                    upozorňujeme vás, že jste do <span class='highlight'>$returnDate</span> měli vrátit knihu <span class='highlight'>$bookName</span>. <br>
                     Vraťte ji prosím co nejdříve.
                 ";
             }
@@ -934,7 +948,6 @@
 
             $users = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-            echo 'got users data';
 
 
 
@@ -983,8 +996,7 @@
 
             // Uzavření spojení s databází
             $conn->close();
-            
-            echo 'got files';
+
 
 
 
