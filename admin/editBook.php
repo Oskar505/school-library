@@ -406,7 +406,7 @@
                         </td>
 
                         <td>
-                            <input class='submitDeleteBtn btn' type='submit' value='Smazat' name='delete'>
+                            <input class='submitDeleteBtn btn' id='deleteBtn' type='submit' value='Smazat' name='delete'>
                         </td>
                     </tr>
                 </table>";
@@ -464,9 +464,24 @@
         });
 
 
+        // delete alert
+
+        let deleteBtn = document.getElementById('deleteBtn')
+
+        deleteBtn.addEventListener('click', function(event) {
+            let confirmation = confirm('Opravdu chcete vymazat tuto knihu?')
+
+            if (!confirmation) {
+                event.preventDefault()
+            }
+        })
+
+
 
         function back() {
-            window.location.href = 'index.php';
+            //window.location.href = 'index.php';
+            window.history.replaceState({}, document.title, window.location.href);
+            window.history.back()
         }
     </script>
 </body>
