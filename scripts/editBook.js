@@ -1,4 +1,7 @@
+
 console.log('returnAutoFill.js');
+console.log('test')
+
 
 function isEmpty(value) {
   return value == null || value === "" || (Array.isArray(value) && value.length === 0);
@@ -204,7 +207,7 @@ function setInfiniteDate() {
   let month = (today.getMonth() + 1).toString().padStart(2, '0'); // Přidáváme 1, protože měsíce jsou číslovány od 0.
   let day = today.getDate().toString().padStart(2, '0');
 
-  lendDateEl.value = year + '-' + month + '-' + day;
+  // lendDateEl.value = year + '-' + month + '-' + day;
 }
 
 
