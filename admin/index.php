@@ -250,19 +250,21 @@
 
 
         // history
-        if ($lentTo != '' && !$editAll) {
+        if (!$editAll) {
             $query = "SELECT history FROM books WHERE id = $id";
             $result = mysqli_query($conn, $query);
             $row = mysqli_fetch_assoc($result);
             $history = $row['history'];
 
 
-            if (!empty($history)) {
-                $history = $history . ', ' . $lentTo;
-            }
+            if ($lentTo != '') {
+                if (!empty($history)) {
+                    $history = $history . ', ' . $lentTo;
+                }
 
-            else {
-                $history = $lentTo;
+                else {
+                    $history = $lentTo;
+                }
             }
         }
 
@@ -417,8 +419,11 @@
                 $mailReturnDate = date_create($returnDate);
                 $mailReturnDate = date_format($mailReturnDate, "j. n. Y");
 
+                $mailLendDate = date_create($lendDate);
+                $mailLendDate = date_format($mailLendDate, "j. n. Y");
+
                 $mail = new SendMail($login);
-                $mail->bookLent($name, $mailReturnDate);
+                $mail->bookLent($name, $mailReturnDate, $mailLendDate);
             }
 
 

@@ -1,0 +1,539 @@
+/* 
+text: white
+secondary text: #E4E2E9
+background: black
+primary: #3b119c
+secondary: #2B0D73
+accent: #ffc800
+border: #4C16CA
+*/
+
+
+
+* {
+    margin: 0;
+}
+
+
+
+
+
+/* FONT SIZES */
+
+:root {
+    --test: 20px;
+}
+
+
+
+
+
+
+
+html {
+    font-size: 62.5%;
+}
+
+
+body {
+    background-color: black;
+    font-family: 'Roboto', sans-serif;
+    /* scrollbar-width: none; */
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+.container {
+    max-width: 1920px;
+    margin: 0 auto;
+}
+
+a {
+    color: black;
+    text-decoration: none;
+}
+
+
+/* scroll snap */
+
+.scrollSnapContainer,
+.scrollSnap {
+    max-width: 100%;
+    height: 100lvh;
+    font-size: 60px;
+}
+
+.scrollSnapContainer {
+    overflow: auto;
+    -webkit-scroll-snap-type: y mandatory;
+        -ms-scroll-snap-type: y mandatory;
+            scroll-snap-type: y mandatory;
+}
+
+.scrollSnap {
+    scroll-snap-align: start;
+}
+
+
+
+.indexHeader {
+    position: relative;
+    min-height: 100lvh;
+    scroll-snap-align: start;
+    user-select: none;
+}
+
+nav {
+    background-color: black;
+    border-bottom: 1.5px solid #363636;
+    height: 7.7lvh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 25px;
+}
+
+nav h2 {
+    color: white;
+    font-size: 32px;
+    font-weight: 800;
+}
+
+
+.textGlow {
+    /* width: 1200px; */
+    width: clamp(100px, 63%, 2000px);
+    height: 350px;
+    position: absolute;
+    top: 8%;
+    left: 0px;
+}
+
+.headerContent {
+    margin-left: 8%;
+    margin-top: 11lvh;
+}
+
+.textGlow .mainH1 {
+    color: white;
+    /* font-size: 128px; */
+    font-size: clamp(50px, calc(1rem + 3.7vw), 200px);
+    font-family: 'Playfair Display', serif;
+    letter-spacing: -1.92px;
+    z-index: 1; /* Přidejte z-index, aby byl text nad gradientem */
+    /* position: absolute;
+    top: 15lvh;
+    left: 8%; */
+    margin-bottom: 0.2em;
+}
+
+.textGlow::before {
+    content: attr(data-text);
+    display: block;
+    width: 160%;
+    height: 200%;
+    position: absolute;
+    left: -450px;
+    top: -70px;
+    z-index: -1;
+    background: radial-gradient(#2B0D73 0, black 70%);
+    border-radius: 10px; /* Prispůsobte poloměr zaoblení podle potřeby */
+}
+
+
+
+.headerSearchBtnWidth{
+    display: inline-block;
+}
+
+.headerSearchBtn {
+    background-color: #FFC800;
+    border-radius: 30px;
+    border-radius: 0.75em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3px 20px;
+    padding: 0.07em 0.5em;
+    font-weight: 500 !important;
+    font-size: 43px;
+    font-size: clamp(20px, 2.3vw, 80px);
+    padding-left: 13px;
+    /* width: clamp(50px, 20vw, 300px); */
+    gap: 5px;
+}
+
+.material-symbols-outlined {
+    font-weight: 500 !important;
+}
+
+.headerSearchBtn span {
+    font-size: clamp(20px, 2.3vw, 80px);
+}
+
+
+
+
+
+main {
+    position: relative;
+    max-width: 1920px;
+    margin: 100px auto;
+    scroll-snap-align: start;
+}
+
+.observerElSearch {
+    position: absolute;
+    top: 1080px;
+    width: 20px;
+    height: 5px;
+    background-color: red;
+}
+
+.search {
+    /* max-width: 1000px; */
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.searchGlow {
+    width: 100vw;
+    height: 110lvh;
+    position: absolute;
+    top: -8%;
+    left: 0%;
+}
+
+.searchGlow::before {
+    content: attr(data-text);
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0px;
+    top: 0%;
+    z-index: -1;
+    background: radial-gradient(#2B0D73 0, black 77%);
+    border-radius: 10px;
+}
+
+.searchBar {
+    width: 400px;
+    height: 45px;
+    background-color: #2B0D73;
+    border-radius: 20px;
+    border: #4C16CA 2px solid;
+    color: white;
+    font-size: 30px;
+    font-weight: 400;
+    padding: 5px 13px;
+    font-family: 'Roboto', sans-serif;
+    margin-bottom: 70px;
+    transition: border-width 0.3s ease-in-out;
+    margin-left: 1px;
+}
+
+.searchBar::placeholder {
+    color: #E4E2E9;
+}
+
+.searchBar:focus {
+    outline: #4C16CA 1px solid;
+}
+
+.results {
+    width: 1400px;
+}
+
+.results .row {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.result {
+    background-color: #3b119c;
+    width: 400px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-radius: 15px;
+    user-select: none;
+}
+
+.result .bookName {
+    font-size: 25px;
+    margin-bottom: 1px;
+}
+
+.result .bookAuthor {
+    font-size: 20px;
+    color: #E4E2E9;
+}
+
+.result .moreIcon {
+    color: #FFC800;
+    font-size: 40px !important;
+    cursor: pointer;
+}
+
+.resultsDivider {
+    height: 40px;
+}
+
+
+
+footer {
+    height: 100lvh;
+    position: relative;
+}
+
+.footerContent {
+    height: 40lvh;
+    max-width: 800px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    /* background-color: #2B0D73; */
+    padding: 0.5em;
+    text-align: center;
+}
+
+.footerGlow {
+    width: 100vw;
+    height: 100lvh;
+    /* position: absolute;
+    top: 17%;
+    left: 23%; */
+}
+
+.footerGlow::before {
+    content: attr(data-text);
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0px;
+    top: -10%;
+    z-index: -1;
+    background: radial-gradient(#2B0D73 0, black 50%);
+    border-radius: 10px;
+}
+
+
+footer h3 {
+    font-size: 40px;
+    color: white;
+    font-weight: 500;
+    margin-bottom: 0.8em;
+}
+
+
+footer p, footer a {
+    font-size: 21px;
+    color: white;
+    margin: 0;
+    padding: 0;
+    padding: 0.1em;
+}
+
+footer p:last-child {
+    margin-top: 8px;
+}
+
+
+/* SCROLL ANIMATION */
+
+/* header */
+.indexHeaderHidden h1{
+    opacity: 0;
+}
+
+.indexHeaderHidden .headerSearchBtn {
+    opacity: 0;
+    transform: translateY(-50%);
+}
+
+.textGlow::before {
+    opacity: 0;
+}
+
+
+.showHeader h1 {
+    opacity: 1;
+    transition: opacity 1s ease-in;
+}
+
+.showHeader .textGlow::before {
+    opacity: 1;
+    transition: opacity 1s ease-in 100ms;
+}
+
+.showHeader .headerSearchBtn {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 1s ease-in 400ms, transform 0.8s ease-in;
+}
+
+/* main */
+
+.indexMainHidden .searchBar {
+    opacity: 0;
+}
+
+.indexMainHidden .searchGlow::before {
+    opacity: 0;
+}
+
+.indexMainHidden .row {
+    opacity: 0;
+    transform: translateY(-30%);
+}
+
+
+.showMain .searchBar {
+    opacity: 1;
+    transition: opacity 0.5s ease-in;
+}
+
+.showMain .searchGlow::before {
+    opacity: 0.9;
+    transition: opacity 1s ease-in 200ms;
+}
+
+.showMain .row:nth-child(1) {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 1s ease-in 200ms, transform 0.8s ease-in;
+}
+
+.showMain .row:nth-child(3) {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 1s ease-in 300ms, transform 0.8s ease-in;
+}
+
+.showMain .row:nth-child(5) {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 1s ease-in 400ms, transform 0.8s ease-in;
+}
+
+
+
+/* more info */
+
+
+.moreInfoBody {
+    height: 100lvh;
+    overflow-x: hidden;
+}
+
+.moreInfoHeader {
+    height: 10%;
+}
+
+.moreInfoMain {
+    height: 90%;
+}
+
+.moreInfoMainContent {
+    width: 60%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.bookNameHeader {
+    color: white;
+    font-size: 12.8rem;
+    font-size: clamp(3rem, 12vw + 1rem, 15rem);
+    font-family: 'Playfair Display', serif;
+    letter-spacing: -0.015em;
+    z-index: 1;
+    margin-bottom: -0.1em;
+    user-select: none;
+}
+
+.moreInfoAuthor {
+    color: #E4E2E9;
+    font-weight: 500;
+    font-size: 3.2rem;
+    margin-bottom: 3rem;
+    user-select: none;
+}
+
+.bookDescription {
+    color: white;
+    text-align: justify;
+    width: 100%;
+    font-size: 1.04lvw;
+    user-select: auto;
+    position: relative;
+    z-index: 1;
+}
+
+.moreInfoTextGlow {
+    width: 100%;
+    height: 140%;
+    position: absolute;
+    top: -50%;
+    left: 15%;
+}
+
+.moreInfoTextGlow::before {
+    content: attr(data-text);
+    display: block;
+    width: 100%;
+    height: 110%;
+    position: absolute;
+    left: -17.709%;
+    top: -25%;
+    z-index: -1;
+    background: radial-gradient(#2B0D73 0, black 75%);
+    border-radius: 10px; /* Prispůsobte poloměr zaoblení podle potřeby */
+}
+
+.moreInfoSource {
+    color: #E4E2E9;
+    font-size: 15px;
+    margin-top: 0.5em;
+}
+
+.moreInfoSource a {
+    color: #E4E2E9;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+}
+
+.moreInfoReserveBtn {
+    margin-top: 50px;
+    font-size: 30px;
+    background-color: #FFC800;
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.25em 0.6em;
+    font-weight: 500 !important;
+    user-select: none;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+}
+
+.moreInfoReserveIcon {
+    font-size: 30px !important;
+}
