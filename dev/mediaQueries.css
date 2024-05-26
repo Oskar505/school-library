@@ -1,0 +1,76 @@
+@media only screen and (max-width: 1400px) {
+    .results {
+        width: clamp(100px, 95vw, 2000px);
+    }
+
+    .result {
+        padding: 13px 15px;
+    }
+
+    .searchBar {
+        width: clamp(275px, 26vw, 500px);
+    }
+}
+
+
+@media only screen and (max-width: 1204px) {
+    
+
+
+    .search {
+        top: 5%;
+    }
+
+    .searchBar {
+        width: clamp(300px, 36vw, 500px);
+    }
+
+    .results {
+        width: clamp(100px, 90vw, 2000px);
+    }
+
+    .result {
+        width: clamp(250px, 45%, 500px);
+        padding: 10px 13px;
+    }
+
+    .result a {
+        max-height: 40px;
+    }
+
+    .result:last-child {
+        display: none;
+    }
+}
+
+
+@media only screen and (max-width: 600px) {
+    .search {
+        top: 5%;
+    }
+
+    .searchBar {
+        width: clamp(230px, 36vw, 500px);
+        margin-bottom: 40px;
+        font-size: 25px;
+    }
+
+    .results {
+        width: clamp(100px, 70vw, 2000px);
+    }
+
+    .result {
+        width: clamp(250px, 100%, 500px);
+        padding: 10px 13px;
+    }
+}
+
+
+
+
+
+@media only screen and (max-height: 750px) {
+    .phoneHide {
+        display: none;
+    }
+}
