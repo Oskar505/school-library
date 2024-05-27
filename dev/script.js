@@ -27,12 +27,57 @@ Array.from(hiddenEl).forEach((el) => observer.observe(el));
 
 
 
+// turn off scroll snap on touchscreen
+
+const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+
+if (isTouchDevice) {
+    console.log('touchscreen')
+
+    document.getElementsByClassName('scrollSnapContainer')[0].classList.remove('scrollSnapContainer')
+}
 
 
 
+// console.log(document.getElementById('searchBar'))
+
+// document.getElementById('searchBar').scrollIntoView({ behavior: 'smooth', block: 'center' })
 
 
 
+// scroll to searchbar on phone
+// window.addEventListener('resize', function() {
+//     console.log('resize')
+//     console.log(document.activeElement.tagName)
+
+//     if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') {
+//         console.log('scroll searchbar')
+//         document.activeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+//     }
+// });
+
+
+function isElementInViewport(el) {
+    const rect = el.getBoundingClientRect();
+    return (
+        rect.top >= 200 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+}
+
+window.addEventListener('resize', function() {
+    console.log('resize')
+    if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') {
+        setTimeout(function() {
+            if (!isElementInViewport(document.activeElement)) {
+                console.log('scroll searchbar')
+                window.scrollBy({ top: -100, behavior: 'smooth' });
+            }
+        }, 1000); // Přidání zpoždění, aby se zohlednilo zobrazení klávesnice
+    }
+});
 
 
 

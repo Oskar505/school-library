@@ -90,11 +90,11 @@ a {
 nav {
     background-color: black;
     border-bottom: 1.5px solid #363636;
-    height: 6.5vh;
+    height: clamp(50px, 6.5vh, 200px);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-left: 25px;
+    padding: 0 25px;
     width: 100%;
     position: fixed;
     z-index: 100;
@@ -105,6 +105,7 @@ nav {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    top: 0;
 }
 
 nav h2 {
@@ -438,7 +439,7 @@ footer p:last-child {
     opacity: 0;
 }
 
-.indexMainHidden .row {
+.indexMainHidden .result {
     opacity: 0;
     transform: translateY(-30%);
 }
@@ -454,19 +455,55 @@ footer p:last-child {
     transition: opacity 1s ease-in 200ms;
 }
 
-.showMain .row:nth-child(1) {
+.showMain .result:nth-child(1) {
     opacity: 1;
     transform: translateY(0);
     transition: opacity 1s ease-in 200ms, transform 0.8s ease-in;
 }
 
-.showMain .row:nth-child(3) {
+.showMain .result:nth-child(2) {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 1s ease-in 200ms, transform 0.8s ease-in;
+}
+
+.showMain .result:nth-child(3) {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 1s ease-in 200ms, transform 0.8s ease-in;
+}
+
+.showMain .result:nth-child(4) {
     opacity: 1;
     transform: translateY(0);
     transition: opacity 1s ease-in 300ms, transform 0.8s ease-in;
 }
 
-.showMain .row:nth-child(5) {
+.showMain .result:nth-child(5) {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 1s ease-in 300ms, transform 0.8s ease-in;
+}
+
+.showMain .result:nth-child(6) {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 1s ease-in 300ms, transform 0.8s ease-in;
+}
+
+.showMain .result:nth-child(7) {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 1s ease-in 400ms, transform 0.8s ease-in;
+}
+
+.showMain .result:nth-child(8) {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 1s ease-in 400ms, transform 0.8s ease-in;
+}
+
+.showMain .result:nth-child(9) {
     opacity: 1;
     transform: translateY(0);
     transition: opacity 1s ease-in 400ms, transform 0.8s ease-in;
@@ -482,13 +519,13 @@ footer p:last-child {
     overflow-x: hidden;
 }
 
-.moreInfoHeader {
-    height: 10%;
+.moreInfoNav {
+    position: static;
 }
 
 .moreInfoMain {
     height: 90%;
-    margin: 40px auto;
+    margin: 60px auto 0 auto;
 }
 
 .moreInfoMainContent {
@@ -503,7 +540,7 @@ footer p:last-child {
 .bookNameHeader {
     color: white;
     font-size: 12.8rem;
-    font-size: clamp(3rem, 10vw + 1rem, 15rem);
+    font-size: clamp(3rem, 10vw, 15rem);
     font-family: 'Playfair Display', serif;
     letter-spacing: -0.015em;
     z-index: 1;
@@ -514,7 +551,7 @@ footer p:last-child {
 .moreInfoAuthor {
     color: #E4E2E9;
     font-weight: 500;
-    font-size: 3.2rem;
+    font-size: clamp(2.2rem, 2.3vw, 15rem);
     margin-bottom: 3rem;
     user-select: none;
 }
@@ -523,7 +560,7 @@ footer p:last-child {
     color: white;
     text-align: justify;
     width: 100%;
-    font-size: 1.04lvw;
+    font-size: clamp(1rem, 1.3vw, 3rem);
     user-select: auto;
     position: relative;
     z-index: 1;
@@ -531,20 +568,23 @@ footer p:last-child {
 
 .moreInfoTextGlow {
     width: 100%;
-    height: 140%;
+    height: 100%;
     position: absolute;
-    top: -50%;
-    left: 15%;
+    top: 0;
+    /* top: -50%;
+    left: 15%; */
 }
 
 .moreInfoTextGlow::before {
     content: attr(data-text);
     display: block;
     width: 100%;
-    height: 110%;
+    height: 160%;
     position: absolute;
-    left: -17.709%;
-    top: -25%;
+    /* left: -17.709%;
+    top: -25%; */
+    left: -2.709%;
+    top: -85%;
     z-index: -1;
     background: radial-gradient(#210d73 0, black 75%);
     border-radius: 10px; /* Prispůsobte poloměr zaoblení podle potřeby */
@@ -552,7 +592,7 @@ footer p:last-child {
 
 .moreInfoSource {
     color: #E4E2E9;
-    font-size: 15px;
+    font-size: clamp(0.9rem, 0.95vw, 2.9rem);
     margin-top: 0.5em;
 }
 

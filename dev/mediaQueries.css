@@ -10,11 +10,43 @@
     .searchBar {
         width: clamp(275px, 26vw, 500px);
     }
+
+
+    .moreInfoMainContent {
+        width: 80%;
+    }
+
+    .moreInfoAuthor {
+        font-size: clamp(2.2rem, 2.4vw, 15rem);
+    }
+
+    .bookDescription {
+        font-size: clamp(1rem, 1.6vw, 3rem);
+    }
+
+    .moreInfoSource {
+        font-size: clamp(0.9rem, 1.2vw, 2.9rem);
+    }
 }
 
 
 @media only screen and (max-width: 1204px) {
+
+    .textGlow {
+        width: 100%;
+    }
     
+    .headerSearchBtn {
+        border-radius: 1em;
+        padding: 0.25em 0.5em;
+        gap: 3px;
+        font-size: clamp(35px, 2.3vw, 80px);
+    }
+
+    .headerSearchBtn svg {
+        width: 35px;
+        height: 35px;
+    }
 
 
     .search {
@@ -44,7 +76,57 @@
 }
 
 
+@media only screen and (max-width: 900px) {
+    .moreInfoMainContent {
+        width: 85%;
+    }
+
+    .footerContent {
+        width: 90%;
+        padding: 0;
+        top: 60%;
+    }
+
+
+    .bookNameHeader {
+        font-size: clamp(3rem, 12vw, 15rem);
+    }
+
+    .moreInfoAuthor {
+        font-size: clamp(2.2rem, 3.2vw, 15rem);
+    }
+
+    .bookDescription {
+        font-size: clamp(1rem, 2.3vw, 3rem);
+    }
+
+    .moreInfoSource {
+        font-size: clamp(0.9rem, 2vw, 2.9rem);
+    }
+
+
+    .moreInfoTextGlow {
+        width: 100%;
+        height: 100%;
+        top: 0;
+    }
+
+    .moreInfoTextGlow::before {
+        height: 100%;
+        left: 0;
+        top: -20%;
+        background: linear-gradient(#210d73 0, black 100%);
+    }
+}
+
+
+
 @media only screen and (max-width: 600px) {
+    .headerContent {
+        margin-left: 4%;
+    }
+
+    
     .search {
         top: 5%;
     }
@@ -62,6 +144,89 @@
     .result {
         width: clamp(250px, 100%, 500px);
         padding: 10px 13px;
+    }
+
+    nav {
+        padding: 0 10px;
+    }
+
+    nav h2 {
+        font-size: 27px;
+    }
+
+    nav svg {
+        width: 30px;
+        height: 30px;
+    }
+
+    .headerSearchBtn {
+        border-radius: 1em;
+        padding: 0.4em 0.8em;
+        gap: 3px;
+        font-size: clamp(20px, 2.3vw, 80px);
+    }
+
+    .headerSearchBtn svg {
+        width: 24px;
+        height: 24px;
+    }
+
+
+    footer h3 {
+        font-size: 30px;
+        color: white;
+        font-weight: 500;
+        margin-bottom: 0.8em;
+    }
+    
+    
+    footer p, footer a {
+        font-size: 20px;
+        color: white;
+        margin: 0;
+        padding: 0;
+        padding: 0.1em;
+    }
+    
+    footer p:last-child {
+        margin-top: 8px;
+    }
+
+
+
+
+    .moreInfoMainContent {
+        width: 85%;
+    }
+
+    .bookNameHeader {
+        font-size: clamp(45px, 15vw, 15rem);
+    }
+
+    .moreInfoAuthor {
+        font-size: clamp(20px, 3.8vw, 15rem);
+    }
+
+    .bookDescription {
+        font-size: clamp(17px, 3.5vw, 3rem);
+    }
+
+    .moreInfoSource {
+        font-size: clamp(15px, 2vw, 2.9rem);
+    }
+
+
+    .moreInfoTextGlow {
+        width: 100%;
+        height: 100%;
+        top: 0;
+    }
+
+    .moreInfoTextGlow::before {
+        height: 100%;
+        left: 0;
+        top: -20%;
+        background: linear-gradient(#210d73 0, black 100%);
     }
 }
 
