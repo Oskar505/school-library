@@ -114,6 +114,45 @@ nav h2 {
     font-weight: 800;
 }
 
+/* .account {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.accountCircle {
+    font-size: 40px !important;
+    color: #294a70 !important;
+    cursor: pointer;
+}
+
+.accountDropdown {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    padding: 10px;
+    text-align: left;
+    border-radius: 5%;
+    box-shadow: 0 0 0 1px #8898aa1a, 0 15px 35px #31315d1a, 0 5px 15px #00000014;
+    color: white;
+}
+
+.accountDropdown::before,
+.accountDropdown::after {
+    content: "";
+    position: absolute;
+    background-color: white;
+    border-radius: 50%;
+} */
+
+.dropdownOption {
+    color: white;
+    font-size: clamp(23px, 1.3vw, 30px);
+}
+
+
+
 
 .textGlow {
     /* width: 1200px; */
