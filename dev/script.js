@@ -1,6 +1,19 @@
 console.log('ok')
 
 
+// Najde všechny elementy na stránce
+const allElements = document.querySelectorAll('*');
+
+// Prochází každý element a kontroluje, zda přesahuje na ose X
+allElements.forEach(element => {
+    const rect = element.getBoundingClientRect();
+    if (rect.right > window.innerWidth || rect.left < 0) {
+        console.log('Element přesahuje na ose X:', element);
+    }
+});
+
+
+
 const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
         console.log(entry);
@@ -36,6 +49,10 @@ if (isTouchDevice) {
 
     document.getElementsByClassName('scrollSnapContainer')[0].classList.remove('scrollSnapContainer')
 }
+
+window.addEventListener('touchstart', function() {
+    document.getElementsByClassName('scrollSnapContainer')[0].classList.remove('scrollSnapContainer')
+})
 
 
 

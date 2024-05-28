@@ -453,7 +453,7 @@
             <form action="moreInfo.php?id=<?php echo $bookId ?>" method="post" id="reserveForm" name="reserve">
                 <div class="moreInfoReserveBtn" id="reserveBtn">
                     <input type="hidden" name="id" value="<?php echo $bookId ?>">
-                    <span class="material-symbols-outlined moreInfoReserveIcon">add</span>
+                    <!-- <span class="material-symbols-outlined moreInfoReserveIcon">add</span> -->
                     <p>Rezervovat</p>
                 </div>
             </form>
@@ -528,6 +528,12 @@
 
             bookInfoElement.textContent = description;
             sourceLinkElement.href = googleBooksUrl;
+
+            if (description == undefined) {
+                let moreInfoSourceEl = document.getElementsByClassName('moreInfoSource')[0]
+                console.log('no description' + moreInfoSourceEl.textContent)
+                moreInfoSourceEl.innerHTML = moreInfoSourceEl.innerHTML.replace('Zdroj: ', '')
+            }
 
         }).catch(error => {
             console.error('Chyba: ', error)
