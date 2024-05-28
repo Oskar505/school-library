@@ -550,6 +550,33 @@ footer p:last-child {
 }
 
 
+/* footer */
+
+/* .indexFooterHidden .footerContent {
+    opacity: 0;
+}
+
+.indexFooterHidden .footerGlow {
+    opacity: 0;
+} */
+
+.showFooter .footerContent {
+    opacity: 1;
+    transition: opacity 1s ease-in;
+}
+
+.showFooter .footerGlow {
+    opacity: 1;
+    transition: opacity 1s ease-in 200ms;
+}
+
+
+
+
+
+
+
+
 
 /* more info */
 
@@ -756,6 +783,73 @@ footer p:last-child {
     text-align: center;
     /* width: clamp(50px, 20vw, 300px); */
     box-shadow: 6px 6px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
 }
 
 
+
+
+/* ERROR */
+
+
+.errorBody {
+    overflow: hidden;
+}
+
+.errorMessage {
+    color: white;
+    margin: 0;
+    min-height: 100lvh;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: center;
+    margin-top: 3%;
+}
+
+.errorContainer::before {
+    content: attr(data-text);
+    display: block;
+    position: absolute;
+    z-index: -1;
+    border-radius: 10px;
+    width: 150vw;
+    height: 200lvh;
+    left: -25%;
+    top: -95%;
+    background: radial-gradient(#210d73 20%, black 65%);
+    overflow-y: hidden;
+}
+
+.errorMessage h1 {
+    font-size: clamp(50px, 7vw, 200px);
+    color: white;
+    font-family: 'Playfair Display', serif;
+    letter-spacing: -1.92px;
+    text-align: center;
+}
+
+.errorMessage p {
+    color: #E4E2E9;
+    font-weight: 500;
+    font-size: clamp(2.2rem, 2.3vw, 15rem);
+    margin-top: 0.3em;
+    user-select: none;
+    text-align: center;
+}
+
+.errorMessage a {
+    background-color: #ffda00;
+    border-radius: 0.75em;
+    border: none;
+    padding: 0.2em 1.1em;
+    font-weight: 500 !important;
+    font-size: clamp(20px, 2vw, 80px);
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    /* width: clamp(50px, 20vw, 300px); */
+    box-shadow: 6px 6px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    margin-top: 1.8em;
+}

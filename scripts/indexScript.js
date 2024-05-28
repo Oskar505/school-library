@@ -26,6 +26,10 @@ const observer = new IntersectionObserver((entries) => {
             else if (entry.target.id == 'indexMain') {
                 entry.target.classList.add('showMain');
             }
+
+            else if (entry.target.id == 'indexFooter') {
+                entry.target.classList.add('showFooter');
+            }
         }
     })
 })

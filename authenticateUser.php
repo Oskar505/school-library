@@ -80,6 +80,16 @@
     }
 
 
+
+    else if (isset($_POST['logout'])) {
+      session_destroy();
+      
+      // redirect to index
+      header('Location: index.php');
+      exit;
+    }
+
+
     else {
       echo '<h1>Vyplňte prosím přihlašovací údaje</h1>';
     }
