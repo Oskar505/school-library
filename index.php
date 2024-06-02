@@ -125,6 +125,21 @@
                     }
                 ?>
             </section>
+
+            <section class="mainButtons">
+                <a href="">
+                    <div class="mainBtn" id="moreBtn">
+                        <p>Více</p>
+                    </div>
+                </a>
+            
+                <a href="">
+                    <div class="mainBtn" id="gradBtn">
+                        <p>Maturitní četba</p>
+                    </div>
+                </a> 
+            </section>
+            
         </section>
     </main>
 

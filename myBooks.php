@@ -39,7 +39,7 @@
 
                     else {
                         $dropdown = "
-                            <a class='dropdownOption' href='/userLogin.php'>Přihlásit se</a>
+                            <a class='dropdownOption' href='/login.php'>Přihlásit se</a>
                         ";
                     }
                 ?>

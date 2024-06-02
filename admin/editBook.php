@@ -4,7 +4,7 @@
     session_start();
 
     if (!isset($_SESSION['loggedin'])) {
-        header('Location: /userLogin.php');
+        header('Location: /login.php');
         exit;
     }
 

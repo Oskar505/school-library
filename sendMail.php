@@ -5,7 +5,7 @@
 
     /*
     if (!isset($_SESSION['loggedin'])) {
-        header('Location: /userLogin.php');
+        header('Location: /login.php');
         exit;
     }
     */
@@ -903,7 +903,7 @@
             // GET CSV FILES
 
             if (!isset($_SESSION['loggedin'])) {
-                header('Location: /userLogin.php');
+                header('Location: /login.php');
                 exit;
             }
 
