@@ -1,3 +1,31 @@
+@media only screen and (min-width: 2560px) {
+    nav {
+        min-height: 60px;
+    }
+
+    nav svg {
+        width: 45px;
+        height: 45px;
+    }
+
+    .account a {
+        display: flex;
+        flex-direction: column;
+        height: 45px;
+    }
+
+    nav h2 {
+        font-size: 38px;
+    }
+
+
+    .headerSearchBtn svg, .headerSearchBtn svg path {
+        width: 48px;
+        height: 48px;
+    }
+}
+
+
 @media only screen and (max-width: 1400px) {
     .results {
         width: clamp(100px, 95vw, 2000px);

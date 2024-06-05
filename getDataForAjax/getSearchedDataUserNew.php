@@ -46,14 +46,16 @@
 
 
         echo "
-            <div class='result'>
-                <span class='bookInfo'>
-                    <p class='bookName'>$name</p>
-                    <p class='bookAuthor'>$author</p>
-                </span>
-                
+            <div class='outerResult'>
                 <a href='moreInfo.php?id=$id'>
-                    <span class='material-symbols-outlined moreIcon'>add</span>
+                    <div class='result'>
+                        <span class='bookInfo'>
+                            <p class='bookName'>$name</p>
+                            <p class='bookAuthor'>$author</p>
+                        </span>
+                        
+                        <span class='material-symbols-outlined moreIcon'>add</span>
+                    </div>
                 </a>
             </div>
         ";
