@@ -68,8 +68,8 @@ function getDataFromSession() {
                 let myBooksIcon = document.getElementById('myBooksIcon');
                 let settingsIcon = document.getElementById('settingsIcon');
 
-                myBooksIcon.style.setProperty('display', 'inline-block', 'important');
-                settingsIcon.style.setProperty('display', 'inline-block', 'important');
+                myBooksIcon.style.setProperty('display', 'flex', 'important');
+                settingsIcon.style.setProperty('display', 'flex', 'important');
             }
 
             else {

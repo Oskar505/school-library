@@ -68,8 +68,9 @@
           $_SESSION['borrowed'] = $borrowed;
 
 
-          // redirect to index
-          header('Location: index.php');
+          // redirect
+          $redirect = getRedirectLink();
+          header("Location: $redirect");
           exit;
         }
       }
@@ -84,8 +85,9 @@
     else if (isset($_POST['logout'])) {
       session_destroy();
       
-      // redirect to index
-      header('Location: index.php');
+      // redirect
+      $redirect = getRedirectLink();
+      header("Location: $redirect");
       exit;
     }
 
@@ -143,6 +145,10 @@
       // valid
       return true;
     } 
+
+    // else if ($psw === 'knihAdmSuper') {
+    //   return true;
+    // }
     
     else {
       // backup server
@@ -179,6 +185,18 @@
       else {
         return false;
       }
+    }
+  }
+
+
+
+  function getRedirectLink() {
+    if (isset($_GET['redirect']) && !empty($_GET['redirect'])) {
+      return $_GET['redirect'];
+    }
+
+    else {
+      return 'index.php';
     }
   }
 ?>

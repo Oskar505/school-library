@@ -35,14 +35,20 @@ border: #3a16ca
 
 html {
     font-size: 62.5%;
+    scroll-behavior: smooth;
 }
 
 
 body {
     background-color: black;
     font-family: 'Roboto', sans-serif;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    /* scrollbar-width: none;
+    -ms-overflow-style: none; */
+}
+
+.longPage {
+    scrollbar-width: auto;
+    -ms-overflow-style: auto;
 }
 
 .indexBody {
@@ -121,6 +127,24 @@ nav {
     align-items: center;
 }
 
+.navUserOptions {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    height: 100%;
+}
+
+.myBooksLink, .account {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.myBooksLink svg, .accountCircle {
+    vertical-align: middle;
+}
+
+
 .glass {
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
     backdrop-filter: blur(10px);
@@ -135,33 +159,41 @@ nav h2 {
     font-weight: 800;
 }
 
+
+.myBooksLink {
+    /* display: none; */
+}
+
 .accountCircle path {
     width: 30px !important;
+}
+
+.account {
 }
 
 .account a {
     display: flex;
     flex-direction: column;
-    height: 40px;
 }
 
 
 .accountCircle {
     font-size: 40px !important;
-    color: #294a70 !important;
+    color: #fff !important;
     cursor: pointer;
 }
 
 .accountDropdown {
     display: none;
     position: absolute;
-    top: 50px;
-    right: 0;
-    padding: 10px;
+    top: 70px;
+    right: 20px;
+    padding: 10px 15px;
     text-align: left;
     border-radius: 5%;
     box-shadow: 0 0 0 1px #8898aa1a, 0 15px 35px #31315d1a, 0 5px 15px #00000014;
     color: white;
+    text-align: left;
 }
 
 .accountDropdown::before,
@@ -174,7 +206,12 @@ nav h2 {
 
 .dropdownOption {
     color: white;
-    font-size: clamp(23px, 1.3vw, 30px);
+    font-size: clamp(23px, 1.5vw, 35px);
+}
+
+.dropdownDivider {
+    border-top: none;
+    margin: 5px 0;
 }
 
 
@@ -259,6 +296,17 @@ nav h2 {
 
 .headerSearchBtn span {
     font-size: clamp(20px, 2.3vw, 80px);
+}
+
+
+.scrollDownIcon {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0 auto;
+    border: 1px solid #E4E2E9;
+    border-radius: 50%;
 }
 
 
@@ -671,17 +719,31 @@ footer p:last-child {
 
 
 .moreInfoBody {
-    height: 100lvh;
+    height: 100vh;
     overflow-x: hidden;
-}
-
-.moreInfoNav {
-    position: static;
 }
 
 .moreInfoMain {
     height: 90%;
-    margin: 60px auto 0 auto;
+    margin: 0 auto;
+    padding: 2lvh;
+    padding-top: calc(clamp(50px, 6.5vh, 200px) + 10px);
+    overflow-x: hidden;
+}
+
+
+.moreInfoMain::before {
+    content: attr(data-text);
+    display: block;
+    width: 150vw;
+    height: 200lvh;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -75%);
+    z-index: -1;
+    background: radial-gradient(#210d73 20%, black 65%);
+    border-radius: 10px; /* Prispůsobte poloměr zaoblení podle potřeby */
 }
 
 .moreInfoMainContent {
@@ -695,7 +757,7 @@ footer p:last-child {
 
 .bookNameHeader {
     color: white;
-    font-size: clamp(60px, 7vw, 200px);
+    font-size: clamp(60px, 7vw, 175px);
     font-family: 'Playfair Display', serif;
     letter-spacing: -0.015em;
     z-index: 1;
@@ -709,7 +771,7 @@ footer p:last-child {
 .moreInfoAuthor {
     color: #E4E2E9;
     font-weight: 500;
-    font-size: clamp(2.2rem, 2.3vw, 15rem);
+    font-size: clamp(22px, 2.3vw, 40px);
     margin-bottom: 3rem;
     user-select: none;
 }
@@ -718,7 +780,7 @@ footer p:last-child {
     color: white;
     text-align: justify;
     width: 100%;
-    font-size: clamp(20px, 1.3vw, 40px);
+    font-size: clamp(18px, 1.3vw, 30px);
     user-select: auto;
     position: relative;
     z-index: 1;
@@ -745,6 +807,7 @@ footer p:last-child {
     z-index: -1;
     background: radial-gradient(#210d73 20%, black 65%);
     border-radius: 10px; /* Prispůsobte poloměr zaoblení podle potřeby */
+    display: none;
 }
 
 .moreInfoSource {
@@ -798,7 +861,8 @@ footer p:last-child {
     flex-wrap: wrap;
     align-items: center;
     align-content: center;
-    margin-top: 3%;
+    padding-top: clamp(50px, 6.5vh, 200px);
+    overflow-x: hidden;
 }
 
 .loginContainer::before {
@@ -815,7 +879,7 @@ footer p:last-child {
 }
 
 .loginHeading {
-    font-size: clamp(50px, 7vw, 200px);
+    font-size: clamp(50px, 7vw, 160px);
     color: white;
     font-family: 'Playfair Display', serif;
     letter-spacing: -1.92px;
@@ -837,7 +901,7 @@ footer p:last-child {
     border-radius: 20px;
     border: #3a16ca 2px solid;
     color: white;
-    font-size:clamp(20px, 1.6vw, 80px);
+    font-size: clamp(20px, 1.6vw, 65px);
     font-weight: 400;
     padding: 7px 13px;
     font-family: 'Roboto', sans-serif;
@@ -857,7 +921,7 @@ footer p:last-child {
 .loginNote {
     color: #E4E2E9;
     font-family: 'Roboto', sans-serif;
-    font-size: clamp(15px, 1.3vw, 25px);
+    font-size: clamp(15px, 1.3vw, 23px);
     margin-bottom: 2.5em;
 }
 
@@ -867,7 +931,7 @@ footer p:last-child {
     border: none;
     padding: 0.2em 0.5em;
     font-weight: 500 !important;
-    font-size: clamp(20px, 2vw, 80px);
+    font-size: clamp(20px, 2vw, 50px);
     font-family: 'Roboto', sans-serif;
     text-align: center;
     /* width: clamp(50px, 20vw, 300px); */
@@ -875,6 +939,142 @@ footer p:last-child {
     cursor: pointer;
 }
 
+
+
+
+/* MY BOOKS */
+#top {
+    position: absolute;
+    top: 0;
+}
+
+
+.h1 {
+    font-size: 50px;
+    padding: 20px 0 100px 30px;
+    color: #fff;
+}
+
+.myBooksBody {
+    overflow-x: hidden;
+}
+
+
+.myBooksMain {
+    padding-top: 40px;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+    align-content: flex-start;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 80lvh;
+    flex-wrap: wrap;
+    gap: 6vw;
+}
+
+.myBooksMain::before {
+    content: attr(data-text);
+    display: block;
+    width: 150vw;
+    height: 200lvh;
+    position: absolute;
+    left: 50%;
+    top: 0%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    background: radial-gradient(#210d73 20%, black 65%);
+    border-radius: 10px;
+}
+
+.myBooksMain section {
+    width: 550px;
+    display: flex;
+    flex-direction: column;
+}
+
+.myBooksMain h2{
+    font-size: clamp(30px, 4vw, 80px);
+    text-align: center;
+    margin-bottom: 0.45em;
+    color: #fff;
+    font-family: 'Playfair Display', serif;
+}
+
+.myBooksMain th {
+    background-color: #2d119c;
+    box-shadow: 6px 6px 8px rgba(0, 0, 0, 0.2);
+    color: #ffda00;
+    color: #fff;
+    padding: 10px 0;
+    position: relative;
+    margin-bottom: 10px;
+    font-size: clamp(15px, 1.5vw, 30px);
+}
+
+.myBooksMain th:first-child {
+    border-radius: 10px 0 0 10px;
+}
+
+.myBooksMain th:last-child {
+    border-radius: 0 10px 10px 0;
+}
+
+
+.tableSplit {
+    height: 15px;
+}
+
+.tableSplit:first-child {
+    height: 25px;
+}
+
+.myBooksMain td {
+    background-color: #2d119c;
+    box-shadow: 6px 6px 8px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    font-size: clamp(15px, 1.4vw, 30px);
+    padding: 10px 15px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.myBooksTr td:first-child {
+    border-radius: 10px 0 0 10px;
+}
+
+.myBooksTr td:last-child {
+    border-radius: 0 10px 10px 0;
+}
+
+.notLoggedIn {
+    font-size: clamp(30px, 4vw, 80px);
+    text-align: center;
+    margin-bottom: 0.45em;
+    color: #fff;
+    font-family: 'Playfair Display', serif;
+    margin: 0 auto;
+}
+
+.notLoggedIn:hover {
+    text-decoration: underline;
+}
+
+.noBooksH2 {
+    margin: 0 auto;
+}
+
+.scrollUpLink {
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    border: 1px solid #E4E2E9;
+    border-radius: 50%;
+}
+
+.scrollUpIcon {
+    transform: rotate(180deg);
+}
 
 
 

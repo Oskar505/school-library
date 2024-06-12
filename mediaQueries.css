@@ -89,7 +89,7 @@
         width: clamp(100px, 90vw, 2000px);
     }
 
-    .result {
+    .outerResult {
         width: clamp(250px, 45%, 500px);
         padding: 10px 13px;
     }
@@ -98,7 +98,7 @@
         max-height: 40px;
     }
 
-    .result:last-child {
+    .outerResult:last-child {
         display: none;
     }
 }
@@ -164,6 +164,18 @@
                 scroll-snap-type: none;
     }
 
+    .scrollSnap {
+        /* height: auto; */
+    }
+
+    .navUserOptions {
+        gap: 7px;
+    }
+
+    #indexMain {
+        min-height: 190lvh;
+    }
+
     
     
     .headerContent {
@@ -173,6 +185,10 @@
     
     .search {
         top: 5%;
+    }
+
+    .searchGlow {
+        height: auto;
     }
 
     .searchBar {
@@ -185,9 +201,14 @@
         width: clamp(100px, 70vw, 2000px);
     }
 
-    .result {
+    .outerResult {
         width: clamp(250px, 100%, 500px);
-        padding: 10px 13px;
+        padding: 4px 13px;
+        display: block;
+    }
+
+    .outerResult:last-child {
+        display: block;
     }
 
     nav {
@@ -277,8 +298,8 @@
 
 
 
-@media only screen and (max-height: 750px) {
-    .phoneHide {
+@media only screen and (max-height: 800px) {
+    /* .outerResult:nth-last-child(5) {
         display: none;
-    }
-}
+    } */
+} 

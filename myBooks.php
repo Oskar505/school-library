@@ -5,61 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moje knihy</title>
 
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="stylesBlue.css">
+    <link rel="stylesheet" href="mediaQueries.css">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-<body>
-    <header class="header container">
-        <h1 class="h1">Moje knihy</h1>
+<body class="longPage myBooksBody" id="myBooksTop">
+    <div id="top"></div>
 
-
-        <div class="userBar">
-            <a href="/index.php">
-                <div class="material-symbols-outlined homeIcon">home</div>
-            </a>
-
-            <div class="account">
-                <div class="material-symbols-outlined accountCircle" id="accountCircle">account_circle</div>
-                
-                <?php
-                    session_start();
-
-                    if (isset($_SESSION['userLoggedIn']) || isset($_SESSION['loggedin'])) {
-                        $firstName = $_SESSION['firstName'];
-
-                        $dropdown = "
-                            <p class='dropdownOption'>$firstName</p>
-                            <hr class='dropdownDivider'>
-                            <a class='dropdownOption' href='admin/logout.php'>Odhlásit se</a>
-                        ";
-                    }
-                    
-
-                    else {
-                        $dropdown = "
-                            <a class='dropdownOption' href='/login.php'>Přihlásit se</a>
-                        ";
-                    }
-                ?>
-
-                <div class="accountDropdown" id="accountDropdown">
-                    <?php echo $dropdown ?>
-                </div>
-            </div>
-        </div>
-
-
-
-        <nav>
-            <!-- <a href="">lorem</a>
-            <a href="">ipsum</a>
-            <a href="">dolor</a>
-            <a href="">sit</a>
-            <a href="">amet</a> -->
-        </nav>
-    </header>
+    <?php include_once 'nav.php'?>
 
 
 
@@ -101,10 +62,15 @@
                 </tbody>
             </table>
         </section>
+
+        <a href="#top" class="scrollUpLink" id="scrollUpBtn">
+            <svg class="scrollUpIcon" xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="#E4E2E9">
+                <path d="M480-344 240-584l43-43 197 197 197-197 43 43-240 240Z"/>
+            </svg>
+        </a>
     </main>
 
 
-    <script src="/scripts/accountDropdown.js"></script>
     <script src="/scripts/myBooks.js"></script>
 </body>
 </html>

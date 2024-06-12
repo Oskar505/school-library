@@ -71,7 +71,8 @@ $.ajax({
             // borrowed books table
             borrowed.forEach(book => {
                 endDate = new Date(book['endDate']);
-                endDate = `${endDate.getDate()}. ${endDate.getMonth() + 1}.`;
+                // endDate = `${endDate.getDate()}. ${endDate.getMonth() + 1}.`;
+                endDate = endDate.toLocaleDateString('cs-CZ')
 
                 newLine = borrowedTable.insertRow(); // add row
                 newLine.className = 'myBooksTr'; // add class
@@ -96,7 +97,7 @@ $.ajax({
             let loginLink = document.createElement('a');
 
             loginLink.textContent = 'Pro zobrazení knih se přihlašte.';
-            loginLink.href = '/userLogin.php';
+            loginLink.href = '/login.php?redirect=myBooks.php';
             loginLink.className = 'notLoggedIn';
 
             myBooksMain.innerHTML = '';
@@ -149,3 +150,41 @@ borrowedTable.addEventListener('click', function(event) {
         }
     }
 })
+
+
+
+
+// show scroll up button
+const elementToShow = document.getElementById('scrollUpBtn');
+elementToShow.style.display = 'none';
+
+
+function isOnTop(el) {
+    const rect = el.getBoundingClientRect();
+    const viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
+    return !(rect.bottom < 0 || rect.top - viewHeight >= 0);
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    const elementToCheck = document.getElementById('top');
+    const elementToShow = document.getElementById('scrollUpBtn');
+
+    if (!isOnTop(elementToCheck)) {
+        elementToShow.style.display = 'block';
+    }
+});
+
+window.addEventListener('scroll', function() {
+    const elementToCheck = document.getElementById('top');
+    const elementToShow = document.getElementById('scrollUpBtn');
+
+    if (!isOnTop(elementToCheck)) {
+        elementToShow.style.display = 'block';
+        console.log('show')
+    }
+
+    else {
+        elementToShow.style.display = 'none';
+        console.log('hide')
+    }
+});
