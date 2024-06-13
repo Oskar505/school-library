@@ -749,6 +749,7 @@ footer p:last-child {
 .moreInfoMainContent {
     width: 60%;
     margin: 0 auto;
+    padding-top: 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -879,7 +880,7 @@ footer p:last-child {
 }
 
 .loginHeading {
-    font-size: clamp(50px, 7vw, 160px);
+    font-size: clamp(55px, 7vw, 160px);
     color: white;
     font-family: 'Playfair Display', serif;
     letter-spacing: -1.92px;
@@ -901,7 +902,7 @@ footer p:last-child {
     border-radius: 20px;
     border: #3a16ca 2px solid;
     color: white;
-    font-size: clamp(20px, 1.6vw, 65px);
+    font-size: clamp(22px, 1.6vw, 65px);
     font-weight: 400;
     padding: 7px 13px;
     font-family: 'Roboto', sans-serif;
@@ -921,7 +922,7 @@ footer p:last-child {
 .loginNote {
     color: #E4E2E9;
     font-family: 'Roboto', sans-serif;
-    font-size: clamp(15px, 1.3vw, 23px);
+    font-size: clamp(16px, 1.3vw, 23px);
     margin-bottom: 2.5em;
 }
 
@@ -931,7 +932,7 @@ footer p:last-child {
     border: none;
     padding: 0.2em 0.5em;
     font-weight: 500 !important;
-    font-size: clamp(20px, 2vw, 50px);
+    font-size: clamp(22px, 2vw, 50px);
     font-family: 'Roboto', sans-serif;
     text-align: center;
     /* width: clamp(50px, 20vw, 300px); */
@@ -989,12 +990,13 @@ footer p:last-child {
 
 .myBooksMain section {
     width: 550px;
+    min-width: 270px;
     display: flex;
     flex-direction: column;
 }
 
 .myBooksMain h2{
-    font-size: clamp(30px, 4vw, 80px);
+    font-size: clamp(40px, 4vw, 80px);
     text-align: center;
     margin-bottom: 0.45em;
     color: #fff;

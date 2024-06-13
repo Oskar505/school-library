@@ -55,6 +55,21 @@
     .moreInfoSource {
         font-size: clamp(0.9rem, 1.2vw, 2.9rem);
     }
+
+
+    .myBooksMain section {
+        width: 35%;
+    }
+
+    .myBooksMain th {
+        padding: 0.5em 0;
+        font-size: clamp(20px, 1.9vw, 30px);
+    }
+
+    .myBooksMain td {
+        font-size: clamp(20px, 1.8vw, 30px);
+        padding: 0.5em 0px;
+    }
 }
 
 
@@ -100,6 +115,26 @@
 
     .outerResult:last-child {
         display: none;
+    }
+
+
+
+    .myBooksMain section {
+        width: 40%;
+    }
+
+    .myBooksMain h2{
+        font-size: clamp(40px, 5vw, 80px);
+    }
+
+    .myBooksMain th {
+        padding: 0.5em 0;
+        font-size: clamp(20px, 2.3vw, 30px);
+    }
+
+    .myBooksMain td {
+        font-size: clamp(20px, 2.2vw, 30px);
+        padding: 0.5em 0px;
     }
 }
 
@@ -152,6 +187,30 @@
         left: 0;
         top: -20%;
         background: linear-gradient(#210d73 20%, black 100%);
+    }
+
+
+
+    .myBooksMain {
+        gap: 3vw;
+    }
+
+    .myBooksMain section {
+        width: 45%;
+    }
+
+    .myBooksMain h2{
+        font-size: clamp(40px, 6.2vw, 80px);
+    }
+
+    .myBooksMain th {
+        padding: 0.5em 0;
+        font-size: clamp(20px, 2.6vw, 30px);
+    }
+
+    .myBooksMain td {
+        font-size: clamp(20px, 2.5vw, 30px);
+        padding: 0.5em 0px;
     }
 }
 
@@ -222,12 +281,33 @@
     nav svg {
         width: 30px;
     }
+    
+
+    .textGlow::before {
+        content: attr(data-text);
+        display: block;
+        position: absolute;
+        z-index: -1;
+        border-radius: 10px;
+        width: 180vw;
+        height: 200lvh;
+        left: -90vw;
+        top: -130lvh;
+        background: radial-gradient(#210d73 20%, black 70%);
+    }
+
+    #searchBarBtn {
+        height: 30px;
+        max-width: 127px;
+        display: block;
+        margin-top: 20px;
+    }
 
     .headerSearchBtn {
         border-radius: 1em;
-        padding: 0.4em 0.8em;
+        padding: 0.3em 0.6em;
         gap: 3px;
-        font-size: clamp(20px, 2.3vw, 80px);
+        font-size: clamp(24px, 2.3vw, 80px);
     }
 
     .headerSearchBtn svg {
@@ -254,6 +334,29 @@
     
     footer p:last-child {
         margin-top: 8px;
+    }
+
+
+
+    .loginContainer::before {
+        width: 100vw;
+        height: 100lvh;
+        left: 0%;
+        top: 0%;
+        background: linear-gradient(#210d73 8%, black 80%);
+    }
+
+    .loginContainer {
+        padding-top: 80px;
+    }
+
+    .loginForm {
+        margin-top: 15px;
+    }
+
+    .loginBtn {
+        padding: 0.35em 0.65em;
+        border-radius: 1em;
     }
 
 
@@ -291,6 +394,37 @@
         left: 0;
         top: -20%;
         background: linear-gradient(#210d73 20%, black 100%);
+    }
+
+
+
+    .myBooksMain {
+        gap: 7lvh;
+    }
+
+    .myBooksMain::before {
+        width: 100vw;
+        max-height: 100lvh;
+        transform: translate(-50%, -10%);
+        background: linear-gradient(#210d73 15%, black 100%);
+    }
+
+    .myBooksMain section {
+        width: 70%;
+    }
+
+    .myBooksMain h2{
+        font-size: clamp(40px, 9vw, 80px);
+    }
+
+    .myBooksMain th {
+        padding: 0.6em 0;
+        font-size: clamp(20px, 2.8vw, 30px);
+    }
+
+    .myBooksMain td {
+        font-size: clamp(20px, 2.7vw, 30px);
+        padding: 0.6em 0px;
     }
 }
 
