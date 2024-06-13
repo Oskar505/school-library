@@ -844,6 +844,19 @@ footer p:last-child {
     font-size: clamp(20px, 2vw, 80px) !important;
 }
 
+.availabilityInfo {
+    position: absolute;
+    right: -60px;
+    display: flex;
+    cursor: help;
+}
+
+.deactivateBtn {
+    filter: grayscale(100%); /* aplikace černobílého filtru */
+    opacity: 0.5; /* snížení průhlednosti */
+    cursor: not-allowed; /* změna kurzoru na "zakázaný" */
+}
+
 
 
 

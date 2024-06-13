@@ -301,9 +301,10 @@
 
     //default values
     $reserveBtnText = 'Rezervovat';
-    $reservationInfo = '<span class="material-symbols-outlined bookAvailable">done</span>
-    <p>V knihovně</p>';
+    $reservationInfo = '';
     $reserveBtnDeactivate = '';
+    $iconHelp = '';
+    $btnHelp = '';
 
 
     $conn = mysqli_connect('localhost', $sqlUser, $sqlPassword, $database);
@@ -350,9 +351,11 @@
 
             if (in_array($bookId, $reservedBooks) || $reservationOk) { // rezervovano uzivatelem
                 $reserveBtnText = 'Zrušit rezervaci';
-                $reservationInfo = '
-                <span class="material-symbols-outlined bookAvailable">done</span>
-                <p>Rezervováno</p>';
+                $iconHelp = 'Kniha je rezervovaná';
+                $availabilityIcon = '
+                <svg title="Kniha je rezervovaná" id="availabilityInfoIcon" xmlns="http://www.w3.org/2000/svg" height="44px" viewBox="0 -960 960 960" width="44px" fill="#00D100">
+                    <path d="M378-246 154-470l43-43 181 181 384-384 43 43-427 427Z"/>
+                </svg>';
                 $reservedByUser = true;
             }
         }
@@ -360,18 +363,19 @@
 
         if ($reserved == 0 && !$reservedByUser) { // not available
             $reserveBtnText = 'Rezervovat';
-            $reservationInfo = '
-            <span class="material-symbols-outlined bookNotAvailable">close</span>
-            <p>Rezervováno</p>';
+            $btnHelp = 'Knihu má zarezervovanou někdo jiný';
+            $availabilityIcon = '';
             $reserveBtnDeactivate = 'deactivateBtn';
         }
         
 
         elseif ($lentToSomeone == 0 && $reserved != 0) {
             $reserveBtnText = 'Rezervovat';
-            $reservationInfo = '
-            <span class="material-symbols-outlined bookLentToSomeone">priority_high</span>
-            <p>Půjčeno</p>';
+            $availabilityIcon = '
+            <svg title="Kniha je půjčená, stále si ji můžete zarezervovat." id="availabilityInfoIcon" xmlns="http://www.w3.org/2000/svg" height="44px" viewBox="0 -960 960 960" width="44px" fill="#ff8000">
+                <path d="m40-120 440-760 440 760H40Zm104-60h672L480-760 144-180Zm340.18-57q12.82 0 21.32-8.68 8.5-8.67 8.5-21.5 0-12.82-8.68-21.32-8.67-8.5-21.5-8.5-12.82 0-21.32 8.68-8.5 8.67-8.5 21.5 0 12.82 8.68 21.32 8.67 8.5 21.5 8.5ZM454-348h60v-224h-60v224Zm26-122Z"/>
+            </svg>';
+            $iconHelp = 'Kniha je půjčená, stále si ji můžete zarezervovat.';
 
 
             //pujceno uzivatelem
@@ -379,9 +383,10 @@
             $borrowedBooks = explode(',', $borrowedBooks);
 
             if (in_array($bookId, $borrowedBooks)) {
-                $reservationInfo = '
-                <span class="material-symbols-outlined bookAvailable">done</span>
-                <p>Půjčeno</p>';
+                $availabilityIcon = '';
+                $reserveBtnDeactivate = 'deactivateBtn';
+                $iconHelp = '';
+                $btnHelp = 'Knihu už máte půjčenou';
             }
         }
     }
@@ -389,17 +394,18 @@
     else {
         if ($reserved == 0) { // not available
             $reserveBtnText = 'Rezervovat';
-            $reservationInfo = '
-            <span class="material-symbols-outlined bookNotAvailable">close</span>
-            <p>Rezervováno</p>';
+            $availabilityIcon = '';
             $reserveBtnDeactivate = 'deactivateBtn';
+            $btnHelp = 'Knihu má zarezervovanou někdo jiný';
         }
 
         elseif ($lentToSomeone == 0 && $reserved != 0) {
             $reserveBtnText = 'Rezervovat';
-            $reservationInfo = '
-            <span class="material-symbols-outlined bookLentToSomeone">priority_high</span>
-            <p>Půjčeno</p>';
+            $iconHelp = 'Kniha je půjčená, stále si ji můžete zarezervovat.';
+            $availabilityIcon = '
+            <svg title="Kniha je půjčená, stále si ji můžete zarezervovat." id="availabilityInfoIcon" xmlns="http://www.w3.org/2000/svg" height="44px" viewBox="0 -960 960 960" width="44px" fill="#ff8000">
+                <path d="m40-120 440-760 440 760H40Zm104-60h672L480-760 144-180Zm340.18-57q12.82 0 21.32-8.68 8.5-8.67 8.5-21.5 0-12.82-8.68-21.32-8.67-8.5-21.5-8.5-12.82 0-21.32 8.68-8.5 8.67-8.5 21.5 0 12.82 8.68 21.32 8.67 8.5 21.5 8.5ZM454-348h60v-224h-60v224Zm26-122Z"/>
+            </svg>';
         }
     }
 ?>
@@ -447,10 +453,12 @@
             
 
             <form action="moreInfo.php?id=<?php echo $bookId ?>" method="post" id="reserveForm" name="reserve">
-                <div class="moreInfoReserveBtn" id="reserveBtn">
+                <div class="moreInfoReserveBtn <?php echo $reserveBtnDeactivate ?>" id="reserveBtn" title="<?php echo $btnHelp ?>">
                     <input type="hidden" name="id" value="<?php echo $bookId ?>">
-                    <!-- <span class="material-symbols-outlined moreInfoReserveIcon">add</span> -->
                     <p>Rezervovat</p>
+                    <div class="availabilityInfo" id="availabilityInfo" title="<?php echo $iconHelp ?>">
+                        <?php echo $availabilityIcon ?>
+                    </div>
                 </div>
             </form>
             
@@ -465,7 +473,9 @@
     <script>
 
         document.getElementById('reserveBtn').addEventListener('click', function() {
-            document.getElementById('reserveForm').submit()
+            if (event.target.id !== 'availabilityInfo' && event.target.id !== 'availabilityInfoIcon' && !document.getElementById('reserveBtn').classList.contains('deactivateBtn')) {
+                document.getElementById('reserveForm').submit();
+            }
         })
         
 

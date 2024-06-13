@@ -3,7 +3,7 @@
         <a href="/index.php" title="Domů"><h2>Knihovna GYKOVY</h2></a>
 
         <div class="navUserOptions">
-            <a href="/myBooks.php" class="myBooksLink" id="myBooksIcon">
+            <a href="/myBooks.php" class="myBooksLink" id="myBooksIcon" title="Moje knihy">
                 <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#FFFFFF">
                     <path d="M220-80q-24 0-42-18t-18-42v-680q0-24 18-42t42-18h520q24 0 42 18t18 42v680q0 24-18 42t-42 18H220Zm0-60h520v-680h-60v266l-97-56-97 56v-266H220v680Zm0 0v-680 680Zm266-414 97-56 97 56-97-56-97 56Z"/>
                 </svg>
